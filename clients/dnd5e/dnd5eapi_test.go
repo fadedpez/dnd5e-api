@@ -143,7 +143,26 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"races/human").Return(&http.Response{
 			StatusCode: 200,
-			Body:       ioutil.NopCloser(bytes.NewReader([]byte(`{"index": "human", "name": "Human", "speed": 30}`))),
+			Body: ioutil.NopCloser(bytes.NewReader([]byte(`{
+				"index": "human", 
+				"name": "Human", 
+				"speed": 30,
+				"ability_bonuses": [
+					{
+						"ability_score": {
+							"index": "str",
+							"name": "STR"
+						},
+						"bonus": 1		
+					},
+					{	
+						"ability_score": {
+							"index": "dex",
+							"name": "DEX"
+						},
+						"bonus": 2
+					}]
+				}`))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client}
@@ -154,6 +173,13 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		assert.Equal(t, "human", actual.Key)
 		assert.Equal(t, "Human", actual.Name)
 		assert.Equal(t, 30, actual.Speed)
+		assert.Equal(t, 2, len(actual.AbilityBonuses))
+		assert.Equal(t, "str", actual.AbilityBonuses[0].AbilityScore.Key)
+		assert.Equal(t, "STR", actual.AbilityBonuses[0].AbilityScore.Name)
+		assert.Equal(t, 1, actual.AbilityBonuses[0].Bonus)
+		assert.Equal(t, "dex", actual.AbilityBonuses[1].AbilityScore.Key)
+		assert.Equal(t, "DEX", actual.AbilityBonuses[1].AbilityScore.Name)
+		assert.Equal(t, 2, actual.AbilityBonuses[1].Bonus)
 	})
 
 }
