@@ -209,4 +209,24 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		assert.NotNil(t, actual)
 		assert.Equal(t, "high-elf", actual.SubRaces[0].Key)
 	})
+
+	t.Run("it returns starting proficiencies", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/races/dwarf.json")
+		raceFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"races/dwarf").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(raceFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		actual, err := dnd5eAPI.GetRace("dwarf")
+
+		assert.Nil(t, err)
+		assert.NotNil(t, actual)
+		assert.Equal(t, "battleaxes", actual.StartingProficiencies[0].Key)
+		assert.Equal(t, "handaxes", actual.StartingProficiencies[1].Key)
+	})
 }
