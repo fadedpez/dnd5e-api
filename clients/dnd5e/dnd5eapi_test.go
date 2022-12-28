@@ -171,4 +171,24 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		assert.Equal(t, actual.Languages[0].Key, "common")
 	})
 
+	t.Run("returns a trait", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/races/elf.json")
+		raceFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"races/elf").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(raceFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		actual, err := dnd5eAPI.GetRace("elf")
+
+		assert.Nil(t, err)
+		assert.NotNil(t, actual)
+		assert.Equal(t, "darkvision", actual.Traits[0].Key)
+		assert.Equal(t, "fey-ancestry", actual.Traits[1].Key)
+	})
+
 }
