@@ -36,6 +36,7 @@ type raceResult struct {
 	AbilityBonus []*abilityBonus `json:"ability_bonuses"`
 	Language     []*language     `json:"languages"`
 	Trait        []*trait        `json:"traits"`
+	SubRaces     []*subRace      `json:"subraces"`
 }
 
 type abilityBonus struct {
@@ -49,6 +50,11 @@ type language struct {
 }
 
 type trait struct {
+	Index string `json:"index"`
+	Name  string `json:"name"`
+}
+
+type subRace struct {
 	Index string `json:"index"`
 	Name  string `json:"name"`
 }
@@ -119,6 +125,7 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 		AbilityBonuses: abilityBonusResultsToAbilityBonuses(response.AbilityBonus),
 		Languages:      languageResultsToLanguages(response.Language),
 		Traits:         traitResultsToTraits(response.Trait),
+		SubRaces:       subRaceResultsToSubRaces(response.SubRaces),
 	}, nil
 }
 
@@ -187,6 +194,26 @@ func traitResultsToTraits(input []*trait) []*entities.Trait {
 	out := make([]*entities.Trait, len(input))
 	for i, t := range input {
 		out[i] = traitResultToTrait(t)
+	}
+
+	return out
+}
+
+func subRaceResultToSubRace(input *subRace) *entities.SubRace {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.SubRace{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func subRaceResultsToSubRaces(input []*subRace) []*entities.SubRace {
+	out := make([]*entities.SubRace, len(input))
+	for i, s := range input {
+		out[i] = subRaceResultToSubRace(s)
 	}
 
 	return out
