@@ -34,11 +34,17 @@ type raceResult struct {
 	Name         string          `json:"name"`
 	Speed        int             `json:"speed"`
 	AbilityBonus []*abilityBonus `json:"ability_bonuses"`
+	Language     []*language     `json:"languages"`
 }
 
 type abilityBonus struct {
 	AbilityScore *listResult `json:"ability_score"`
 	Bonus        int         `json:"bonus"`
+}
+
+type language struct {
+	Index string `json:"index"`
+	Name  string `json:"name"`
 }
 
 type listResponse struct {
@@ -105,6 +111,7 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 		Name:           response.Name,
 		Speed:          response.Speed,
 		AbilityBonuses: abilityBonusResultsToAbilityBonuses(response.AbilityBonus),
+		Languages:      languageResultsToLanguages(response.Language),
 	}, nil
 }
 
@@ -133,6 +140,26 @@ func abilityBonusResultsToAbilityBonuses(input []*abilityBonus) []*entities.Abil
 	out := make([]*entities.AbilityBonus, len(input))
 	for i, b := range input {
 		out[i] = abilityBonusResultToAbilityBonus(b)
+	}
+
+	return out
+}
+
+func languageResultToLanguage(input *language) *entities.Language {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Language{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func languageResultsToLanguages(input []*language) []*entities.Language {
+	out := make([]*entities.Language, len(input))
+	for i, l := range input {
+		out[i] = languageResultToLanguage(l)
 	}
 
 	return out

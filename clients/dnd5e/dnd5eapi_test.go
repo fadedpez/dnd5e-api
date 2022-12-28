@@ -168,6 +168,7 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		assert.Equal(t, "dex", actual.AbilityBonuses[1].AbilityScore.Key)
 		assert.Equal(t, "DEX", actual.AbilityBonuses[1].AbilityScore.Name)
 		assert.Equal(t, 1, actual.AbilityBonuses[1].Bonus)
+		assert.Equal(t, actual.Languages[0].Key, "common")
 	})
 
 }
