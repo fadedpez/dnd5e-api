@@ -30,13 +30,14 @@ type listResult struct {
 }
 
 type raceResult struct {
-	Index        string          `json:"index"`
-	Name         string          `json:"name"`
-	Speed        int             `json:"speed"`
-	AbilityBonus []*abilityBonus `json:"ability_bonuses"`
-	Language     []*language     `json:"languages"`
-	Trait        []*trait        `json:"traits"`
-	SubRaces     []*subRace      `json:"subraces"`
+	Index                 string          `json:"index"`
+	Name                  string          `json:"name"`
+	Speed                 int             `json:"speed"`
+	AbilityBonus          []*abilityBonus `json:"ability_bonuses"`
+	Language              []*language     `json:"languages"`
+	Trait                 []*trait        `json:"traits"`
+	SubRaces              []*subRace      `json:"subraces"`
+	StartingProficiencies []*proficiency  `json:"starting_proficiencies"`
 }
 
 type abilityBonus struct {
@@ -55,6 +56,11 @@ type trait struct {
 }
 
 type subRace struct {
+	Index string `json:"index"`
+	Name  string `json:"name"`
+}
+
+type proficiency struct {
 	Index string `json:"index"`
 	Name  string `json:"name"`
 }
@@ -119,13 +125,14 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 	}
 
 	return &entities.Race{
-		Key:            response.Index,
-		Name:           response.Name,
-		Speed:          response.Speed,
-		AbilityBonuses: abilityBonusResultsToAbilityBonuses(response.AbilityBonus),
-		Languages:      languageResultsToLanguages(response.Language),
-		Traits:         traitResultsToTraits(response.Trait),
-		SubRaces:       subRaceResultsToSubRaces(response.SubRaces),
+		Key:                   response.Index,
+		Name:                  response.Name,
+		Speed:                 response.Speed,
+		AbilityBonuses:        abilityBonusResultsToAbilityBonuses(response.AbilityBonus),
+		Languages:             languageResultsToLanguages(response.Language),
+		Traits:                traitResultsToTraits(response.Trait),
+		SubRaces:              subRaceResultsToSubRaces(response.SubRaces),
+		StartingProficiencies: proficiencyResultsToProficiencies(response.StartingProficiencies),
 	}, nil
 }
 
@@ -214,6 +221,26 @@ func subRaceResultsToSubRaces(input []*subRace) []*entities.SubRace {
 	out := make([]*entities.SubRace, len(input))
 	for i, s := range input {
 		out[i] = subRaceResultToSubRace(s)
+	}
+
+	return out
+}
+
+func proficiencyResultToProficiency(input *proficiency) *entities.Proficiency {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Proficiency{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func proficiencyResultsToProficiencies(input []*proficiency) []*entities.Proficiency {
+	out := make([]*entities.Proficiency, len(input))
+	for i, p := range input {
+		out[i] = proficiencyResultToProficiency(p)
 	}
 
 	return out
