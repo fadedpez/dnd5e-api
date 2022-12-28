@@ -7,6 +7,7 @@ type Race struct {
 	AbilityBonuses []*AbilityBonus `json:"ability_bonuses"`
 	Languages      []*Language     `json:"languages"`
 	Traits         []*Trait        `json:"traits"`
+	SubRaces       []*SubRace      `json:"subrace"`
 }
 
 type AbilityScore struct {
@@ -25,6 +26,11 @@ type Language struct {
 }
 
 type Trait struct {
+	Key  string `json:"key"`
+	Name string `json:"name"`
+}
+
+type SubRace struct {
 	Key  string `json:"key"`
 	Name string `json:"name"`
 }
