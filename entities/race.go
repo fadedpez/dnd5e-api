@@ -10,6 +10,7 @@ type Race struct {
 	SubRaces                   []*SubRace      `json:"subrace"`
 	StartingProficiencies      []*Proficiency  `json:"starting_proficiencies"`
 	StartingProficiencyOptions *Choice         `json:"starting_proficiency_options"`
+	LanguageOptions            *Choice         `json:"language_options"`
 }
 
 type AbilityScore struct {

@@ -39,6 +39,7 @@ type raceResult struct {
 	SubRaces                   []*subRace             `json:"subraces"`
 	StartingProficiencies      []*proficiency         `json:"starting_proficiencies"`
 	StartingProficiencyOptions map[string]interface{} `json:"starting_proficiency_options"`
+	LanguageOptions            map[string]interface{} `json:"language_options"`
 }
 
 func (r *raceResult) getStartingProficiencyChoice() *entities.Choice {
@@ -50,6 +51,20 @@ func (r *raceResult) getStartingProficiencyChoice() *entities.Choice {
 		Choose:    int(r.StartingProficiencyOptions["choose"].(float64)),
 		Type:      r.StartingProficiencyOptions["type"].(string),
 		OptionSet: mapToOptionSet(r.StartingProficiencyOptions["from"].(map[string]interface{})),
+	}
+
+	return out
+}
+
+func (r *raceResult) getLanguageChoice() *entities.Choice {
+	if r.LanguageOptions == nil {
+		return nil
+	}
+
+	out := &entities.Choice{
+		Choose:    int(r.LanguageOptions["choose"].(float64)),
+		Type:      r.LanguageOptions["type"].(string),
+		OptionSet: mapToOptionSet(r.LanguageOptions["from"].(map[string]interface{})),
 	}
 
 	return out
@@ -205,6 +220,7 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 		SubRaces:                   subRaceResultsToSubRaces(response.SubRaces),
 		StartingProficiencies:      proficiencyResultsToProficiencies(response.StartingProficiencies),
 		StartingProficiencyOptions: response.getStartingProficiencyChoice(),
+		LanguageOptions:            response.getLanguageChoice(),
 	}
 
 	raceChoice := response.getStartingProficiencyChoice()

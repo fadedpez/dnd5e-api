@@ -171,6 +171,12 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		assert.Equal(t, "DEX", actual.AbilityBonuses[1].AbilityScore.Name)
 		assert.Equal(t, 1, actual.AbilityBonuses[1].Bonus)
 		assert.Equal(t, actual.Languages[0].Key, "common")
+		assert.Equal(t, 1, actual.LanguageOptions.Choose)
+		assert.Equal(t, "languages", actual.LanguageOptions.Type)
+		assert.Equal(t, entities.OptionSetTypeArray, actual.LanguageOptions.OptionSet.GetType())
+		assert.Equal(t, 15, len(actual.LanguageOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options))
+		assert.Equal(t, "dwarvish", actual.LanguageOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options[0].(*entities.ReferenceOption).Reference.Key)
+		assert.Equal(t, "elvish", actual.LanguageOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options[1].(*entities.ReferenceOption).Reference.Key)
 	})
 
 	t.Run("returns a trait", func(t *testing.T) {
@@ -236,5 +242,6 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		assert.Equal(t, 3, len(actual.StartingProficiencyOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options))
 		assert.Equal(t, "smiths-tools", actual.StartingProficiencyOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options[0].(*entities.ReferenceOption).Reference.Key)
 		assert.Equal(t, "brewers-supplies", actual.StartingProficiencyOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options[1].(*entities.ReferenceOption).Reference.Key)
+
 	})
 }
