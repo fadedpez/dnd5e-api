@@ -78,3 +78,21 @@ type listResponse struct {
 	Count   int           `json:"count"`
 	Results []*listResult `json:"results"`
 }
+
+type equipmentResult struct {
+	Index             string             `json:"index"`
+	Name              string             `json:"name"`
+	Cost              *cost              `json:"cost"`
+	Weight            int                `json:"weight"`
+	EquipmentCategory *equipmentCategory `json:"equipment_category"`
+}
+
+type equipmentCategory struct {
+	Index string `json:"index"`
+	Name  string `json:"name"`
+}
+
+type cost struct {
+	Quantity int    `json:"quantity"`
+	Unit     string `json:"unit"`
+}

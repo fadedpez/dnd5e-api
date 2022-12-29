@@ -167,3 +167,32 @@ func proficiencyResultsToProficiencies(input []*proficiency) []*entities.Profici
 
 	return out
 }
+
+func listResultToEquipment(input *listResult) *entities.Equipment {
+	return &entities.Equipment{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func equipmentCategoryResultToEquipmentCategory(input *equipmentCategory) *entities.EquipmentCategory {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.EquipmentCategory{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func costResultToCost(input *cost) *entities.Cost {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Cost{
+		Quantity: input.Quantity,
+		Unit:     input.Unit,
+	}
+}
