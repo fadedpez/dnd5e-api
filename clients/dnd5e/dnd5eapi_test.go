@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/fadedpez/dnd5e-api/entities"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -228,5 +230,11 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		assert.NotNil(t, actual)
 		assert.Equal(t, "battleaxes", actual.StartingProficiencies[0].Key)
 		assert.Equal(t, "handaxes", actual.StartingProficiencies[1].Key)
+		assert.Equal(t, 1, actual.StartingProficiencyOptions.Choose)
+		assert.Equal(t, "proficiencies", actual.StartingProficiencyOptions.Type)
+		assert.Equal(t, entities.OptionSetTypeArray, actual.StartingProficiencyOptions.OptionSet.GetType())
+		assert.Equal(t, 3, len(actual.StartingProficiencyOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options))
+		assert.Equal(t, "smiths-tools", actual.StartingProficiencyOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options[0].(*entities.ReferenceOption).Reference.Key)
+		assert.Equal(t, "brewers-supplies", actual.StartingProficiencyOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options[1].(*entities.ReferenceOption).Reference.Key)
 	})
 }
