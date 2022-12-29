@@ -30,14 +30,85 @@ type listResult struct {
 }
 
 type raceResult struct {
-	Index                 string          `json:"index"`
-	Name                  string          `json:"name"`
-	Speed                 int             `json:"speed"`
-	AbilityBonus          []*abilityBonus `json:"ability_bonuses"`
-	Language              []*language     `json:"languages"`
-	Trait                 []*trait        `json:"traits"`
-	SubRaces              []*subRace      `json:"subraces"`
-	StartingProficiencies []*proficiency  `json:"starting_proficiencies"`
+	Index                      string                 `json:"index"`
+	Name                       string                 `json:"name"`
+	Speed                      int                    `json:"speed"`
+	AbilityBonus               []*abilityBonus        `json:"ability_bonuses"`
+	Language                   []*language            `json:"languages"`
+	Trait                      []*trait               `json:"traits"`
+	SubRaces                   []*subRace             `json:"subraces"`
+	StartingProficiencies      []*proficiency         `json:"starting_proficiencies"`
+	StartingProficiencyOptions map[string]interface{} `json:"starting_proficiency_options"`
+}
+
+func (r *raceResult) getStartingProficiencyChoice() *entities.Choice {
+	if r.StartingProficiencyOptions == nil {
+		return nil
+	}
+
+	out := &entities.Choice{
+		Choose:    int(r.StartingProficiencyOptions["choose"].(float64)),
+		Type:      r.StartingProficiencyOptions["type"].(string),
+		OptionSet: mapToOptionSet(r.StartingProficiencyOptions["from"].(map[string]interface{})),
+	}
+
+	return out
+}
+
+func mapToReferenceItem(input map[string]interface{}) *entities.ReferenceItem {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.ReferenceItem{
+		Name: input["name"].(string),
+		URL:  input["url"].(string),
+		Key:  input["index"].(string),
+	}
+}
+
+func mapToOption(input map[string]interface{}) entities.Option {
+	if input == nil {
+		return nil
+	}
+
+	switch input["option_type"].(string) {
+	case "reference":
+		return &entities.ReferenceOption{
+			Reference: mapToReferenceItem(input["item"].(map[string]interface{})),
+		}
+	}
+
+	return nil
+}
+
+func mapsToOptions(input []map[string]interface{}) []entities.Option {
+	out := make([]entities.Option, len(input))
+	for i, o := range input {
+		out[i] = mapToOption(o)
+	}
+
+	return out
+}
+
+func mapToOptionSet(input map[string]interface{}) entities.OptionSet {
+	if input == nil {
+		return nil
+	}
+
+	switch input["option_set_type"].(string) {
+	case "options_array":
+		sliceMaps := make([]map[string]interface{}, len(input["options"].([]interface{})))
+		sliceInterfaces := input["options"].([]interface{})
+		for i, v := range sliceInterfaces {
+			sliceMaps[i] = v.(map[string]interface{})
+		}
+		return &entities.OptionsArrayOptionSet{
+			Options: mapsToOptions(sliceMaps),
+		}
+	}
+
+	return nil
 }
 
 type abilityBonus struct {
@@ -124,16 +195,25 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 		return nil, err
 	}
 
-	return &entities.Race{
-		Key:                   response.Index,
-		Name:                  response.Name,
-		Speed:                 response.Speed,
-		AbilityBonuses:        abilityBonusResultsToAbilityBonuses(response.AbilityBonus),
-		Languages:             languageResultsToLanguages(response.Language),
-		Traits:                traitResultsToTraits(response.Trait),
-		SubRaces:              subRaceResultsToSubRaces(response.SubRaces),
-		StartingProficiencies: proficiencyResultsToProficiencies(response.StartingProficiencies),
-	}, nil
+	race := &entities.Race{
+		Key:                        response.Index,
+		Name:                       response.Name,
+		Speed:                      response.Speed,
+		AbilityBonuses:             abilityBonusResultsToAbilityBonuses(response.AbilityBonus),
+		Languages:                  languageResultsToLanguages(response.Language),
+		Traits:                     traitResultsToTraits(response.Trait),
+		SubRaces:                   subRaceResultsToSubRaces(response.SubRaces),
+		StartingProficiencies:      proficiencyResultsToProficiencies(response.StartingProficiencies),
+		StartingProficiencyOptions: response.getStartingProficiencyChoice(),
+	}
+
+	raceChoice := response.getStartingProficiencyChoice()
+	if raceChoice == nil {
+		return race, nil
+	}
+
+	return race, nil
+
 }
 
 func listResultToRace(input *listResult) *entities.Race {

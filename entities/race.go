@@ -1,14 +1,15 @@
 package entities
 
 type Race struct {
-	Key                   string          `json:"key"`
-	Name                  string          `json:"name"`
-	Speed                 int             `json:"speed"`
-	AbilityBonuses        []*AbilityBonus `json:"ability_bonuses"`
-	Languages             []*Language     `json:"languages"`
-	Traits                []*Trait        `json:"traits"`
-	SubRaces              []*SubRace      `json:"subrace"`
-	StartingProficiencies []*Proficiency  `json:"starting_proficiencies"`
+	Key                        string          `json:"key"`
+	Name                       string          `json:"name"`
+	Speed                      int             `json:"speed"`
+	AbilityBonuses             []*AbilityBonus `json:"ability_bonuses"`
+	Languages                  []*Language     `json:"languages"`
+	Traits                     []*Trait        `json:"traits"`
+	SubRaces                   []*SubRace      `json:"subrace"`
+	StartingProficiencies      []*Proficiency  `json:"starting_proficiencies"`
+	StartingProficiencyOptions *Choice         `json:"starting_proficiency_options"`
 }
 
 type AbilityScore struct {
