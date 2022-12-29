@@ -245,3 +245,132 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 
 	})
 }
+
+func TestDnd5eAPI_ListEquipment(t *testing.T) {
+	t.Run("returns error if http.Get fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"equipment").Return(nil, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListEquipment()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "http.Get failed", err.Error())
+	})
+
+	t.Run("returns error if decoding fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"equipment").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListEquipment()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
+	})
+
+	t.Run("returns error if status code is not 200", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"equipment").Return(&http.Response{
+			StatusCode: 500,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListEquipment()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "unexpected status code: 500", err.Error())
+	})
+
+	t.Run("it returns a list of equipment", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/equipment/equipmentlist.json")
+		equipmentFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"equipment").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(equipmentFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		actual, err := dnd5eAPI.ListEquipment()
+
+		assert.Nil(t, err)
+		assert.NotNil(t, actual)
+		assert.Equal(t, 237, len(actual))
+		assert.Equal(t, "abacus", actual[0].Key)
+		assert.Equal(t, "Abacus", actual[0].Name)
+	})
+}
+
+func TestDnd5eAPI_GetEquipment(t *testing.T) {
+	t.Run("returns error if http.Get fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"equipment/abacus").Return(nil, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetEquipment("abacus")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "http.Get failed", err.Error())
+	})
+
+	t.Run("returns error if decoding fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"equipment/abacus").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetEquipment("abacus")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
+	})
+
+	t.Run("returns error if status code is not 200", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"equipment/abacus").Return(&http.Response{
+			StatusCode: 500,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetEquipment("abacus")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "unexpected status code: 500", err.Error())
+	})
+
+	t.Run("it returns an equipment", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/equipment/abacus.json")
+		equipmentFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"equipment/abacus").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(equipmentFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		actual, err := dnd5eAPI.GetEquipment("abacus")
+
+		assert.Nil(t, err)
+		assert.NotNil(t, actual)
+		assert.Equal(t, "abacus", actual.Key)
+		assert.Equal(t, "Abacus", actual.Name)
+		assert.Equal(t, "adventuring-gear", actual.EquipmentCategory.Key)
+		assert.Equal(t, "Adventuring Gear", actual.EquipmentCategory.Name)
+		assert.Equal(t, 2, actual.Cost.Quantity)
+		assert.Equal(t, "gp", actual.Cost.Unit)
+		assert.Equal(t, 2, actual.Weight)
+	})
+
+}

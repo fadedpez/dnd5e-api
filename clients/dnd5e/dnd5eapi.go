@@ -93,3 +93,56 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 	return race, nil
 
 }
+
+func (c *dnd5eAPI) ListEquipment() ([]*entities.Equipment, error) {
+	resp, err := c.client.Get(baserulzURL + "equipment")
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := listResponse{}
+
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]*entities.Equipment, len(response.Results))
+	for i, r := range response.Results {
+		out[i] = listResultToEquipment(r)
+	}
+
+	return out, nil
+}
+
+func (c *dnd5eAPI) GetEquipment(key string) (*entities.Equipment, error) {
+	resp, err := c.client.Get(baserulzURL + "equipment/" + key)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := equipmentResult{}
+
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	if err != nil {
+		return nil, err
+	}
+
+	equipment := &entities.Equipment{
+		Key:               response.Index,
+		Name:              response.Name,
+		Cost:              costResultToCost(response.Cost),
+		Weight:            response.Weight,
+		EquipmentCategory: equipmentCategoryResultToEquipmentCategory(response.EquipmentCategory),
+	}
+
+	return equipment, nil
+}
