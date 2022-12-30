@@ -314,3 +314,10 @@ func armorClassResultToArmorClass(input *armorClass) *entities.ArmorClass {
 		DexBonus: input.DexBonus,
 	}
 }
+
+func listClassResultToClass(input *listResult) *entities.Class {
+	return &entities.Class{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
