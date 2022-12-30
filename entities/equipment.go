@@ -59,3 +59,24 @@ type Properties struct {
 type Range struct {
 	Normal int `json:"normal"`
 }
+
+type Armor struct {
+	Key                 string             `json:"key"`
+	Name                string             `json:"name"`
+	EquipmentCategory   *EquipmentCategory `json:"equipment_category"`
+	Cost                *Cost              `json:"cost"`
+	Weight              int                `json:"weight"`
+	ArmorCategory       string             `json:"armor_category"`
+	ArmorClass          *ArmorClass        `json:"armor_class"`
+	StrMinimum          int                `json:"str_minimum"`
+	StealthDisadvantage bool               `json:"stealth_disadvantage"`
+}
+
+func (a *Armor) GetType() string {
+	return "armor"
+}
+
+type ArmorClass struct {
+	Base     int  `json:"base"`
+	DexBonus bool `json:"dex_bonus"`
+}

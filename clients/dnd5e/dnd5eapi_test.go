@@ -412,4 +412,35 @@ func TestDnd5eAPI_GetEquipment(t *testing.T) {
 		assert.Equal(t, 10, actual.Cost.Quantity)
 		assert.Equal(t, "gp", actual.Cost.Unit)
 	})
+
+	t.Run("it returns a weapon property", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/equipment/studded-leather-armor.json")
+		equipmentFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"equipment/studded-leather-armor").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(equipmentFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetEquipment("studded-leather-armor")
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, "armor", result.GetType())
+		actual := result.(*entities.Armor)
+		assert.Equal(t, "studded-leather-armor", actual.Key)
+		assert.Equal(t, "Studded Leather Armor", actual.Name)
+		assert.Equal(t, "armor", actual.EquipmentCategory.Key)
+		assert.Equal(t, "Light", actual.ArmorCategory)
+		assert.Equal(t, 12, actual.ArmorClass.Base)
+		assert.Equal(t, true, actual.ArmorClass.DexBonus)
+		assert.Equal(t, 0, actual.StrMinimum)
+		assert.Equal(t, false, actual.StealthDisadvantage)
+		assert.Equal(t, 13, actual.Weight)
+		assert.Equal(t, 45, actual.Cost.Quantity)
+		assert.Equal(t, "gp", actual.Cost.Unit)
+	})
 }
