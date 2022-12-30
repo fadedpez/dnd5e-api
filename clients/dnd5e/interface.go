@@ -14,3 +14,7 @@ type Interface interface {
 type httpIface interface {
 	Get(url string) (*http.Response, error)
 }
+
+type EquipmentInterface interface {
+	GetType() string
+}

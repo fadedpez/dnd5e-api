@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 
 	"github.com/fadedpez/dnd5e-api/entities"
 )
@@ -119,7 +120,7 @@ func (c *dnd5eAPI) ListEquipment() ([]*entities.Equipment, error) {
 	return out, nil
 }
 
-func (c *dnd5eAPI) GetEquipment(key string) (*entities.Equipment, error) {
+func (c *dnd5eAPI) GetEquipment(key string) (EquipmentInterface, error) {
 	resp, err := c.client.Get(baserulzURL + "equipment/" + key)
 	if err != nil {
 		return nil, err
@@ -131,9 +132,26 @@ func (c *dnd5eAPI) GetEquipment(key string) (*entities.Equipment, error) {
 	defer resp.Body.Close()
 	response := equipmentResult{}
 
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	if response.EquipmentCategory.Index == "weapon" {
+		weaponResponse := &weaponResult{}
+
+		err = json.Unmarshal(responseBody, &weaponResponse)
+		if err != nil {
+			return nil, err
+		}
+
+		return weaponResultToWeapon(weaponResponse), nil
+
 	}
 
 	equipment := &entities.Equipment{

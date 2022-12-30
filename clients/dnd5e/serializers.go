@@ -196,3 +196,76 @@ func costResultToCost(input *cost) *entities.Cost {
 		Unit:     input.Unit,
 	}
 }
+
+func damageResultToDamage(input *damage) *entities.Damage {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Damage{
+		DamageDice: input.DamageDice,
+		DamageType: damageTypeResultToDamageType(input.DamageType),
+	}
+}
+
+func damageTypeResultToDamageType(input *damageType) *entities.DamageType {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.DamageType{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func propertyResultToProperties(input *properties) *entities.Properties {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Properties{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func propertiesResultsToProperties(input []*properties) []*entities.Properties {
+	out := make([]*entities.Properties, len(input))
+	for i, p := range input {
+		out[i] = propertyResultToProperties(p)
+	}
+
+	return out
+}
+
+func weaponRangeResultToWeaponRange(input *weaponRange) *entities.Range {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Range{
+		Normal: input.Normal,
+	}
+}
+
+func weaponResultToWeapon(input *weaponResult) *entities.Weapon {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Weapon{
+		Key:               input.Index,
+		Name:              input.Name,
+		Cost:              costResultToCost(input.Cost),
+		Damage:            damageResultToDamage(input.Damage),
+		Weight:            input.Weight,
+		EquipmentCategory: equipmentCategoryResultToEquipmentCategory(input.EquipmentCategory),
+		WeaponCategory:    input.WeaponCategory,
+		WeaponRange:       input.WeaponRange,
+		CategoryRange:     input.CategoryRange,
+		Range:             weaponRangeResultToWeaponRange(input.Range),
+		Properties:        propertiesResultsToProperties(input.Properties),
+		TwoHandedDamage:   damageResultToDamage(input.TwoHandedDamage),
+	}
+}
