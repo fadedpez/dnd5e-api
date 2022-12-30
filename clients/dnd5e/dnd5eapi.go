@@ -167,3 +167,33 @@ func (c *dnd5eAPI) GetEquipment(key string) (EquipmentInterface, error) {
 		return equipmentResultToEquipment(&response), nil
 	}
 }
+
+func (c *dnd5eAPI) ListClasses() ([]*entities.Class, error) {
+	resp, err := c.client.Get(baserulzURL + "classes")
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := listResponse{}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]*entities.Class, len(response.Results))
+	for i, r := range response.Results {
+		out[i] = listClassResultToClass(r)
+	}
+
+	return out, nil
+}

@@ -37,8 +37,3 @@ type SubRace struct {
 	Key  string `json:"key"`
 	Name string `json:"name"`
 }
-
-type Proficiency struct {
-	Key  string `json:"key"`
-	Name string `json:"name"`
-}
