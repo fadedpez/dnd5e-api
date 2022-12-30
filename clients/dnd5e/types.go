@@ -155,3 +155,9 @@ type armorClass struct {
 	Base     int  `json:"base"`
 	DexBonus bool `json:"dex_bonus"`
 }
+
+type classResult struct {
+	Index  string `json:"index"`
+	Name   string `json:"name"`
+	HitDie int    `json:"hit_die"`
+}

@@ -505,3 +505,64 @@ func TestDND5eAPI_ListClasses(t *testing.T) {
 		assert.Equal(t, "Barbarian", result[0].Name)
 	})
 }
+
+func TestDND5eAPI_GetClass(t *testing.T) {
+	t.Run("it returns an error when http.Get fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"classes/ranger").Return(nil, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetClass("ranger")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "http.Get failed", err.Error())
+	})
+
+	t.Run("it returns an error if json.Unmarshal fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"classes/ranger").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetClass("ranger")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
+	})
+
+	t.Run("it returns an error when the status code is not 200", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"classes/ranger").Return(&http.Response{
+			StatusCode: 500,
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetClass("ranger")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "unexpected status code: 500", err.Error())
+	})
+
+	t.Run("it returns a class", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/ranger.json")
+		classFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/ranger").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClass("ranger")
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, "ranger", result.Key)
+		assert.Equal(t, "Ranger", result.Name)
+		assert.Equal(t, 10, result.HitDie)
+	})
+}
