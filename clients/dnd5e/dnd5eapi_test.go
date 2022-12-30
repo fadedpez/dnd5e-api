@@ -364,13 +364,52 @@ func TestDnd5eAPI_GetEquipment(t *testing.T) {
 
 		assert.Nil(t, err)
 		assert.NotNil(t, actual)
-		assert.Equal(t, "abacus", actual.Key)
-		assert.Equal(t, "Abacus", actual.Name)
-		assert.Equal(t, "adventuring-gear", actual.EquipmentCategory.Key)
-		assert.Equal(t, "Adventuring Gear", actual.EquipmentCategory.Name)
-		assert.Equal(t, 2, actual.Cost.Quantity)
-		assert.Equal(t, "gp", actual.Cost.Unit)
-		assert.Equal(t, 2, actual.Weight)
+		assert.Equal(t, "equipment", actual.GetType())
+		equipment := actual.(*entities.Equipment)
+		assert.Equal(t, "abacus", equipment.Key)
+		assert.Equal(t, "Abacus", equipment.Name)
+		assert.Equal(t, "adventuring-gear", equipment.EquipmentCategory.Key)
+		assert.Equal(t, "Adventuring Gear", equipment.EquipmentCategory.Name)
+		assert.Equal(t, 2, equipment.Cost.Quantity)
+		assert.Equal(t, "gp", equipment.Cost.Unit)
+		assert.Equal(t, 2, equipment.Weight)
 	})
 
+	t.Run("it returns a weapon", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/equipment/battleaxe.json")
+		equipmentFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"equipment/battleaxe").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(equipmentFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetEquipment("battleaxe")
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, "weapon", result.GetType())
+		actual := result.(*entities.Weapon)
+		assert.Equal(t, "battleaxe", actual.Key)
+		assert.Equal(t, "Battleaxe", actual.Name)
+		assert.Equal(t, "weapon", actual.EquipmentCategory.Key)
+		assert.Equal(t, "Martial", actual.WeaponCategory)
+		assert.Equal(t, "Melee", actual.WeaponRange)
+		assert.Equal(t, "Martial Melee", actual.CategoryRange)
+		assert.Equal(t, "1d8", actual.Damage.DamageDice)
+		assert.Equal(t, "slashing", actual.Damage.DamageType.Key)
+		assert.Equal(t, "Slashing", actual.Damage.DamageType.Name)
+		assert.Equal(t, 5, actual.Range.Normal)
+		assert.Equal(t, "versatile", actual.Properties[0].Key)
+		assert.Equal(t, "Versatile", actual.Properties[0].Name)
+		assert.Equal(t, "1d10", actual.TwoHandedDamage.DamageDice)
+		assert.Equal(t, "slashing", actual.TwoHandedDamage.DamageType.Key)
+		assert.Equal(t, "Slashing", actual.TwoHandedDamage.DamageType.Name)
+		assert.Equal(t, 4, actual.Weight)
+		assert.Equal(t, 10, actual.Cost.Quantity)
+		assert.Equal(t, "gp", actual.Cost.Unit)
+	})
 }

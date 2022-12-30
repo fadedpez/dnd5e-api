@@ -96,3 +96,37 @@ type cost struct {
 	Quantity int    `json:"quantity"`
 	Unit     string `json:"unit"`
 }
+
+type weaponResult struct {
+	Index             string             `json:"index"`
+	Name              string             `json:"name"`
+	Cost              *cost              `json:"cost"`
+	Weight            int                `json:"weight"`
+	EquipmentCategory *equipmentCategory `json:"equipment_category"`
+	WeaponCategory    string             `json:"weapon_category"`
+	WeaponRange       string             `json:"weapon_range"`
+	CategoryRange     string             `json:"category_range"`
+	Damage            *damage            `json:"damage"`
+	Range             *weaponRange       `json:"range"`
+	Properties        []*properties      `json:"properties"`
+	TwoHandedDamage   *damage            `json:"two_handed_damage"`
+}
+
+type damage struct {
+	DamageDice string      `json:"damage_dice"`
+	DamageType *damageType `json:"damage_type"`
+}
+
+type damageType struct {
+	Index string `json:"index"`
+	Name  string `json:"name"`
+}
+
+type weaponRange struct {
+	Normal int `json:"normal"`
+}
+
+type properties struct {
+	Index string `json:"index"`
+	Name  string `json:"name"`
+}
