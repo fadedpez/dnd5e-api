@@ -157,7 +157,8 @@ type armorClass struct {
 }
 
 type classResult struct {
-	Index  string `json:"index"`
-	Name   string `json:"name"`
-	HitDie int    `json:"hit_die"`
+	Index         string         `json:"index"`
+	Name          string         `json:"name"`
+	HitDie        int            `json:"hit_die"`
+	Proficiencies []*proficiency `json:"proficiencies"`
 }
