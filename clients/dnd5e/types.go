@@ -87,6 +87,14 @@ type equipmentResult struct {
 	EquipmentCategory *equipmentCategory `json:"equipment_category"`
 }
 
+func (e *equipmentResult) getCategoryKey() string {
+	if e.EquipmentCategory == nil {
+		return ""
+	}
+
+	return e.EquipmentCategory.Index
+}
+
 type equipmentCategory struct {
 	Index string `json:"index"`
 	Name  string `json:"name"`
@@ -129,4 +137,21 @@ type weaponRange struct {
 type properties struct {
 	Index string `json:"index"`
 	Name  string `json:"name"`
+}
+
+type armorResult struct {
+	Index               string             `json:"index"`
+	Name                string             `json:"name"`
+	Cost                *cost              `json:"cost"`
+	Weight              int                `json:"weight"`
+	EquipmentCategory   *equipmentCategory `json:"equipment_category"`
+	ArmorCategory       string             `json:"armor_category"`
+	ArmorClass          *armorClass        `json:"armor_class"`
+	StrMinimum          int                `json:"str_minimum"`
+	StealthDisadvantage bool               `json:"stealth_disadvantage"`
+}
+
+type armorClass struct {
+	Base     int  `json:"base"`
+	DexBonus bool `json:"dex_bonus"`
 }

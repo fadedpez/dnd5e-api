@@ -142,7 +142,8 @@ func (c *dnd5eAPI) GetEquipment(key string) (EquipmentInterface, error) {
 		return nil, err
 	}
 
-	if response.EquipmentCategory.Index == "weapon" {
+	switch response.getCategoryKey() {
+	case "weapon":
 		weaponResponse := &weaponResult{}
 
 		err = json.Unmarshal(responseBody, &weaponResponse)
@@ -152,15 +153,17 @@ func (c *dnd5eAPI) GetEquipment(key string) (EquipmentInterface, error) {
 
 		return weaponResultToWeapon(weaponResponse), nil
 
-	}
+	case "armor":
+		armorResponse := &armorResult{}
 
-	equipment := &entities.Equipment{
-		Key:               response.Index,
-		Name:              response.Name,
-		Cost:              costResultToCost(response.Cost),
-		Weight:            response.Weight,
-		EquipmentCategory: equipmentCategoryResultToEquipmentCategory(response.EquipmentCategory),
-	}
+		err = json.Unmarshal(responseBody, &armorResponse)
+		if err != nil {
+			return nil, err
+		}
 
-	return equipment, nil
+		return armorResultToArmor(armorResponse), nil
+
+	default:
+		return equipmentResultToEquipment(&response), nil
+	}
 }

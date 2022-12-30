@@ -197,6 +197,22 @@ func costResultToCost(input *cost) *entities.Cost {
 	}
 }
 
+func equipmentResultToEquipment(input *equipmentResult) *entities.Equipment {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Equipment{
+		Key:    input.Index,
+		Name:   input.Name,
+		Cost:   costResultToCost(input.Cost),
+		Weight: input.Weight,
+		EquipmentCategory: equipmentCategoryResultToEquipmentCategory(
+			input.EquipmentCategory,
+		),
+	}
+}
+
 func damageResultToDamage(input *damage) *entities.Damage {
 	if input == nil {
 		return nil
@@ -267,5 +283,34 @@ func weaponResultToWeapon(input *weaponResult) *entities.Weapon {
 		Range:             weaponRangeResultToWeaponRange(input.Range),
 		Properties:        propertiesResultsToProperties(input.Properties),
 		TwoHandedDamage:   damageResultToDamage(input.TwoHandedDamage),
+	}
+}
+
+func armorResultToArmor(input *armorResult) *entities.Armor {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Armor{
+		Key:                 input.Index,
+		Name:                input.Name,
+		Cost:                costResultToCost(input.Cost),
+		ArmorCategory:       input.ArmorCategory,
+		ArmorClass:          armorClassResultToArmorClass(input.ArmorClass),
+		StrMinimum:          input.StrMinimum,
+		StealthDisadvantage: input.StealthDisadvantage,
+		Weight:              input.Weight,
+		EquipmentCategory:   equipmentCategoryResultToEquipmentCategory(input.EquipmentCategory),
+	}
+}
+
+func armorClassResultToArmorClass(input *armorClass) *entities.ArmorClass {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.ArmorClass{
+		Base:     input.Base,
+		DexBonus: input.DexBonus,
 	}
 }
