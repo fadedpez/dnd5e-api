@@ -566,5 +566,7 @@ func TestDND5eAPI_GetClass(t *testing.T) {
 		assert.Equal(t, 10, result.HitDie)
 		assert.Equal(t, "light-armor", result.Proficiencies[0].Key)
 		assert.Equal(t, "medium-armor", result.Proficiencies[1].Key)
+		assert.Equal(t, "str", result.SavingThrows[0].Key)
+		assert.Equal(t, "STR", result.SavingThrows[0].Name)
 	})
 }

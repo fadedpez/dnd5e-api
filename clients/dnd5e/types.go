@@ -161,4 +161,10 @@ type classResult struct {
 	Name          string         `json:"name"`
 	HitDie        int            `json:"hit_die"`
 	Proficiencies []*proficiency `json:"proficiencies"`
+	SavingThrows  []*savingThrow `json:"saving_throws"`
+}
+
+type savingThrow struct {
+	Index string `json:"index"`
+	Name  string `json:"name"`
 }
