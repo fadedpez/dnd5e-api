@@ -321,3 +321,23 @@ func listClassResultToClass(input *listResult) *entities.Class {
 		Name: input.Name,
 	}
 }
+
+func savingThrowResultToSavingThrow(input *savingThrow) *entities.SavingThrow {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.SavingThrow{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func savingThrowResultsToSavingThrows(input []*savingThrow) []*entities.SavingThrow {
+	out := make([]*entities.SavingThrow, len(input))
+	for i, s := range input {
+		out[i] = savingThrowResultToSavingThrow(s)
+	}
+
+	return out
+}
