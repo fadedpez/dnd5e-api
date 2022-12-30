@@ -157,14 +157,25 @@ type armorClass struct {
 }
 
 type classResult struct {
-	Index         string         `json:"index"`
-	Name          string         `json:"name"`
-	HitDie        int            `json:"hit_die"`
-	Proficiencies []*proficiency `json:"proficiencies"`
-	SavingThrows  []*savingThrow `json:"saving_throws"`
+	Index             string               `json:"index"`
+	Name              string               `json:"name"`
+	HitDie            int                  `json:"hit_die"`
+	Proficiencies     []*proficiency       `json:"proficiencies"`
+	SavingThrows      []*savingThrow       `json:"saving_throws"`
+	StartingEquipment []*startingEquipment `json:"starting_equipment"`
 }
 
 type savingThrow struct {
+	Index string `json:"index"`
+	Name  string `json:"name"`
+}
+
+type startingEquipment struct {
+	Equipment *equipmentList `json:"equipment"`
+	Quantity  int            `json:"quantity"`
+}
+
+type equipmentList struct {
 	Index string `json:"index"`
 	Name  string `json:"name"`
 }
