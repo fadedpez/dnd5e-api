@@ -341,3 +341,34 @@ func savingThrowResultsToSavingThrows(input []*savingThrow) []*entities.SavingTh
 
 	return out
 }
+
+func equipmentListResultToEquipmentList(input *equipmentList) *entities.EquipmentList {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.EquipmentList{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func startingEquipmentResultToStartingEquipment(input *startingEquipment) *entities.StartingEquipment {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.StartingEquipment{
+		Equipment: equipmentListResultToEquipmentList(input.Equipment),
+		Quantity:  input.Quantity,
+	}
+}
+
+func startingEquipmentResultsToStartingEquipment(input []*startingEquipment) []*entities.StartingEquipment {
+	out := make([]*entities.StartingEquipment, len(input))
+	for i, s := range input {
+		out[i] = startingEquipmentResultToStartingEquipment(s)
+	}
+
+	return out
+}

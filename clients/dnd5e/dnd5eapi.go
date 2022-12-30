@@ -221,11 +221,12 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 	}
 
 	class := &entities.Class{
-		Key:           response.Index,
-		Name:          response.Name,
-		HitDie:        response.HitDie,
-		Proficiencies: proficiencyResultsToProficiencies(response.Proficiencies),
-		SavingThrows:  savingThrowResultsToSavingThrows(response.SavingThrows),
+		Key:               response.Index,
+		Name:              response.Name,
+		HitDie:            response.HitDie,
+		Proficiencies:     proficiencyResultsToProficiencies(response.Proficiencies),
+		SavingThrows:      savingThrowResultsToSavingThrows(response.SavingThrows),
+		StartingEquipment: startingEquipmentResultsToStartingEquipment(response.StartingEquipment),
 	}
 
 	return class, nil
