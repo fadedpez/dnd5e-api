@@ -197,3 +197,34 @@ func (c *dnd5eAPI) ListClasses() ([]*entities.Class, error) {
 
 	return out, nil
 }
+
+func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
+	resp, err := c.client.Get(baserulzURL + "classes/" + key)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := classResult{}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	class := &entities.Class{
+		Key:    response.Index,
+		Name:   response.Name,
+		HitDie: response.HitDie,
+	}
+
+	return class, nil
+}
