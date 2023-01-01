@@ -34,14 +34,10 @@ type SpellDamageAtSlotLevel struct {
 }
 
 type DC struct {
-	DCType    *DCType `json:"dc_type"`
+	DCType    *ReferenceItem `json:"dc_type"`
 	DCSuccess string  `json:"dc_success"`
 }
 
-type DCType struct {
-	Key  string `json:"key"`
-	Name string `json:"name"`
-}
 
 type AreaOfEffect struct {
 	Type string `json:"type"`

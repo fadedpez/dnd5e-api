@@ -58,8 +58,8 @@ func mapToOptionSet(input map[string]interface{}) entities.OptionSet {
 	return nil
 }
 
-func listResultToRace(input *listResult) *entities.Race {
-	return &entities.Race{
+func listResultToRace(input *listResult) *entities.ReferenceItem {
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
@@ -71,7 +71,7 @@ func abilityBonusResultToAbilityBonus(input *abilityBonus) *entities.AbilityBonu
 	}
 
 	return &entities.AbilityBonus{
-		AbilityScore: &entities.AbilityScore{
+		AbilityScore: &entities.ReferenceItem{
 			Key:  input.AbilityScore.Index,
 			Name: input.AbilityScore.Name,
 		},
@@ -88,19 +88,19 @@ func abilityBonusResultsToAbilityBonuses(input []*abilityBonus) []*entities.Abil
 	return out
 }
 
-func languageResultToLanguage(input *listResult) *entities.Language {
+func languageResultToLanguage(input *listResult) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
 
-	return &entities.Language{
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
 }
 
-func languageResultsToLanguages(input []*listResult) []*entities.Language {
-	out := make([]*entities.Language, len(input))
+func languageResultsToLanguages(input []*listResult) []*entities.ReferenceItem {
+	out := make([]*entities.ReferenceItem, len(input))
 	for i, l := range input {
 		out[i] = languageResultToLanguage(l)
 	}
@@ -108,19 +108,19 @@ func languageResultsToLanguages(input []*listResult) []*entities.Language {
 	return out
 }
 
-func traitResultToTrait(input *listResult) *entities.Trait {
+func traitResultToTrait(input *listResult) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
 
-	return &entities.Trait{
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
 }
 
-func traitResultsToTraits(input []*listResult) []*entities.Trait {
-	out := make([]*entities.Trait, len(input))
+func traitResultsToTraits(input []*listResult) []*entities.ReferenceItem {
+	out := make([]*entities.ReferenceItem, len(input))
 	for i, t := range input {
 		out[i] = traitResultToTrait(t)
 	}
@@ -128,19 +128,19 @@ func traitResultsToTraits(input []*listResult) []*entities.Trait {
 	return out
 }
 
-func subRaceResultToSubRace(input *listResult) *entities.SubRace {
+func subRaceResultToSubRace(input *listResult) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
 
-	return &entities.SubRace{
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
 }
 
-func subRaceResultsToSubRaces(input []*listResult) []*entities.SubRace {
-	out := make([]*entities.SubRace, len(input))
+func subRaceResultsToSubRaces(input []*listResult) []*entities.ReferenceItem {
+	out := make([]*entities.ReferenceItem, len(input))
 	for i, s := range input {
 		out[i] = subRaceResultToSubRace(s)
 	}
@@ -148,19 +148,19 @@ func subRaceResultsToSubRaces(input []*listResult) []*entities.SubRace {
 	return out
 }
 
-func proficiencyResultToProficiency(input *listResult) *entities.Proficiency {
+func proficiencyResultToProficiency(input *listResult) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
 
-	return &entities.Proficiency{
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
 }
 
-func proficiencyResultsToProficiencies(input []*listResult) []*entities.Proficiency {
-	out := make([]*entities.Proficiency, len(input))
+func proficiencyResultsToProficiencies(input []*listResult) []*entities.ReferenceItem {
+	out := make([]*entities.ReferenceItem, len(input))
 	for i, p := range input {
 		out[i] = proficiencyResultToProficiency(p)
 	}
@@ -168,19 +168,19 @@ func proficiencyResultsToProficiencies(input []*listResult) []*entities.Proficie
 	return out
 }
 
-func listResultToEquipment(input *listResult) *entities.Equipment {
-	return &entities.Equipment{
+func listResultToEquipment(input *listResult) *entities.ReferenceItem {
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
 }
 
-func equipmentCategoryResultToEquipmentCategory(input *listResult) *entities.EquipmentCategory {
+func equipmentCategoryResultToEquipmentCategory(input *listResult) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
 
-	return &entities.EquipmentCategory{
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
@@ -224,30 +224,30 @@ func damageResultToDamage(input *damage) *entities.Damage {
 	}
 }
 
-func damageTypeResultToDamageType(input *listResult) *entities.DamageType {
+func damageTypeResultToDamageType(input *listResult) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
 
-	return &entities.DamageType{
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
 }
 
-func propertyResultToProperties(input *listResult) *entities.Properties {
+func propertyResultToProperties(input *listResult) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
 
-	return &entities.Properties{
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
 }
 
-func propertiesResultsToProperties(input []*listResult) []*entities.Properties {
-	out := make([]*entities.Properties, len(input))
+func propertiesResultsToProperties(input []*listResult) []*entities.ReferenceItem {
+	out := make([]*entities.ReferenceItem, len(input))
 	for i, p := range input {
 		out[i] = propertyResultToProperties(p)
 	}
@@ -315,26 +315,26 @@ func armorClassResultToArmorClass(input *armorClass) *entities.ArmorClass {
 	}
 }
 
-func listClassResultToClass(input *listResult) *entities.Class {
-	return &entities.Class{
+func listClassResultToClass(input *listResult) *entities.ReferenceItem {
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
 }
 
-func savingThrowResultToSavingThrow(input *listResult) *entities.SavingThrow {
+func savingThrowResultToSavingThrow(input *listResult) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
 
-	return &entities.SavingThrow{
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
 }
 
-func savingThrowResultsToSavingThrows(input []*listResult) []*entities.SavingThrow {
-	out := make([]*entities.SavingThrow, len(input))
+func savingThrowResultsToSavingThrows(input []*listResult) []*entities.ReferenceItem {
+	out := make([]*entities.ReferenceItem, len(input))
 	for i, s := range input {
 		out[i] = savingThrowResultToSavingThrow(s)
 	}
@@ -342,12 +342,12 @@ func savingThrowResultsToSavingThrows(input []*listResult) []*entities.SavingThr
 	return out
 }
 
-func equipmentListResultToEquipmentList(input *listResult) *entities.EquipmentList {
+func equipmentListResultToEquipmentList(input *listResult) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
 
-	return &entities.EquipmentList{
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
@@ -373,12 +373,12 @@ func startingEquipmentResultsToStartingEquipment(input []*startingEquipment) []*
 	return out
 }
 
-func listResultToSpell(input *listResult) *entities.Spell {
+func listResultToSpell(input *listResult) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
 
-	return &entities.Spell{
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
@@ -435,12 +435,12 @@ func dcResultToDC(input *dc) *entities.DC {
 	}
 }
 
-func dcTypeResultToDCType(input *listResult) *entities.DCType {
+func dcTypeResultToDCType(input *listResult) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
 
-	return &entities.DCType{
+	return &entities.ReferenceItem{
 		Key:  input.Index,
 		Name: input.Name,
 	}
