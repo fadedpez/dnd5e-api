@@ -576,3 +576,143 @@ func TestDND5eAPI_GetClass(t *testing.T) {
 		assert.Equal(t, "Arrow", result.StartingEquipment[1].Equipment.Name)
 	})
 }
+
+func TestDnd5eAPI_ListSpells(t *testing.T) {
+	t.Run("it returns an error when http.Get fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"spells").Return(nil, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListSpells()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "http.Get failed", err.Error())
+	})
+
+	t.Run("it returns an error if json.Unmarshal fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"spells").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListSpells()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
+	})
+
+	t.Run("it returns an error when the status code is not 200", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"spells").Return(&http.Response{
+			StatusCode: 500,
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListSpells()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "unexpected status code: 500", err.Error())
+	})
+
+	t.Run("it returns a list of spells", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/spells/spelllist.json")
+		spellsFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"spells").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(spellsFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.ListSpells()
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, 319, len(result))
+		assert.Equal(t, "acid-arrow", result[0].Key)
+		assert.Equal(t, "Acid Arrow", result[0].Name)
+
+	})
+}
+
+func TestDND5eAPI_GetSpell(t *testing.T) {
+	t.Run("it returns an error when http.Get fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"spells/burning-hands").Return(nil, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetSpell("burning-hands")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "http.Get failed", err.Error())
+	})
+
+	t.Run("it returns an error if json.Unmarshal fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"spells/burning-hands").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetSpell("burning-hands")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
+	})
+
+	t.Run("it returns an error when the status code is not 200", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"spells/burning-hands").Return(&http.Response{
+			StatusCode: 500,
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetSpell("burning-hands")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "unexpected status code: 500", err.Error())
+	})
+
+	t.Run("it returns a spell", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/spells/burninghands.json")
+		spellFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"spells/burning-hands").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(spellFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetSpell("burning-hands")
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, "burning-hands", result.Key)
+		assert.Equal(t, "Burning Hands", result.Name)
+		assert.Equal(t, "Self", result.Range)
+		assert.Equal(t, false, result.Ritual)
+		assert.Equal(t, "Instantaneous", result.Duration)
+		assert.Equal(t, false, result.Concentration)
+		assert.Equal(t, "1 action", result.CastingTime)
+		assert.Equal(t, 1, result.SpellLevel)
+		assert.Equal(t, "fire", result.SpellDamage.SpellDamageType.Key)
+		assert.Equal(t, "Fire", result.SpellDamage.SpellDamageType.Name)
+		assert.Equal(t, "9d6", result.SpellDamage.SpellDamageAtSlotLevel.SeventhLevel)
+		assert.Equal(t, "dex", result.DC.DCType.Key)
+		assert.Equal(t, "DEX", result.DC.DCType.Name)
+		assert.Equal(t, "half", result.DC.DCSuccess)
+		assert.Equal(t, "cone", result.AreaOfEffect.Type)
+		assert.Equal(t, 15, result.AreaOfEffect.Size)
+		assert.Equal(t, "evocation", result.SpellSchool.Key)
+		assert.Equal(t, "Evocation", result.SpellSchool.Name)
+		assert.Equal(t, "sorcerer", result.SpellClasses[0].Key)
+		assert.Equal(t, "wizard", result.SpellClasses[1].Key)
+	})
+}

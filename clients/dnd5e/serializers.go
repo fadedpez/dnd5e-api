@@ -88,7 +88,7 @@ func abilityBonusResultsToAbilityBonuses(input []*abilityBonus) []*entities.Abil
 	return out
 }
 
-func languageResultToLanguage(input *language) *entities.Language {
+func languageResultToLanguage(input *listResult) *entities.Language {
 	if input == nil {
 		return nil
 	}
@@ -99,7 +99,7 @@ func languageResultToLanguage(input *language) *entities.Language {
 	}
 }
 
-func languageResultsToLanguages(input []*language) []*entities.Language {
+func languageResultsToLanguages(input []*listResult) []*entities.Language {
 	out := make([]*entities.Language, len(input))
 	for i, l := range input {
 		out[i] = languageResultToLanguage(l)
@@ -108,7 +108,7 @@ func languageResultsToLanguages(input []*language) []*entities.Language {
 	return out
 }
 
-func traitResultToTrait(input *trait) *entities.Trait {
+func traitResultToTrait(input *listResult) *entities.Trait {
 	if input == nil {
 		return nil
 	}
@@ -119,7 +119,7 @@ func traitResultToTrait(input *trait) *entities.Trait {
 	}
 }
 
-func traitResultsToTraits(input []*trait) []*entities.Trait {
+func traitResultsToTraits(input []*listResult) []*entities.Trait {
 	out := make([]*entities.Trait, len(input))
 	for i, t := range input {
 		out[i] = traitResultToTrait(t)
@@ -128,7 +128,7 @@ func traitResultsToTraits(input []*trait) []*entities.Trait {
 	return out
 }
 
-func subRaceResultToSubRace(input *subRace) *entities.SubRace {
+func subRaceResultToSubRace(input *listResult) *entities.SubRace {
 	if input == nil {
 		return nil
 	}
@@ -139,7 +139,7 @@ func subRaceResultToSubRace(input *subRace) *entities.SubRace {
 	}
 }
 
-func subRaceResultsToSubRaces(input []*subRace) []*entities.SubRace {
+func subRaceResultsToSubRaces(input []*listResult) []*entities.SubRace {
 	out := make([]*entities.SubRace, len(input))
 	for i, s := range input {
 		out[i] = subRaceResultToSubRace(s)
@@ -148,7 +148,7 @@ func subRaceResultsToSubRaces(input []*subRace) []*entities.SubRace {
 	return out
 }
 
-func proficiencyResultToProficiency(input *proficiency) *entities.Proficiency {
+func proficiencyResultToProficiency(input *listResult) *entities.Proficiency {
 	if input == nil {
 		return nil
 	}
@@ -159,7 +159,7 @@ func proficiencyResultToProficiency(input *proficiency) *entities.Proficiency {
 	}
 }
 
-func proficiencyResultsToProficiencies(input []*proficiency) []*entities.Proficiency {
+func proficiencyResultsToProficiencies(input []*listResult) []*entities.Proficiency {
 	out := make([]*entities.Proficiency, len(input))
 	for i, p := range input {
 		out[i] = proficiencyResultToProficiency(p)
@@ -175,7 +175,7 @@ func listResultToEquipment(input *listResult) *entities.Equipment {
 	}
 }
 
-func equipmentCategoryResultToEquipmentCategory(input *equipmentCategory) *entities.EquipmentCategory {
+func equipmentCategoryResultToEquipmentCategory(input *listResult) *entities.EquipmentCategory {
 	if input == nil {
 		return nil
 	}
@@ -224,7 +224,7 @@ func damageResultToDamage(input *damage) *entities.Damage {
 	}
 }
 
-func damageTypeResultToDamageType(input *damageType) *entities.DamageType {
+func damageTypeResultToDamageType(input *listResult) *entities.DamageType {
 	if input == nil {
 		return nil
 	}
@@ -235,7 +235,7 @@ func damageTypeResultToDamageType(input *damageType) *entities.DamageType {
 	}
 }
 
-func propertyResultToProperties(input *properties) *entities.Properties {
+func propertyResultToProperties(input *listResult) *entities.Properties {
 	if input == nil {
 		return nil
 	}
@@ -246,7 +246,7 @@ func propertyResultToProperties(input *properties) *entities.Properties {
 	}
 }
 
-func propertiesResultsToProperties(input []*properties) []*entities.Properties {
+func propertiesResultsToProperties(input []*listResult) []*entities.Properties {
 	out := make([]*entities.Properties, len(input))
 	for i, p := range input {
 		out[i] = propertyResultToProperties(p)
@@ -322,7 +322,7 @@ func listClassResultToClass(input *listResult) *entities.Class {
 	}
 }
 
-func savingThrowResultToSavingThrow(input *savingThrow) *entities.SavingThrow {
+func savingThrowResultToSavingThrow(input *listResult) *entities.SavingThrow {
 	if input == nil {
 		return nil
 	}
@@ -333,7 +333,7 @@ func savingThrowResultToSavingThrow(input *savingThrow) *entities.SavingThrow {
 	}
 }
 
-func savingThrowResultsToSavingThrows(input []*savingThrow) []*entities.SavingThrow {
+func savingThrowResultsToSavingThrows(input []*listResult) []*entities.SavingThrow {
 	out := make([]*entities.SavingThrow, len(input))
 	for i, s := range input {
 		out[i] = savingThrowResultToSavingThrow(s)
@@ -342,7 +342,7 @@ func savingThrowResultsToSavingThrows(input []*savingThrow) []*entities.SavingTh
 	return out
 }
 
-func equipmentListResultToEquipmentList(input *equipmentList) *entities.EquipmentList {
+func equipmentListResultToEquipmentList(input *listResult) *entities.EquipmentList {
 	if input == nil {
 		return nil
 	}
@@ -371,4 +371,111 @@ func startingEquipmentResultsToStartingEquipment(input []*startingEquipment) []*
 	}
 
 	return out
+}
+
+func listResultToSpell(input *listResult) *entities.Spell {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Spell{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func spellDamageResultToSpellDamage(input *spellDamage) *entities.SpellDamage {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.SpellDamage{
+		SpellDamageType:        spellDamageTypeResultToSpellDamageType(input.DamageType),
+		SpellDamageAtSlotLevel: spellDamageAtSlotLevelToSpellDamageAtSlotLevel(input.DamageAtSlotLevel),
+	}
+}
+
+func spellDamageTypeResultToSpellDamageType(input *listResult) *entities.ReferenceItem {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.ReferenceItem{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func spellDamageAtSlotLevelToSpellDamageAtSlotLevel(input *spellDamageAtSlotLevel) *entities.SpellDamageAtSlotLevel {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.SpellDamageAtSlotLevel{
+		FirstLevel:   input.FirstLevel,
+		SecondLevel:  input.SecondLevel,
+		ThirdLevel:   input.ThirdLevel,
+		FourthLevel:  input.FourthLevel,
+		FifthLevel:   input.FifthLevel,
+		SixthLevel:   input.SixthLevel,
+		SeventhLevel: input.SeventhLevel,
+		EighthLevel:  input.EighthLevel,
+		NinthLevel:   input.NinthLevel,
+	}
+}
+
+func dcResultToDC(input *dc) *entities.DC {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.DC{
+		DCType:    dcTypeResultToDCType(input.DCType),
+		DCSuccess: input.DCSuccess,
+	}
+}
+
+func dcTypeResultToDCType(input *listResult) *entities.DCType {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.DCType{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func spellClassResultsToSpellClasses(input []*listResult) []*entities.ReferenceItem {
+	out := make([]*entities.ReferenceItem, len(input))
+	for i, s := range input {
+		out[i] = &entities.ReferenceItem{
+			Key:  s.Index,
+			Name: s.Name,
+		}
+	}
+
+	return out
+}
+
+func areaOfEffectResultToAreaOfEffect(input *areaOfEffect) *entities.AreaOfEffect {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.AreaOfEffect{
+		Type: input.Type,
+		Size: input.Size,
+	}
+}
+
+func spellSchoolResultToSpellSchool(input *listResult) *entities.ReferenceItem {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.ReferenceItem{
+		Key:  input.Index,
+		Name: input.Name,
+	}
 }

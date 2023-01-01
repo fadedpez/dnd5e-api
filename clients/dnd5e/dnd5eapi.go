@@ -231,3 +231,69 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 
 	return class, nil
 }
+
+func (c *dnd5eAPI) ListSpells() ([]*entities.Spell, error) {
+	resp, err := c.client.Get(baserulzURL + "spells")
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := listResponse{}
+
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]*entities.Spell, len(response.Results))
+	for i, r := range response.Results {
+		out[i] = listResultToSpell(r)
+	}
+
+	return out, nil
+}
+
+func (c *dnd5eAPI) GetSpell(key string) (*entities.Spell, error) {
+	resp, err := c.client.Get(baserulzURL + "spells/" + key)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := spellResult{}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	spell := &entities.Spell{
+		Key:           response.Index,
+		Name:          response.Name,
+		Range:         response.Range,
+		Ritual:        response.Ritual,
+		Duration:      response.Duration,
+		Concentration: response.Concentration,
+		CastingTime:   response.CastingTime,
+		SpellLevel:    response.SpellLevel,
+		SpellDamage:   spellDamageResultToSpellDamage(response.SpellDamage),
+		DC:            dcResultToDC(response.DC),
+		AreaOfEffect:  areaOfEffectResultToAreaOfEffect(response.AreaOfEffect),
+		SpellSchool:   spellSchoolResultToSpellSchool(response.SpellSchool),
+		SpellClasses:  spellClassResultsToSpellClasses(response.SpellClasses),
+	}
+
+	return spell, nil
+}
