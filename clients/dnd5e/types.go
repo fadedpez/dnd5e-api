@@ -13,10 +13,10 @@ type raceResult struct {
 	Name                       string                 `json:"name"`
 	Speed                      int                    `json:"speed"`
 	AbilityBonus               []*abilityBonus        `json:"ability_bonuses"`
-	Language                   []*language            `json:"languages"`
-	Trait                      []*trait               `json:"traits"`
-	SubRaces                   []*subRace             `json:"subraces"`
-	StartingProficiencies      []*proficiency         `json:"starting_proficiencies"`
+	Language                   []*listResult          `json:"languages"`
+	Trait                      []*listResult          `json:"traits"`
+	SubRaces                   []*listResult          `json:"subraces"`
+	StartingProficiencies      []*listResult          `json:"starting_proficiencies"`
 	StartingProficiencyOptions map[string]interface{} `json:"starting_proficiency_options"`
 	LanguageOptions            map[string]interface{} `json:"language_options"`
 }
@@ -54,37 +54,17 @@ type abilityBonus struct {
 	Bonus        int         `json:"bonus"`
 }
 
-type language struct {
-	Index string `json:"index"`
-	Name  string `json:"name"`
-}
-
-type trait struct {
-	Index string `json:"index"`
-	Name  string `json:"name"`
-}
-
-type subRace struct {
-	Index string `json:"index"`
-	Name  string `json:"name"`
-}
-
-type proficiency struct {
-	Index string `json:"index"`
-	Name  string `json:"name"`
-}
-
 type listResponse struct {
 	Count   int           `json:"count"`
 	Results []*listResult `json:"results"`
 }
 
 type equipmentResult struct {
-	Index             string             `json:"index"`
-	Name              string             `json:"name"`
-	Cost              *cost              `json:"cost"`
-	Weight            int                `json:"weight"`
-	EquipmentCategory *equipmentCategory `json:"equipment_category"`
+	Index             string      `json:"index"`
+	Name              string      `json:"name"`
+	Cost              *cost       `json:"cost"`
+	Weight            int         `json:"weight"`
+	EquipmentCategory *listResult `json:"equipment_category"`
 }
 
 func (e *equipmentResult) getCategoryKey() string {
@@ -95,60 +75,45 @@ func (e *equipmentResult) getCategoryKey() string {
 	return e.EquipmentCategory.Index
 }
 
-type equipmentCategory struct {
-	Index string `json:"index"`
-	Name  string `json:"name"`
-}
-
 type cost struct {
 	Quantity int    `json:"quantity"`
 	Unit     string `json:"unit"`
 }
 
 type weaponResult struct {
-	Index             string             `json:"index"`
-	Name              string             `json:"name"`
-	Cost              *cost              `json:"cost"`
-	Weight            int                `json:"weight"`
-	EquipmentCategory *equipmentCategory `json:"equipment_category"`
-	WeaponCategory    string             `json:"weapon_category"`
-	WeaponRange       string             `json:"weapon_range"`
-	CategoryRange     string             `json:"category_range"`
-	Damage            *damage            `json:"damage"`
-	Range             *weaponRange       `json:"range"`
-	Properties        []*properties      `json:"properties"`
-	TwoHandedDamage   *damage            `json:"two_handed_damage"`
+	Index             string        `json:"index"`
+	Name              string        `json:"name"`
+	Cost              *cost         `json:"cost"`
+	Weight            int           `json:"weight"`
+	EquipmentCategory *listResult   `json:"equipment_category"`
+	WeaponCategory    string        `json:"weapon_category"`
+	WeaponRange       string        `json:"weapon_range"`
+	CategoryRange     string        `json:"category_range"`
+	Damage            *damage       `json:"damage"`
+	Range             *weaponRange  `json:"range"`
+	Properties        []*listResult `json:"properties"`
+	TwoHandedDamage   *damage       `json:"two_handed_damage"`
 }
 
 type damage struct {
 	DamageDice string      `json:"damage_dice"`
-	DamageType *damageType `json:"damage_type"`
-}
-
-type damageType struct {
-	Index string `json:"index"`
-	Name  string `json:"name"`
+	DamageType *listResult `json:"damage_type"`
 }
 
 type weaponRange struct {
 	Normal int `json:"normal"`
 }
 
-type properties struct {
-	Index string `json:"index"`
-	Name  string `json:"name"`
-}
-
 type armorResult struct {
-	Index               string             `json:"index"`
-	Name                string             `json:"name"`
-	Cost                *cost              `json:"cost"`
-	Weight              int                `json:"weight"`
-	EquipmentCategory   *equipmentCategory `json:"equipment_category"`
-	ArmorCategory       string             `json:"armor_category"`
-	ArmorClass          *armorClass        `json:"armor_class"`
-	StrMinimum          int                `json:"str_minimum"`
-	StealthDisadvantage bool               `json:"stealth_disadvantage"`
+	Index               string      `json:"index"`
+	Name                string      `json:"name"`
+	Cost                *cost       `json:"cost"`
+	Weight              int         `json:"weight"`
+	EquipmentCategory   *listResult `json:"equipment_category"`
+	ArmorCategory       string      `json:"armor_category"`
+	ArmorClass          *armorClass `json:"armor_class"`
+	StrMinimum          int         `json:"str_minimum"`
+	StealthDisadvantage bool        `json:"stealth_disadvantage"`
 }
 
 type armorClass struct {
@@ -160,22 +125,55 @@ type classResult struct {
 	Index             string               `json:"index"`
 	Name              string               `json:"name"`
 	HitDie            int                  `json:"hit_die"`
-	Proficiencies     []*proficiency       `json:"proficiencies"`
-	SavingThrows      []*savingThrow       `json:"saving_throws"`
+	Proficiencies     []*listResult        `json:"proficiencies"`
+	SavingThrows      []*listResult        `json:"saving_throws"`
 	StartingEquipment []*startingEquipment `json:"starting_equipment"`
 }
 
-type savingThrow struct {
-	Index string `json:"index"`
-	Name  string `json:"name"`
-}
-
 type startingEquipment struct {
-	Equipment *equipmentList `json:"equipment"`
-	Quantity  int            `json:"quantity"`
+	Equipment *listResult `json:"equipment"`
+	Quantity  int         `json:"quantity"`
 }
 
-type equipmentList struct {
-	Index string `json:"index"`
-	Name  string `json:"name"`
+type spellResult struct {
+	Index         string        `json:"index"`
+	Name          string        `json:"name"`
+	Range         string        `json:"range"`
+	Ritual        bool          `json:"ritual"`
+	Duration      string        `json:"duration"`
+	Concentration bool          `json:"concentration"`
+	CastingTime   string        `json:"casting_time"`
+	SpellLevel    int           `json:"level"`
+	SpellDamage   *spellDamage  `json:"damage"`
+	DC            *dc           `json:"dc"`
+	AreaOfEffect  *areaOfEffect `json:"area_of_effect"`
+	SpellSchool   *listResult   `json:"school"`
+	SpellClasses  []*listResult `json:"classes"`
+}
+
+type spellDamage struct {
+	DamageType        *listResult             `json:"damage_type"`
+	DamageAtSlotLevel *spellDamageAtSlotLevel `json:"damage_at_slot_level"`
+}
+
+type spellDamageAtSlotLevel struct {
+	FirstLevel   string `json:"1"`
+	SecondLevel  string `json:"2"`
+	ThirdLevel   string `json:"3"`
+	FourthLevel  string `json:"4"`
+	FifthLevel   string `json:"5"`
+	SixthLevel   string `json:"6"`
+	SeventhLevel string `json:"7"`
+	EighthLevel  string `json:"8"`
+	NinthLevel   string `json:"9"`
+}
+
+type dc struct {
+	DCType    *listResult `json:"dc_type"`
+	DCSuccess string      `json:"dc_success"`
+}
+
+type areaOfEffect struct {
+	Type string `json:"type"`
+	Size int    `json:"size"`
 }

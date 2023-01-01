@@ -6,12 +6,6 @@ type Choice struct {
 	OptionSet OptionSet `json:"from"`
 }
 
-type ReferenceItem struct {
-	Key  string `json:"index"`
-	Name string `json:"name"`
-	URL  string `json:"url"`
-}
-
 type OptionSetType string
 
 const (
