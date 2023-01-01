@@ -3,18 +3,13 @@ package entities
 type Equipment struct {
 	Key               string             `json:"key"`
 	Name              string             `json:"name"`
-	EquipmentCategory *EquipmentCategory `json:"equipment_category"`
+	EquipmentCategory *ReferenceItem `json:"equipment_category"`
 	Cost              *Cost              `json:"cost"`
 	Weight            int                `json:"weight"`
 }
 
 func (e *Equipment) GetType() string {
 	return "equipment"
-}
-
-type EquipmentCategory struct {
-	Key  string `json:"key"`
-	Name string `json:"name"`
 }
 
 type Cost struct {
@@ -25,7 +20,7 @@ type Cost struct {
 type Weapon struct {
 	Key               string             `json:"key"`
 	Name              string             `json:"name"`
-	EquipmentCategory *EquipmentCategory `json:"equipment_category"`
+	EquipmentCategory *ReferenceItem `json:"equipment_category"`
 	Cost              *Cost              `json:"cost"`
 	Weight            int                `json:"weight"`
 	WeaponCategory    string             `json:"weapon_category"`
@@ -33,7 +28,7 @@ type Weapon struct {
 	WeaponRange       string             `json:"range"`
 	CategoryRange     string             `json:"category_range"`
 	Range             *Range             `json:"weapon_range"`
-	Properties        []*Properties      `json:"properties"`
+	Properties        []*ReferenceItem      `json:"properties"`
 	TwoHandedDamage   *Damage            `json:"two_handed_damage"`
 }
 
@@ -43,17 +38,7 @@ func (w *Weapon) GetType() string {
 
 type Damage struct {
 	DamageDice string      `json:"damage_dice"`
-	DamageType *DamageType `json:"damage_type"`
-}
-
-type DamageType struct {
-	Key  string `json:"key"`
-	Name string `json:"name"`
-}
-
-type Properties struct {
-	Key  string `json:"key"`
-	Name string `json:"name"`
+	DamageType *ReferenceItem `json:"damage_type"`
 }
 
 type Range struct {
@@ -63,7 +48,7 @@ type Range struct {
 type Armor struct {
 	Key                 string             `json:"key"`
 	Name                string             `json:"name"`
-	EquipmentCategory   *EquipmentCategory `json:"equipment_category"`
+	EquipmentCategory   *ReferenceItem `json:"equipment_category"`
 	Cost                *Cost              `json:"cost"`
 	Weight              int                `json:"weight"`
 	ArmorCategory       string             `json:"armor_category"`

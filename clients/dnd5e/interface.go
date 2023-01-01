@@ -7,8 +7,14 @@ import (
 )
 
 type Interface interface {
-	ListRaces() ([]*entities.Race, error)
+	ListRaces() ([]*entities.ReferenceItem, error)
 	GetRace(key string) (*entities.Race, error)
+	ListEquipment() ([]*entities.ReferenceItem, error)
+	GetEquipment(key string) (EquipmentInterface, error)
+	ListClasses() ([]*entities.ReferenceItem, error)
+	GetClass(key string) (*entities.Class, error)
+	ListSpells() ([]*entities.ReferenceItem, error)
+	GetSpell(key string) (*entities.Spell, error)
 }
 
 type httpIface interface {

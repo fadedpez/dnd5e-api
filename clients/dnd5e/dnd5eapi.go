@@ -31,7 +31,7 @@ func NewDND5eAPI(cfg *DND5eAPIConfig) (Interface, error) {
 	return &dnd5eAPI{client: cfg.Client}, nil
 }
 
-func (c *dnd5eAPI) ListRaces() ([]*entities.Race, error) {
+func (c *dnd5eAPI) ListRaces() ([]*entities.ReferenceItem, error) {
 	resp, err := c.client.Get(baserulzURL + "races")
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (c *dnd5eAPI) ListRaces() ([]*entities.Race, error) {
 		return nil, err
 	}
 
-	out := make([]*entities.Race, len(response.Results))
+	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
 		out[i] = listResultToRace(r)
 	}
@@ -95,7 +95,7 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 
 }
 
-func (c *dnd5eAPI) ListEquipment() ([]*entities.Equipment, error) {
+func (c *dnd5eAPI) ListEquipment() ([]*entities.ReferenceItem, error) {
 	resp, err := c.client.Get(baserulzURL + "equipment")
 	if err != nil {
 		return nil, err
@@ -112,7 +112,7 @@ func (c *dnd5eAPI) ListEquipment() ([]*entities.Equipment, error) {
 		return nil, err
 	}
 
-	out := make([]*entities.Equipment, len(response.Results))
+	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
 		out[i] = listResultToEquipment(r)
 	}
@@ -168,7 +168,7 @@ func (c *dnd5eAPI) GetEquipment(key string) (EquipmentInterface, error) {
 	}
 }
 
-func (c *dnd5eAPI) ListClasses() ([]*entities.Class, error) {
+func (c *dnd5eAPI) ListClasses() ([]*entities.ReferenceItem, error) {
 	resp, err := c.client.Get(baserulzURL + "classes")
 	if err != nil {
 		return nil, err
@@ -190,7 +190,7 @@ func (c *dnd5eAPI) ListClasses() ([]*entities.Class, error) {
 		return nil, err
 	}
 
-	out := make([]*entities.Class, len(response.Results))
+	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
 		out[i] = listClassResultToClass(r)
 	}
@@ -232,7 +232,7 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 	return class, nil
 }
 
-func (c *dnd5eAPI) ListSpells() ([]*entities.Spell, error) {
+func (c *dnd5eAPI) ListSpells() ([]*entities.ReferenceItem, error) {
 	resp, err := c.client.Get(baserulzURL + "spells")
 	if err != nil {
 		return nil, err
@@ -249,7 +249,7 @@ func (c *dnd5eAPI) ListSpells() ([]*entities.Spell, error) {
 		return nil, err
 	}
 
-	out := make([]*entities.Spell, len(response.Results))
+	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
 		out[i] = listResultToSpell(r)
 	}
