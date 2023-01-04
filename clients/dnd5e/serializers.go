@@ -24,9 +24,36 @@ func mapToOption(input map[string]interface{}) entities.Option {
 		return &entities.ReferenceOption{
 			Reference: mapToReferenceItem(input["item"].(map[string]interface{})),
 		}
+	case "counted_reference":
+		return &entities.ReferenceOption{
+			Reference: mapToReferenceItem(input["of"].(map[string]interface{})),
+		}
+	case "choice":
+		return mapToChoice(input["choice"].(map[string]interface{}))
 	}
 
 	return nil
+}
+
+func mapsToChoices(input []map[string]interface{}) []*entities.Choice {
+	out := make([]*entities.Choice, len(input))
+	for i, c := range input {
+		out[i] = mapToChoice(c)
+	}
+
+	return out
+}
+
+func mapToChoice(input map[string]interface{}) *entities.Choice {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Choice{
+		Choose:    int(input["choose"].(float64)),
+		Type:      input["type"].(string),
+		OptionSet: mapToOptionList(input["from"].(map[string]interface{})),
+	}
 }
 
 func mapsToOptions(input []map[string]interface{}) []entities.Option {
@@ -38,7 +65,7 @@ func mapsToOptions(input []map[string]interface{}) []entities.Option {
 	return out
 }
 
-func mapToOptionSet(input map[string]interface{}) entities.OptionSet {
+func mapToOptionList(input map[string]interface{}) *entities.OptionList {
 	if input == nil {
 		return nil
 	}
@@ -50,9 +77,11 @@ func mapToOptionSet(input map[string]interface{}) entities.OptionSet {
 		for i, v := range sliceInterfaces {
 			sliceMaps[i] = v.(map[string]interface{})
 		}
-		return &entities.OptionsArrayOptionSet{
+		return &entities.OptionList{
 			Options: mapsToOptions(sliceMaps),
 		}
+	case "equipment_category":
+
 	}
 
 	return nil
