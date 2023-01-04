@@ -29,7 +29,7 @@ func (r *raceResult) getStartingProficiencyChoice() *entities.Choice {
 	out := &entities.Choice{
 		Choose:    int(r.StartingProficiencyOptions["choose"].(float64)),
 		Type:      r.StartingProficiencyOptions["type"].(string),
-		OptionSet: mapToOptionSet(r.StartingProficiencyOptions["from"].(map[string]interface{})),
+		OptionSet: mapToOptionList(r.StartingProficiencyOptions["from"].(map[string]interface{})),
 	}
 
 	return out
@@ -43,7 +43,7 @@ func (r *raceResult) getLanguageChoice() *entities.Choice {
 	out := &entities.Choice{
 		Choose:    int(r.LanguageOptions["choose"].(float64)),
 		Type:      r.LanguageOptions["type"].(string),
-		OptionSet: mapToOptionSet(r.LanguageOptions["from"].(map[string]interface{})),
+		OptionSet: mapToOptionList(r.LanguageOptions["from"].(map[string]interface{})),
 	}
 
 	return out
@@ -57,6 +57,10 @@ type abilityBonus struct {
 type listResponse struct {
 	Count   int           `json:"count"`
 	Results []*listResult `json:"results"`
+}
+
+type equipmentListResponse struct {
+	Equipment []*listResult `json:"equipment"`
 }
 
 type equipmentResult struct {
@@ -122,12 +126,14 @@ type armorClass struct {
 }
 
 type classResult struct {
-	Index             string               `json:"index"`
-	Name              string               `json:"name"`
-	HitDie            int                  `json:"hit_die"`
-	Proficiencies     []*listResult        `json:"proficiencies"`
-	SavingThrows      []*listResult        `json:"saving_throws"`
-	StartingEquipment []*startingEquipment `json:"starting_equipment"`
+	Index                    string                   `json:"index"`
+	Name                     string                   `json:"name"`
+	HitDie                   int                      `json:"hit_die"`
+	Proficiencies            []*listResult            `json:"proficiencies"`
+	SavingThrows             []*listResult            `json:"saving_throws"`
+	StartingEquipment        []*startingEquipment     `json:"starting_equipment"`
+	ProficiencyChoices       []map[string]interface{} `json:"proficiency_choices"`
+	StartingEquipmentOptions []map[string]interface{} `json:"starting_equipment_options"`
 }
 
 type startingEquipment struct {

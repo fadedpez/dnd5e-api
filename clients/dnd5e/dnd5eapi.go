@@ -120,6 +120,105 @@ func (c *dnd5eAPI) ListEquipment() ([]*entities.ReferenceItem, error) {
 	return out, nil
 }
 
+func (c *dnd5eAPI) listEquipmentByCategory(category string) ([]*entities.ReferenceItem, error) {
+	resp, err := c.client.Get(baserulzURL + "equipment-categories/" + category)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := equipmentListResponse{}
+
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]*entities.ReferenceItem, len(response.Equipment))
+	for i, r := range response.Equipment {
+		out[i] = listResultToEquipment(r)
+	}
+
+	return out, nil
+}
+
+func (c *dnd5eAPI) startingEquipmentCategoriesToOptionList(input []map[string]interface{}) ([]map[string]interface{}, error) {
+	out := make([]map[string]interface{}, len(input))
+	for i, v := range input {
+		item, err := c.startingEquipmentCategoryToOptionList(v)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = item
+	}
+
+	return out, nil
+}
+
+func (c *dnd5eAPI) startingEquipmentCategoryToOptionList(input map[string]interface{}) (map[string]interface{}, error) {
+	out := make(map[string]interface{})
+	for k, v := range input {
+		if k == "from" {
+			if item, ok := v.(map[string]interface{}); ok {
+				if item["option_set_type"] == "equipment_category" {
+					if category, ok := item["equipment_category"].(map[string]interface{}); ok {
+						if name, ok := category["index"].(string); ok {
+							equipment, err := c.listEquipmentByCategory(name)
+							if err != nil {
+								return nil, err
+							}
+							options := make([]interface{}, len(equipment))
+							for idx, e := range equipment {
+								options[idx] = map[string]interface{}{
+									"option_type": "reference",
+									"item": map[string]interface{}{
+										"index": e.Key,
+										"name":  e.Name,
+										"url":   e.URL,
+									},
+								}
+
+							}
+							out[k] = map[string]interface{}{
+								"option_set_type": "options_array",
+								"options":         options,
+							}
+						}
+					}
+				} else if item["option_set_type"] == "options_array" {
+					if options, ok := item["options"].([]interface{}); ok {
+						for idx, optionItem := range options {
+							if option, ok := optionItem.(map[string]interface{}); ok {
+								if option["option_type"] == "choice" {
+									if choice, ok := option["choice"].(map[string]interface{}); ok {
+										newChoice, err := c.startingEquipmentCategoryToOptionList(choice)
+										if err != nil {
+											return nil, err
+										}
+
+										option["choice"] = newChoice
+									}
+								}
+								options[idx] = option
+							}
+
+						}
+						out[k] = item
+					}
+
+				}
+			}
+
+		} else {
+			out[k] = v
+		}
+	}
+	return out, nil
+}
+
 func (c *dnd5eAPI) GetEquipment(key string) (EquipmentInterface, error) {
 	resp, err := c.client.Get(baserulzURL + "equipment/" + key)
 	if err != nil {
@@ -220,13 +319,20 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 		return nil, err
 	}
 
+	startingEquipmentOption, err := c.startingEquipmentCategoriesToOptionList(response.StartingEquipmentOptions)
+	if err != nil {
+		return nil, err
+	}
+
 	class := &entities.Class{
-		Key:               response.Index,
-		Name:              response.Name,
-		HitDie:            response.HitDie,
-		Proficiencies:     proficiencyResultsToProficiencies(response.Proficiencies),
-		SavingThrows:      savingThrowResultsToSavingThrows(response.SavingThrows),
-		StartingEquipment: startingEquipmentResultsToStartingEquipment(response.StartingEquipment),
+		Key:                      response.Index,
+		Name:                     response.Name,
+		HitDie:                   response.HitDie,
+		Proficiencies:            proficiencyResultsToProficiencies(response.Proficiencies),
+		SavingThrows:             savingThrowResultsToSavingThrows(response.SavingThrows),
+		StartingEquipment:        startingEquipmentResultsToStartingEquipment(response.StartingEquipment),
+		ProficiencyChoices:       mapsToChoices(response.ProficiencyChoices),
+		StartingEquipmentOptions: mapsToChoices(startingEquipmentOption),
 	}
 
 	return class, nil

@@ -174,9 +174,9 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		assert.Equal(t, 1, actual.LanguageOptions.Choose)
 		assert.Equal(t, "languages", actual.LanguageOptions.Type)
 		assert.Equal(t, entities.OptionSetTypeArray, actual.LanguageOptions.OptionSet.GetType())
-		assert.Equal(t, 15, len(actual.LanguageOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options))
-		assert.Equal(t, "dwarvish", actual.LanguageOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options[0].(*entities.ReferenceOption).Reference.Key)
-		assert.Equal(t, "elvish", actual.LanguageOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options[1].(*entities.ReferenceOption).Reference.Key)
+		assert.Equal(t, 15, len(actual.LanguageOptions.OptionSet.Options))
+		assert.Equal(t, "dwarvish", actual.LanguageOptions.OptionSet.Options[0].(*entities.ReferenceOption).Reference.Key)
+		assert.Equal(t, "elvish", actual.LanguageOptions.OptionSet.Options[1].(*entities.ReferenceOption).Reference.Key)
 	})
 
 	t.Run("returns a trait", func(t *testing.T) {
@@ -239,9 +239,9 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		assert.Equal(t, 1, actual.StartingProficiencyOptions.Choose)
 		assert.Equal(t, "proficiencies", actual.StartingProficiencyOptions.Type)
 		assert.Equal(t, entities.OptionSetTypeArray, actual.StartingProficiencyOptions.OptionSet.GetType())
-		assert.Equal(t, 3, len(actual.StartingProficiencyOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options))
-		assert.Equal(t, "smiths-tools", actual.StartingProficiencyOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options[0].(*entities.ReferenceOption).Reference.Key)
-		assert.Equal(t, "brewers-supplies", actual.StartingProficiencyOptions.OptionSet.(*entities.OptionsArrayOptionSet).Options[1].(*entities.ReferenceOption).Reference.Key)
+		assert.Equal(t, 3, len(actual.StartingProficiencyOptions.OptionSet.Options))
+		assert.Equal(t, "smiths-tools", actual.StartingProficiencyOptions.OptionSet.Options[0].(*entities.ReferenceOption).Reference.Key)
+		assert.Equal(t, "brewers-supplies", actual.StartingProficiencyOptions.OptionSet.Options[1].(*entities.ReferenceOption).Reference.Key)
 
 	})
 }
@@ -556,6 +556,15 @@ func TestDND5eAPI_GetClass(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classFile)),
 		}, nil)
 
+		filePath, _ = filepath.Abs("../../testdata/equipment_categories/simplemeleeweapons.json")
+		equipmentFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"equipment-categories/simple-melee-weapons").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(equipmentFile)),
+		}, nil)
+
 		dnd5eAPI := &dnd5eAPI{client: client}
 		result, err := dnd5eAPI.GetClass("ranger")
 
@@ -574,6 +583,10 @@ func TestDND5eAPI_GetClass(t *testing.T) {
 		assert.Equal(t, 20, result.StartingEquipment[1].Quantity)
 		assert.Equal(t, "arrow", result.StartingEquipment[1].Equipment.Key)
 		assert.Equal(t, "Arrow", result.StartingEquipment[1].Equipment.Name)
+		assert.Equal(t, 1, len(result.ProficiencyChoices))
+		assert.Equal(t, 8, len(result.ProficiencyChoices[0].OptionSet.Options))
+		assert.Equal(t, 3, result.ProficiencyChoices[0].Choose)
+		assert.Equal(t, "proficiencies", result.ProficiencyChoices[0].Type)
 	})
 }
 
