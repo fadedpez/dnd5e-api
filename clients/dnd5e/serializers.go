@@ -508,3 +508,14 @@ func spellSchoolResultToSpellSchool(input *listResult) *entities.ReferenceItem {
 		Name: input.Name,
 	}
 }
+
+func listResultToFeature(input *listResult) *entities.ReferenceItem {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.ReferenceItem{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
