@@ -2,7 +2,6 @@ package dnd5e
 
 import (
 	"github.com/fadedpez/dnd5e-api/entities"
-	"github.com/fadedpez/dnd5e-api/entities/choice"
 )
 
 func listResultToRace(input *listResult) *entities.ReferenceItem {
@@ -449,7 +448,7 @@ func featureClassResultToClass(input *listResult) *entities.ReferenceItem {
 	}
 }
 
-func choiceResultToChoice(input *choiceResult) *choice.ChoiceOption {
+func choiceResultToChoice(input *choiceResult) *entities.ChoiceOption {
 	if input == nil {
 		return nil
 	}
@@ -457,12 +456,12 @@ func choiceResultToChoice(input *choiceResult) *choice.ChoiceOption {
 	return input.toEntity()
 }
 
-func choiceResultsToChoices(input []*choiceResult) []*choice.ChoiceOption {
+func choiceResultsToChoices(input []*choiceResult) []*entities.ChoiceOption {
 	if input == nil {
 		return nil
 	}
 
-	out := make([]*choice.ChoiceOption, len(input))
+	out := make([]*entities.ChoiceOption, len(input))
 	for i, c := range input {
 		out[i] = choiceResultToChoice(c)
 	}

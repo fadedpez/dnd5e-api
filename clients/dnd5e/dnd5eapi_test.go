@@ -10,8 +10,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fadedpez/dnd5e-api/entities/choice"
-
 	"github.com/fadedpez/dnd5e-api/entities"
 
 	"github.com/stretchr/testify/assert"
@@ -176,10 +174,10 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		assert.Equal(t, 1, actual.LanguageOptions.ChoiceCount)
 		assert.Equal(t, "languages", actual.LanguageOptions.ChoiceType)
 		assert.Equal(t, 15, len(actual.LanguageOptions.OptionList.Options))
-		assert.Equal(t, choice.OptionTypeReference, actual.LanguageOptions.OptionList.Options[0].GetOptionType())
-		assert.Equal(t, "dwarvish", actual.LanguageOptions.OptionList.Options[0].(*choice.ReferenceOption).Reference.Key)
-		assert.Equal(t, choice.OptionTypeReference, actual.LanguageOptions.OptionList.Options[1].GetOptionType())
-		assert.Equal(t, "elvish", actual.LanguageOptions.OptionList.Options[1].(*choice.ReferenceOption).Reference.Key)
+		assert.Equal(t, entities.OptionTypeReference, actual.LanguageOptions.OptionList.Options[0].GetOptionType())
+		assert.Equal(t, "dwarvish", actual.LanguageOptions.OptionList.Options[0].(*entities.ReferenceOption).Reference.Key)
+		assert.Equal(t, entities.OptionTypeReference, actual.LanguageOptions.OptionList.Options[1].GetOptionType())
+		assert.Equal(t, "elvish", actual.LanguageOptions.OptionList.Options[1].(*entities.ReferenceOption).Reference.Key)
 	})
 
 	t.Run("returns a trait", func(t *testing.T) {
@@ -241,10 +239,10 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		assert.Equal(t, "handaxes", actual.StartingProficiencies[1].Key)
 		assert.Equal(t, 1, actual.StartingProficiencyOptions.ChoiceCount)
 		assert.Equal(t, 3, len(actual.StartingProficiencyOptions.OptionList.Options))
-		assert.Equal(t, choice.OptionTypeReference, actual.StartingProficiencyOptions.OptionList.Options[0].GetOptionType())
-		assert.Equal(t, "smiths-tools", actual.StartingProficiencyOptions.OptionList.Options[0].(*choice.ReferenceOption).Reference.Key)
-		assert.Equal(t, choice.OptionTypeReference, actual.StartingProficiencyOptions.OptionList.Options[1].GetOptionType())
-		assert.Equal(t, "brewers-supplies", actual.StartingProficiencyOptions.OptionList.Options[1].(*choice.ReferenceOption).Reference.Key)
+		assert.Equal(t, entities.OptionTypeReference, actual.StartingProficiencyOptions.OptionList.Options[0].GetOptionType())
+		assert.Equal(t, "smiths-tools", actual.StartingProficiencyOptions.OptionList.Options[0].(*entities.ReferenceOption).Reference.Key)
+		assert.Equal(t, entities.OptionTypeReference, actual.StartingProficiencyOptions.OptionList.Options[1].GetOptionType())
+		assert.Equal(t, "brewers-supplies", actual.StartingProficiencyOptions.OptionList.Options[1].(*entities.ReferenceOption).Reference.Key)
 
 	})
 }
@@ -591,8 +589,8 @@ func TestDND5eAPI_GetClass(t *testing.T) {
 		assert.Equal(t, 3, result.ProficiencyChoices[0].ChoiceCount)
 		assert.Equal(t, "proficiencies", result.ProficiencyChoices[0].ChoiceType)
 		assert.Equal(t, 3, len(result.StartingEquipmentOptions))
-		assert.Equal(t, choice.OptionTypeChoice, result.StartingEquipmentOptions[1].OptionList.Options[1].GetOptionType())
-		choiceOption := result.StartingEquipmentOptions[1].OptionList.Options[1].(*choice.ChoiceOption)
+		assert.Equal(t, entities.OptionTypeChoice, result.StartingEquipmentOptions[1].OptionList.Options[1].GetOptionType())
+		choiceOption := result.StartingEquipmentOptions[1].OptionList.Options[1].(*entities.ChoiceOption)
 		assert.Equal(t, 10, len(choiceOption.OptionList.Options))
 	})
 }
