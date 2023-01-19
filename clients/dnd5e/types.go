@@ -155,14 +155,10 @@ type areaOfEffect struct {
 }
 
 type featureResult struct {
-	Index           string      `json:"index"`
-	Name            string      `json:"name"`
-	Level           int         `json:"level"`
-	Class           *listResult `json:"class"`
-	FeatureSpecific *subFeature `json:"feature_specific"`
-}
-
-type subFeature struct {
-	SubfeatureOptions []map[string]interface{} `json:"subfeature_options"`
-	Invocations       []*listResult            `json:"invocations"`
+	Index             string        `json:"index"`
+	Name              string        `json:"name"`
+	Level             int           `json:"level"`
+	Class             *listResult   `json:"class"`
+	SubFeatureOptions *choiceResult `json:"subfeature_options"`
+	Invocations       []*listResult `json:"invocations"`
 }

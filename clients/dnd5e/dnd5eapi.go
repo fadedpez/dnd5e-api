@@ -464,10 +464,11 @@ func (c *dnd5eAPI) GetFeature(key string) (*entities.Feature, error) {
 	}
 
 	feature := &entities.Feature{
-		Key:   response.Index,
-		Name:  response.Name,
-		Level: response.Level,
-		Class: featureClassResultToClass(response.Class),
+		Key:             response.Index,
+		Name:            response.Name,
+		Level:           response.Level,
+		Class:           featureClassResultToClass(response.Class),
+		FeatureSpecific: choiceResultToChoice(response.SubFeatureOptions),
 	}
 
 	return feature, nil
