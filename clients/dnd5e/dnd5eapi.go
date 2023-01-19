@@ -84,17 +84,11 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 		Traits:                     traitResultsToTraits(response.Trait),
 		SubRaces:                   subRaceResultsToSubRaces(response.SubRaces),
 		StartingProficiencies:      proficiencyResultsToProficiencies(response.StartingProficiencies),
-		StartingProficiencyOptions: response.getStartingProficiencyChoice(),
-		LanguageOptions:            response.getLanguageChoice(),
-	}
-
-	raceChoice := response.getStartingProficiencyChoice()
-	if raceChoice == nil {
-		return race, nil
+		StartingProficiencyOptions: choiceResultToChoice(response.StartingProficiencyOptions),
+		LanguageOptions:            choiceResultToChoice(response.LanguageOptions),
 	}
 
 	return race, nil
-
 }
 
 func (c *dnd5eAPI) ListEquipment() ([]*entities.ReferenceItem, error) {
@@ -144,80 +138,6 @@ func (c *dnd5eAPI) listEquipmentByCategory(category string) ([]*entities.Referen
 		out[i] = listResultToEquipment(r)
 	}
 
-	return out, nil
-}
-
-func (c *dnd5eAPI) startingEquipmentCategoriesToOptionList(input []map[string]interface{}) ([]map[string]interface{}, error) {
-	out := make([]map[string]interface{}, len(input))
-	for i, v := range input {
-		item, err := c.startingEquipmentCategoryToOptionList(v)
-		if err != nil {
-			return nil, err
-		}
-		out[i] = item
-	}
-
-	return out, nil
-}
-
-func (c *dnd5eAPI) startingEquipmentCategoryToOptionList(input map[string]interface{}) (map[string]interface{}, error) {
-	out := make(map[string]interface{})
-	for k, v := range input {
-		if k == "from" {
-			if item, ok := v.(map[string]interface{}); ok {
-				if item["option_set_type"] == "equipment_category" {
-					if category, ok := item["equipment_category"].(map[string]interface{}); ok {
-						if name, ok := category["index"].(string); ok {
-							equipment, err := c.listEquipmentByCategory(name)
-							if err != nil {
-								return nil, err
-							}
-							options := make([]interface{}, len(equipment))
-							for idx, e := range equipment {
-								options[idx] = map[string]interface{}{
-									"option_type": "reference",
-									"item": map[string]interface{}{
-										"index": e.Key,
-										"name":  e.Name,
-										"url":   e.URL,
-									},
-								}
-
-							}
-							out[k] = map[string]interface{}{
-								"option_set_type": "options_array",
-								"options":         options,
-							}
-						}
-					}
-				} else if item["option_set_type"] == "options_array" {
-					if options, ok := item["options"].([]interface{}); ok {
-						for idx, optionItem := range options {
-							if option, ok := optionItem.(map[string]interface{}); ok {
-								if option["option_type"] == "choiceResult" {
-									if choice, ok := option["choiceResult"].(map[string]interface{}); ok {
-										newChoice, err := c.startingEquipmentCategoryToOptionList(choice)
-										if err != nil {
-											return nil, err
-										}
-
-										option["choiceResult"] = newChoice
-									}
-								}
-								options[idx] = option
-							}
-
-						}
-						out[k] = item
-					}
-
-				}
-			}
-
-		} else {
-			out[k] = v
-		}
-	}
 	return out, nil
 }
 
