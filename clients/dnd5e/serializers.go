@@ -1,6 +1,9 @@
 package dnd5e
 
-import "github.com/fadedpez/dnd5e-api/entities"
+import (
+	"github.com/fadedpez/dnd5e-api/entities"
+	"github.com/fadedpez/dnd5e-api/entities/choice"
+)
 
 func mapToReferenceItem(input map[string]interface{}) *entities.ReferenceItem {
 	if input == nil {
@@ -28,8 +31,8 @@ func mapToOption(input map[string]interface{}) entities.Option {
 		return &entities.ReferenceOption{
 			Reference: mapToReferenceItem(input["of"].(map[string]interface{})),
 		}
-	case "choice":
-		return mapToChoice(input["choice"].(map[string]interface{}))
+	case "choiceResult":
+		return mapToChoice(input["choiceResult"].(map[string]interface{}))
 	}
 
 	return nil
@@ -518,4 +521,36 @@ func listResultToFeature(input *listResult) *entities.ReferenceItem {
 		Key:  input.Index,
 		Name: input.Name,
 	}
+}
+
+func featureClassResultToClass(input *listResult) *entities.ReferenceItem {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.ReferenceItem{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func choiceResultToChoice(input *choiceResult) *choice.ChoiceOption {
+	if input == nil {
+		return nil
+	}
+
+	return input.toEntity()
+}
+
+func choiceResultsToChoices(input []*choiceResult) []*choice.ChoiceOption {
+	if input == nil {
+		return nil
+	}
+
+	out := make([]*choice.ChoiceOption, len(input))
+	for i, c := range input {
+		out[i] = choiceResultToChoice(c)
+	}
+
+	return out
 }

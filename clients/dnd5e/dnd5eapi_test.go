@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/fadedpez/dnd5e-api/entities/choice"
+
 	"github.com/fadedpez/dnd5e-api/entities"
 
 	"github.com/stretchr/testify/assert"
@@ -584,9 +586,13 @@ func TestDND5eAPI_GetClass(t *testing.T) {
 		assert.Equal(t, "arrow", result.StartingEquipment[1].Equipment.Key)
 		assert.Equal(t, "Arrow", result.StartingEquipment[1].Equipment.Name)
 		assert.Equal(t, 1, len(result.ProficiencyChoices))
-		assert.Equal(t, 8, len(result.ProficiencyChoices[0].OptionSet.Options))
-		assert.Equal(t, 3, result.ProficiencyChoices[0].Choose)
-		assert.Equal(t, "proficiencies", result.ProficiencyChoices[0].Type)
+		assert.Equal(t, 8, len(result.ProficiencyChoices[0].OptionList.Options))
+		assert.Equal(t, 3, result.ProficiencyChoices[0].ChoiceCount)
+		assert.Equal(t, "proficiencies", result.ProficiencyChoices[0].ChoiceType)
+		assert.Equal(t, 3, len(result.StartingEquipmentOptions))
+		assert.Equal(t, choice.OptionTypeChoice, result.StartingEquipmentOptions[1].OptionList.Options[1].GetOptionType())
+		choiceOption := result.StartingEquipmentOptions[1].OptionList.Options[1].(*choice.ChoiceOption)
+		assert.Equal(t, 10, len(choiceOption.OptionList.Options))
 	})
 }
 
@@ -736,7 +742,7 @@ func TestDND5eAPI_ListFeatures(t *testing.T) {
 		client.On("Get", baserulzURL+"features").Return(nil, errors.New("http.Get failed"))
 
 		dnd5eAPI := &dnd5eAPI{client: client}
-		_, err := dnd5eAPI.GetFeatures()
+		_, err := dnd5eAPI.ListFeatures()
 
 		assert.NotNil(t, err)
 		assert.Equal(t, "http.Get failed", err.Error())
@@ -750,7 +756,7 @@ func TestDND5eAPI_ListFeatures(t *testing.T) {
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client}
-		_, err := dnd5eAPI.GetFeatures()
+		_, err := dnd5eAPI.ListFeatures()
 
 		assert.NotNil(t, err)
 		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
@@ -763,7 +769,7 @@ func TestDND5eAPI_ListFeatures(t *testing.T) {
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client}
-		_, err := dnd5eAPI.GetFeatures()
+		_, err := dnd5eAPI.ListFeatures()
 
 		assert.NotNil(t, err)
 		assert.Equal(t, "unexpected status code: 500", err.Error())
@@ -781,7 +787,7 @@ func TestDND5eAPI_ListFeatures(t *testing.T) {
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client}
-		result, err := dnd5eAPI.GetFeatures()
+		result, err := dnd5eAPI.ListFeatures()
 
 		assert.Nil(t, err)
 		assert.NotNil(t, result)

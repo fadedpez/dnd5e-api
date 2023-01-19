@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	"github.com/fadedpez/dnd5e-api/entities/choice"
+
 	"github.com/fadedpez/dnd5e-api/entities"
 )
 
@@ -192,14 +194,14 @@ func (c *dnd5eAPI) startingEquipmentCategoryToOptionList(input map[string]interf
 					if options, ok := item["options"].([]interface{}); ok {
 						for idx, optionItem := range options {
 							if option, ok := optionItem.(map[string]interface{}); ok {
-								if option["option_type"] == "choice" {
-									if choice, ok := option["choice"].(map[string]interface{}); ok {
+								if option["option_type"] == "choiceResult" {
+									if choice, ok := option["choiceResult"].(map[string]interface{}); ok {
 										newChoice, err := c.startingEquipmentCategoryToOptionList(choice)
 										if err != nil {
 											return nil, err
 										}
 
-										option["choice"] = newChoice
+										option["choiceResult"] = newChoice
 									}
 								}
 								options[idx] = option
@@ -319,7 +321,7 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 		return nil, err
 	}
 
-	startingEquipmentOption, err := c.startingEquipmentCategoriesToOptionList(response.StartingEquipmentOptions)
+	startingEquipmentOption, err := c.replaceEquipmentCategoryOptionSetTypesToOptionsArrays(response.StartingEquipmentOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -331,11 +333,97 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 		Proficiencies:            proficiencyResultsToProficiencies(response.Proficiencies),
 		SavingThrows:             savingThrowResultsToSavingThrows(response.SavingThrows),
 		StartingEquipment:        startingEquipmentResultsToStartingEquipment(response.StartingEquipment),
-		ProficiencyChoices:       mapsToChoices(response.ProficiencyChoices),
-		StartingEquipmentOptions: mapsToChoices(startingEquipmentOption),
+		ProficiencyChoices:       choiceResultsToChoices(response.ProficiencyChoices),
+		StartingEquipmentOptions: startingEquipmentOption,
 	}
 
 	return class, nil
+}
+
+func (c *dnd5eAPI) replaceEquipmentCategoryOptionSetTypesToOptionsArrays(input []*choiceResult) ([]*choice.ChoiceOption, error) {
+	out := make([]*choice.ChoiceOption, len(input))
+	for i, item := range input { // item is a choice
+		newChoice, err := c.replaceEquipmentCategoryOptionSetTypeToOptionsArray(item)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = newChoice.toEntity()
+	}
+	return out, nil
+}
+
+func (c *dnd5eAPI) replaceEquipmentCategoryOptionSetTypeToOptionsArray(input *choiceResult) (*choiceResult, error) {
+	if input == nil {
+		return nil, errors.New("input is nil")
+	}
+
+	if input.Type != "equipment" {
+		return input, nil
+	}
+
+	if input.From == nil {
+		return input, nil
+	}
+
+	if input.From.OptionSetType == "options_array" {
+		for idx, option := range input.From.Options {
+			if option.OptionType == "choice" {
+				newChoice, err := c.replaceEquipmentCategoryOptionSetTypeToOptionsArray(option.Choice)
+				if err != nil {
+					return nil, err
+				}
+				option.Choice = newChoice
+				input.From.Options[idx] = option
+			} else if option.OptionType == "multiple" {
+				for idx2, multiple := range option.Items {
+					if multiple.OptionType == "choice" {
+						newChoice, err := c.replaceEquipmentCategoryOptionSetTypeToOptionsArray(multiple.Choice)
+						if err != nil {
+							return nil, err
+						}
+						multiple.Choice = newChoice
+						option.Items[idx2] = multiple //TODO: refactor/rename idx2?
+					}
+
+				}
+				input.From.Options[idx] = option
+			}
+		}
+
+		return input, nil
+	}
+
+	if input.From.OptionSetType != "equipment_category" {
+		return input, nil
+	}
+
+	//TODO: should we return an error?
+	if input.From.EquipmentCategory == nil {
+		return input, nil
+	}
+
+	equipment, err := c.listEquipmentByCategory(input.From.EquipmentCategory.Index)
+	if err != nil {
+		return nil, err
+	}
+
+	input.From.OptionSetType = "options_array"
+
+	options := make([]*option, len(equipment))
+	for i, e := range equipment {
+		options[i] = &option{
+			OptionType: "reference",
+			Item: &referenceItem{
+				Name:  e.Name,
+				URL:   fmt.Sprintf("/api/equipment/%s", e.Key),
+				Index: e.Key,
+			},
+		}
+	}
+
+	input.From.Options = options
+
+	return input, nil
 }
 
 func (c *dnd5eAPI) ListSpells() ([]*entities.ReferenceItem, error) {
@@ -404,7 +492,7 @@ func (c *dnd5eAPI) GetSpell(key string) (*entities.Spell, error) {
 	return spell, nil
 }
 
-func (c *dnd5eAPI) GetFeatures() ([]*entities.ReferenceItem, error) {
+func (c *dnd5eAPI) ListFeatures() ([]*entities.ReferenceItem, error) {
 	resp, err := c.client.Get(baserulzURL + "features")
 	if err != nil {
 		return nil, err
@@ -432,4 +520,37 @@ func (c *dnd5eAPI) GetFeatures() ([]*entities.ReferenceItem, error) {
 	}
 
 	return out, nil
+}
+
+func (c *dnd5eAPI) GetFeature(key string) (*entities.Feature, error) {
+	resp, err := c.client.Get(baserulzURL + "features/" + key)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := featureResult{}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+
+	if err != nil {
+		return nil, err
+	}
+
+	feature := &entities.Feature{
+		Key:   response.Index,
+		Name:  response.Name,
+		Level: response.Level,
+		Class: featureClassResultToClass(response.Class),
+	}
+
+	return feature, nil
 }
