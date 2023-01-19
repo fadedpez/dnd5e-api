@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/fadedpez/dnd5e-api/entities/choice"
-
 	"github.com/fadedpez/dnd5e-api/entities"
 )
 
@@ -260,8 +258,8 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 	return class, nil
 }
 
-func (c *dnd5eAPI) replaceEquipmentCategoryOptionSetTypesToOptionsArrays(input []*choiceResult) ([]*choice.ChoiceOption, error) {
-	out := make([]*choice.ChoiceOption, len(input))
+func (c *dnd5eAPI) replaceEquipmentCategoryOptionSetTypesToOptionsArrays(input []*choiceResult) ([]*entities.ChoiceOption, error) {
+	out := make([]*entities.ChoiceOption, len(input))
 	for i, item := range input { // item is a choice
 		newChoice, err := c.replaceEquipmentCategoryOptionSetTypeToOptionsArray(item)
 		if err != nil {

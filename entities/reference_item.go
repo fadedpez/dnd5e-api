@@ -5,15 +5,15 @@ import "strings"
 type ReferenceItem struct {
 	Key  string `json:"index"`
 	Name string `json:"name"`
-	URL  string `json:"url"`
+	Type string `json:"url"`
 }
 
 func (r *ReferenceItem) GetType() string {
-	if r.URL == "" {
+	if r.Type == "" {
 		return ""
 	}
 
-	parts := strings.Split(r.URL, "/")
+	parts := strings.Split(r.Type, "/")
 	if len(parts) < 2 || len(parts) > 4 {
 		return ""
 	}

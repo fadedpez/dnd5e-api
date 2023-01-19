@@ -9,6 +9,6 @@ type Feature struct {
 }
 
 type SubFeature struct {
-	SubfeatureOptions *Choice          `json:"subfeature_options"`
+	SubfeatureOptions *ChoiceOption    `json:"subfeature_options"`
 	Invocations       *[]ReferenceItem `json:"invocations"`
 }

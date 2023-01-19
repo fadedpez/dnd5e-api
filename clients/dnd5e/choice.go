@@ -3,7 +3,7 @@ package dnd5e
 import (
 	"strings"
 
-	"github.com/fadedpez/dnd5e-api/entities/choice"
+	"github.com/fadedpez/dnd5e-api/entities"
 )
 
 type optionSet struct {
@@ -12,14 +12,14 @@ type optionSet struct {
 	Options           []*option      `json:"options"`
 }
 
-func (o *optionSet) toEntity() *choice.OptionList {
-	var options []choice.Option
+func (o *optionSet) toEntity() *entities.OptionList {
+	var options []entities.Option
 
 	for _, opt := range o.Options {
 		options = append(options, opt.toEntity())
 	}
 
-	return &choice.OptionList{
+	return &entities.OptionList{
 		Options: options,
 	}
 }
@@ -33,11 +33,11 @@ type option struct {
 	Choice     *choiceResult  `json:"choice"`
 }
 
-func (o *option) toEntity() choice.Option {
+func (o *option) toEntity() entities.Option {
 	switch o.OptionType {
 	case "reference":
-		return &choice.ReferenceOption{
-			Reference: &choice.ReferenceItem{
+		return &entities.ReferenceOption{
+			Reference: &entities.ReferenceItem{
 				Key:  o.Item.Index,
 				Name: o.Item.Name,
 				Type: urlToType(o.Item.URL),
@@ -46,21 +46,21 @@ func (o *option) toEntity() choice.Option {
 	case "choice":
 		return o.Choice.toEntity()
 	case "counted_reference":
-		return &choice.CountedReferenceOption{
+		return &entities.CountedReferenceOption{
 			Count: o.Count,
-			Reference: &choice.ReferenceItem{
+			Reference: &entities.ReferenceItem{
 				Key:  o.Of.Index,
 				Name: o.Of.Name,
 				Type: urlToType(o.Of.URL),
 			},
 		}
 	case "multiple":
-		var items []choice.Option
+		var items []entities.Option
 		for _, item := range o.Items {
 			items = append(items, item.toEntity())
 		}
 
-		return &choice.MultipleOption{
+		return &entities.MultipleOption{
 			Items: items,
 		}
 	}
@@ -103,9 +103,9 @@ type choiceResult struct {
 	From   *optionSet `json:"from"`
 }
 
-func (c *choiceResult) toEntity() *choice.ChoiceOption {
+func (c *choiceResult) toEntity() *entities.ChoiceOption {
 
-	return &choice.ChoiceOption{
+	return &entities.ChoiceOption{
 		ChoiceCount: c.Choose,
 		ChoiceType:  c.Type,
 		OptionList:  c.From.toEntity(),
