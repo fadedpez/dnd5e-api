@@ -1,20 +1,21 @@
 package entities
 
+import "github.com/fadedpez/dnd5e-api/entities/choice"
+
 type Race struct {
-	Key                        string          `json:"key"`
-	Name                       string          `json:"name"`
-	Speed                      int             `json:"speed"`
-	AbilityBonuses             []*AbilityBonus `json:"ability_bonuses"`
+	Key                        string               `json:"key"`
+	Name                       string               `json:"name"`
+	Speed                      int                  `json:"speed"`
+	AbilityBonuses             []*AbilityBonus      `json:"ability_bonuses"`
 	Languages                  []*ReferenceItem     `json:"languages"`
-	Traits                     []*ReferenceItem        `json:"traits"`
-	SubRaces                   []*ReferenceItem      `json:"subrace"`
-	StartingProficiencies      []*ReferenceItem  `json:"starting_proficiencies"`
-	StartingProficiencyOptions *Choice         `json:"starting_proficiency_options"`
-	LanguageOptions            *Choice         `json:"language_options"`
+	Traits                     []*ReferenceItem     `json:"traits"`
+	SubRaces                   []*ReferenceItem     `json:"subrace"`
+	StartingProficiencies      []*ReferenceItem     `json:"starting_proficiencies"`
+	StartingProficiencyOptions *choice.ChoiceOption `json:"starting_proficiency_options"`
+	LanguageOptions            *choice.ChoiceOption `json:"language_options"`
 }
 
 type AbilityBonus struct {
 	AbilityScore *ReferenceItem `json:"ability_score"`
-	Bonus        int           `json:"bonus"`
+	Bonus        int            `json:"bonus"`
 }
-

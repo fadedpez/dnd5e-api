@@ -1,7 +1,5 @@
 package dnd5e
 
-import "github.com/fadedpez/dnd5e-api/entities"
-
 type listResult struct {
 	Index string `json:"index"`
 	Name  string `json:"name"`
@@ -9,44 +7,16 @@ type listResult struct {
 }
 
 type raceResult struct {
-	Index                      string                 `json:"index"`
-	Name                       string                 `json:"name"`
-	Speed                      int                    `json:"speed"`
-	AbilityBonus               []*abilityBonus        `json:"ability_bonuses"`
-	Language                   []*listResult          `json:"languages"`
-	Trait                      []*listResult          `json:"traits"`
-	SubRaces                   []*listResult          `json:"subraces"`
-	StartingProficiencies      []*listResult          `json:"starting_proficiencies"`
-	StartingProficiencyOptions map[string]interface{} `json:"starting_proficiency_options"`
-	LanguageOptions            map[string]interface{} `json:"language_options"`
-}
-
-func (r *raceResult) getStartingProficiencyChoice() *entities.Choice {
-	if r.StartingProficiencyOptions == nil {
-		return nil
-	}
-
-	out := &entities.Choice{
-		Choose:    int(r.StartingProficiencyOptions["choose"].(float64)),
-		Type:      r.StartingProficiencyOptions["type"].(string),
-		OptionSet: mapToOptionList(r.StartingProficiencyOptions["from"].(map[string]interface{})),
-	}
-
-	return out
-}
-
-func (r *raceResult) getLanguageChoice() *entities.Choice {
-	if r.LanguageOptions == nil {
-		return nil
-	}
-
-	out := &entities.Choice{
-		Choose:    int(r.LanguageOptions["choose"].(float64)),
-		Type:      r.LanguageOptions["type"].(string),
-		OptionSet: mapToOptionList(r.LanguageOptions["from"].(map[string]interface{})),
-	}
-
-	return out
+	Index                      string          `json:"index"`
+	Name                       string          `json:"name"`
+	Speed                      int             `json:"speed"`
+	AbilityBonus               []*abilityBonus `json:"ability_bonuses"`
+	Language                   []*listResult   `json:"languages"`
+	Trait                      []*listResult   `json:"traits"`
+	SubRaces                   []*listResult   `json:"subraces"`
+	StartingProficiencies      []*listResult   `json:"starting_proficiencies"`
+	StartingProficiencyOptions *choiceResult   `json:"starting_proficiency_options"`
+	LanguageOptions            *choiceResult   `json:"language_options"`
 }
 
 type abilityBonus struct {
