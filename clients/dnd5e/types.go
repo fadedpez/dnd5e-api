@@ -126,14 +126,14 @@ type armorClass struct {
 }
 
 type classResult struct {
-	Index                    string                   `json:"index"`
-	Name                     string                   `json:"name"`
-	HitDie                   int                      `json:"hit_die"`
-	Proficiencies            []*listResult            `json:"proficiencies"`
-	SavingThrows             []*listResult            `json:"saving_throws"`
-	StartingEquipment        []*startingEquipment     `json:"starting_equipment"`
-	ProficiencyChoices       []map[string]interface{} `json:"proficiency_choices"`
-	StartingEquipmentOptions []map[string]interface{} `json:"starting_equipment_options"`
+	Index                    string               `json:"index"`
+	Name                     string               `json:"name"`
+	HitDie                   int                  `json:"hit_die"`
+	Proficiencies            []*listResult        `json:"proficiencies"`
+	SavingThrows             []*listResult        `json:"saving_throws"`
+	StartingEquipment        []*startingEquipment `json:"starting_equipment"`
+	ProficiencyChoices       []*choiceResult      `json:"proficiency_choices"`
+	StartingEquipmentOptions []*choiceResult      `json:"starting_equipment_options"`
 }
 
 type startingEquipment struct {
@@ -182,4 +182,17 @@ type dc struct {
 type areaOfEffect struct {
 	Type string `json:"type"`
 	Size int    `json:"size"`
+}
+
+type featureResult struct {
+	Index           string      `json:"index"`
+	Name            string      `json:"name"`
+	Level           int         `json:"level"`
+	Class           *listResult `json:"class"`
+	FeatureSpecific *subFeature `json:"feature_specific"`
+}
+
+type subFeature struct {
+	SubfeatureOptions []map[string]interface{} `json:"subfeature_options"`
+	Invocations       []*listResult            `json:"invocations"`
 }
