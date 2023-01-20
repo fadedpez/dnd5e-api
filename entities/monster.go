@@ -1,21 +1,12 @@
 package entities
 
 type Monster struct {
-	Key                   string                `json:"index"`
-	Name                  string                `json:"name"`
-	Size                  string                `json:"size"`
-	Type                  string                `json:"type"`
-	Alignment             string                `json:"alignment"`
-	ArmorClass            int                   `json:"armor_class"`
-	HitPoints             int                   `json:"hit_points"`
-	HitDice               string                `json:"hit_dice"`
-	Speed                 *Speed                `json:"speed"`
-	Strength              int                   `json:"strength"`     //TODO: Refactor to AbilityScore
-	Dexterity             int                   `json:"dexterity"`    //TODO: Refactor to AbilityScore
-	Constitution          int                   `json:"constitution"` //TODO: Refactor to AbilityScore
-	Intelligence          int                   `json:"intelligence"` //TODO: Refactor to AbilityScore
-	Wisdom                int                   `json:"wisdom"`       //TODO: Refactor to AbilityScore
-	Charisma              int                   `json:"charisma"`     //TODO: Refactor to AbilityScore
+	Key                   string `json:"index"`
+	Name                  string `json:"name"`
+	Size                  string `json:"size"`
+	Type                  string `json:"type"`
+	Alignment             string `json:"alignment"`
+	MonsterStats          *MonsterStats
 	Proficiencies         []*MonsterProficiency `json:"proficiencies"`
 	DamageVulnerabilities []string              `json:"damage_vulnerabilities"`
 	DamageResistances     []string              `json:"damage_resistances"`
@@ -36,6 +27,19 @@ type Speed struct {
 	Fly    string `json:"fly"`
 	Swim   string `json:"swim"`
 	Climb  string `json:"climb"`
+}
+
+type MonsterStats struct {
+	ArmorClass   int    `json:"armor_class"`
+	HitPoints    int    `json:"hit_points"`
+	HitDice      string `json:"hit_dice"`
+	Speed        *Speed `json:"speed"`
+	Strength     int    `json:"strength"` //TODO: Refactor to AbilityScore
+	Dexterity    int    `json:"dexterity"`
+	Constitution int    `json:"constitution"`
+	Intelligence int    `json:"intelligence"`
+	Wisdom       int    `json:"wisdom"`
+	Charisma     int    `json:"charisma"`
 }
 
 type MonsterProficiency struct {
