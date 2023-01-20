@@ -166,3 +166,11 @@ type featureResult struct {
 type subFeatureOption struct {
 	SubFeatureOptions *choiceResult `json:"subfeature_options"`
 }
+
+type skillResult struct {
+	Index        string         `json:"index"`
+	Name         string         `json:"name"`
+	Description  []string       `json:"desc"`
+	AbilityScore *referenceItem `json:"ability_score"`
+	URL          string         `json:"url"`
+}
