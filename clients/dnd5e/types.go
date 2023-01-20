@@ -174,3 +174,90 @@ type skillResult struct {
 	AbilityScore *referenceItem `json:"ability_score"`
 	URL          string         `json:"url"`
 }
+
+type monsterResult struct {
+	Index                 string                `json:"index"`
+	Name                  string                `json:"name"`
+	Size                  string                `json:"size"`
+	Type                  string                `json:"type"`
+	Alignment             string                `json:"alignment"`
+	ArmorClass            int                   `json:"armor_class"`
+	HitPoints             int                   `json:"hit_points"`
+	HitDice               string                `json:"hit_dice"`
+	HitPointsRoll         string                `json:"hit_points_roll"`
+	Speed                 *monsterSpeed         `json:"speed"`
+	Strength              int                   `json:"strength"`
+	Dexterity             int                   `json:"dexterity"`
+	Constitution          int                   `json:"constitution"`
+	Intelligence          int                   `json:"intelligence"`
+	Wisdom                int                   `json:"wisdom"`
+	Charisma              int                   `json:"charisma"`
+	Proficiencies         []*monsterProficiency `json:"proficiencies"`
+	DamageVulnerabilities []string              `json:"damage_vulnerabilities"`
+	DamageResistances     []string              `json:"damage_resistances"`
+	DamageImmunities      []string              `json:"damage_immunities"`
+	ConditionImmunities   []string              `json:"condition_immunities"`
+	Senses                *monsterSenses        `json:"senses"`
+	Lanuages              string                `json:"languages"`
+	ChallengeRating       float32               `json:"challenge_rating"`
+	XP                    int                   `json:"xp"`
+	SpecialAbilities      []*monsterAbility     `json:"special_abilities"`
+	MonsterActions        []*monsterAction      `json:"actions"`
+	LegendaryActions      []*monsterAction      `json:"legendary_actions"`
+}
+
+type monsterSpeed struct {
+	Walk   string `json:"walk"`
+	Burrow string `json:"burrow"`
+	Climb  string `json:"climb"`
+	Fly    string `json:"fly"`
+	Swim   string `json:"swim"`
+}
+
+type monsterProficiency struct {
+	Value       int            `json:"value"`
+	Proficiency *referenceItem `json:"proficiency"`
+}
+
+type monsterSenses struct {
+	Blindsight        string `json:"blindsight"`
+	Darkvision        string `json:"darkvision"`
+	Tremorsense       string `json:"tremorsense"`
+	Truesight         string `json:"truesight"`
+	PassivePerception int    `json:"passive_perception"`
+}
+
+type monsterAbility struct {
+	Name        string               `json:"name"`
+	Description string               `json:"desc"`
+	Usage       *monsterAbilityUsage `json:"usage"`
+}
+
+type monsterAbilityUsage struct {
+	Type      string   `json:"type"`
+	Times     int      `json:"times"`
+	RestTypes []string `json:"rest_types"`
+	MinValue  int      `json:"min_value"`
+}
+
+type monsterAction struct {
+	Name            string               `json:"name"`
+	Description     string               `json:"desc"`
+	MultiAttackType string               `json:"multiattack_type"`
+	Actions         []*action            `json:"actions"`
+	AttackBonus     int                  `json:"attack_bonus"`
+	Damage          *damage              `json:"damage"`
+	Usage           *monsterAbilityUsage `json:"usage"`
+	DC              *monsterDC           `json:"dc"`
+}
+
+type action struct {
+	ActionName string `json:"action_name"`
+	Count      int    `json:"count"`
+	ActionType string `json:"type"`
+}
+
+type monsterDC struct {
+	DC      *dc `json:"dc"`
+	DCValue int `json:"dc_value"`
+}
