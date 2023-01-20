@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"strconv"
 
 	"github.com/fadedpez/dnd5e-api/entities"
 )
@@ -50,7 +51,7 @@ func (c *dnd5eAPI) ListRaces() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = listResultToRace(r)
+		out[i] = referenceItemToRace(r)
 	}
 
 	return out, nil
@@ -108,13 +109,13 @@ func (c *dnd5eAPI) ListEquipment() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = listResultToEquipment(r)
+		out[i] = referenceItemToEquipment(r)
 	}
 
 	return out, nil
 }
 
-func (c *dnd5eAPI) listEquipmentByCategory(category string) ([]*entities.ReferenceItem, error) {
+func (c *dnd5eAPI) listEquipmentByCategory(category string) ([]*referenceItem, error) {
 	resp, err := c.client.Get(baserulzURL + "equipment-categories/" + category)
 	if err != nil {
 		return nil, err
@@ -131,12 +132,7 @@ func (c *dnd5eAPI) listEquipmentByCategory(category string) ([]*entities.Referen
 		return nil, err
 	}
 
-	out := make([]*entities.ReferenceItem, len(response.Equipment))
-	for i, r := range response.Equipment {
-		out[i] = listResultToEquipment(r)
-	}
-
-	return out, nil
+	return response.Equipment, nil
 }
 
 func (c *dnd5eAPI) GetEquipment(key string) (EquipmentInterface, error) {
@@ -211,7 +207,7 @@ func (c *dnd5eAPI) ListClasses() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = listClassResultToClass(r)
+		out[i] = referenceItemToClass(r)
 	}
 
 	return out, nil
@@ -331,11 +327,7 @@ func (c *dnd5eAPI) replaceEquipmentCategoryOptionSetTypeToOptionsArray(input *ch
 	for i, e := range equipment {
 		options[i] = &option{
 			OptionType: "reference",
-			Item: &referenceItem{
-				Name:  e.Name,
-				URL:   fmt.Sprintf("/api/equipment/%s", e.Key),
-				Index: e.Key,
-			},
+			Item:       e,
 		}
 	}
 
@@ -344,8 +336,78 @@ func (c *dnd5eAPI) replaceEquipmentCategoryOptionSetTypeToOptionsArray(input *ch
 	return input, nil
 }
 
-func (c *dnd5eAPI) ListSpells() ([]*entities.ReferenceItem, error) {
-	resp, err := c.client.Get(baserulzURL + "spells")
+type ListSpellsInput struct {
+	Level *int
+	Class string
+}
+
+func (c *dnd5eAPI) ListSpells(input *ListSpellsInput) ([]*entities.ReferenceItem, error) {
+	if input == nil {
+		return nil, errors.New("input is nil")
+	}
+
+	if input.Class == "" {
+		levelList, err := c.doGetSpellsByLevel(input.Level)
+		if err != nil {
+			return nil, err
+		}
+
+		levelOut := make([]*entities.ReferenceItem, len(levelList))
+		for i, r := range levelList {
+			levelOut[i] = referenceItemToSpell(r)
+		}
+
+		return levelOut, nil
+	}
+
+	if input.Level == nil {
+		classList, err := c.doGetSpellsByClass(input.Class)
+		if err != nil {
+			return nil, err
+		}
+
+		classOut := make([]*entities.ReferenceItem, len(classList))
+		for i, r := range classList {
+			classOut[i] = referenceItemToSpell(r)
+		}
+
+		return classOut, nil
+	}
+
+	levelList, err := c.doGetSpellsByLevel(input.Level)
+	if err != nil {
+		return nil, err
+	}
+
+	levelMap := make(map[string]bool)
+	for _, r := range levelList {
+		levelMap[r.Index] = true
+	}
+
+	classList, err := c.doGetSpellsByClass(input.Class)
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]*entities.ReferenceItem, 0)
+	for _, r := range classList {
+		if levelMap[r.Index] {
+			out = append(out, referenceItemToSpell(r))
+		}
+	}
+
+	return out, nil
+}
+
+func (c *dnd5eAPI) doGetSpellsByLevel(level *int) ([]*referenceItem, error) {
+	var url string
+	if level == nil {
+		url = baserulzURL + "spells"
+	} else {
+		url = baserulzURL + "spells?level=" + strconv.Itoa(*level)
+	}
+
+	resp, err := c.client.Get(baserulzURL + "spells?level=" + url)
 	if err != nil {
 		return nil, err
 	}
@@ -361,12 +423,33 @@ func (c *dnd5eAPI) ListSpells() ([]*entities.ReferenceItem, error) {
 		return nil, err
 	}
 
-	out := make([]*entities.ReferenceItem, len(response.Results))
-	for i, r := range response.Results {
-		out[i] = listResultToSpell(r)
+	return response.Results, nil
+}
+
+func (c *dnd5eAPI) doGetSpellsByClass(class string) ([]*referenceItem, error) {
+	if class == "" {
+		return nil, errors.New("class is empty")
 	}
 
-	return out, nil
+	url := baserulzURL + "classes/" + class + "/spells"
+
+	resp, err := c.client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := listResponse{}
+
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response.Results, nil
 }
 
 func (c *dnd5eAPI) GetSpell(key string) (*entities.Spell, error) {
@@ -434,7 +517,7 @@ func (c *dnd5eAPI) ListFeatures() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = listResultToFeature(r)
+		out[i] = referenceItemToFeature(r)
 	}
 
 	return out, nil

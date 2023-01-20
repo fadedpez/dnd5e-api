@@ -68,12 +68,6 @@ func (o *option) toEntity() entities.Option {
 	return nil
 }
 
-type referenceItem struct {
-	Index string `json:"index"`
-	Name  string `json:"name"`
-	URL   string `json:"url"`
-}
-
 type referenceOption struct {
 	Item *referenceItem `json:"item"`
 }
