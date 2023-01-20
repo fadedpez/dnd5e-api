@@ -1068,3 +1068,64 @@ func TestDND5eAPI_GetSkill(t *testing.T) {
 		assert.Equal(t, "skills", result.Type)
 	})
 }
+
+func TestDND5eAPI_ListMonsters(t *testing.T) {
+	t.Run("it returns an error when http.Get fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"monsters").Return(nil, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListMonsters()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "http.Get failed", err.Error())
+	})
+
+	t.Run("it returns an error if json.Unmarshal fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"monsters").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListMonsters()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
+	})
+
+	t.Run("it returns an error when the status code is not 200", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"monsters").Return(&http.Response{
+			StatusCode: 500,
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListMonsters()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "unexpected status code: 500", err.Error())
+	})
+
+	t.Run("it returns a list of monsters", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/monsters/monsterslist.json")
+		monstersFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"monsters").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(monstersFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.ListMonsters()
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, 334, len(result))
+		assert.Equal(t, "aboleth", result[0].Key)
+		assert.Equal(t, "Aboleth", result[0].Name)
+	})
+}

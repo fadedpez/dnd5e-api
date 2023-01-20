@@ -625,3 +625,33 @@ func (c *dnd5eAPI) GetSkill(key string) (*entities.Skill, error) {
 
 	return skill, nil
 }
+
+func (c *dnd5eAPI) ListMonsters() ([]*entities.ReferenceItem, error) {
+	resp, err := c.client.Get(baserulzURL + "monsters")
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := listResponse{}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]*entities.ReferenceItem, len(response.Results))
+	for i, r := range response.Results {
+		out[i] = referenceItemToMonster(r)
+	}
+
+	return out, nil
+}
