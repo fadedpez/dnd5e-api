@@ -407,7 +407,7 @@ func (c *dnd5eAPI) doGetSpellsByLevel(level *int) ([]*referenceItem, error) {
 		url = baserulzURL + "spells?level=" + strconv.Itoa(*level)
 	}
 
-	resp, err := c.client.Get(baserulzURL + "spells?level=" + url)
+	resp, err := c.client.Get(url)
 	if err != nil {
 		return nil, err
 	}

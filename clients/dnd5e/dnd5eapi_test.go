@@ -601,7 +601,7 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 		client.On("Get", baserulzURL+"spells").Return(nil, errors.New("http.Get failed"))
 
 		dnd5eAPI := &dnd5eAPI{client: client}
-		_, err := dnd5eAPI.ListSpells()
+		_, err := dnd5eAPI.ListSpells(&ListSpellsInput{})
 
 		assert.NotNil(t, err)
 		assert.Equal(t, "http.Get failed", err.Error())
@@ -615,7 +615,7 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client}
-		_, err := dnd5eAPI.ListSpells()
+		_, err := dnd5eAPI.ListSpells(&ListSpellsInput{})
 
 		assert.NotNil(t, err)
 		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
@@ -628,13 +628,13 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client}
-		_, err := dnd5eAPI.ListSpells()
+		_, err := dnd5eAPI.ListSpells(&ListSpellsInput{})
 
 		assert.NotNil(t, err)
 		assert.Equal(t, "unexpected status code: 500", err.Error())
 	})
 
-	t.Run("it returns a list of spells", func(t *testing.T) {
+	t.Run("it returns a list of spells with no level or class specified", func(t *testing.T) {
 		client := &mockHTTPClient{}
 		filePath, _ := filepath.Abs("../../testdata/spells/spelllist.json")
 		spellsFile, err := os.ReadFile(filePath)
@@ -646,7 +646,7 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client}
-		result, err := dnd5eAPI.ListSpells()
+		result, err := dnd5eAPI.ListSpells(&ListSpellsInput{})
 
 		assert.Nil(t, err)
 		assert.NotNil(t, result)
@@ -654,6 +654,84 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 		assert.Equal(t, "acid-arrow", result[0].Key)
 		assert.Equal(t, "Acid Arrow", result[0].Name)
 
+	})
+
+	t.Run("it returns a list of spells at level when level is specified and class is not", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/levels/1/spells.json")
+		spellsFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"spells?level=1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(spellsFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		setLevel := 1
+		result, err := dnd5eAPI.ListSpells(&ListSpellsInput{Level: &setLevel})
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, 49, len(result))
+		assert.Equal(t, "alarm", result[0].Key)
+		assert.Equal(t, "Alarm", result[0].Name)
+	})
+
+	t.Run("it returns a list of spells of a class when level is not specified", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/sorcerer/sorcerer_spells.json")
+		spellsFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/sorcerer/spells").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(spellsFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		setClass := "sorcerer"
+		result, err := dnd5eAPI.ListSpells(&ListSpellsInput{Class: setClass})
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, 120, len(result))
+		assert.Equal(t, "acid-splash", result[0].Key)
+		assert.Equal(t, "Acid Splash", result[0].Name)
+	})
+
+	t.Run("it returns a list of spells of a specified class and level", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		classFilePath, _ := filepath.Abs("../../testdata/classes/sorcerer/sorcerer_spells.json")
+		classSpellsFile, err := os.ReadFile(classFilePath)
+		assert.Nil(t, err)
+
+		levelFilePath, _ := filepath.Abs("../../testdata/levels/1/spells.json")
+		levelSpellsFile, err := os.ReadFile(levelFilePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/sorcerer/spells").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classSpellsFile)),
+		}, nil)
+
+		client.On("Get", baserulzURL+"spells?level=1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(levelSpellsFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		setClass := "sorcerer"
+		setLevel := 1
+		result, err := dnd5eAPI.ListSpells(&ListSpellsInput{Class: setClass, Level: &setLevel})
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, 17, len(result))
+		assert.Equal(t, "burning-hands", result[0].Key)
+		assert.Equal(t, "Burning Hands", result[0].Name)
+		assert.Equal(t, "charm-person", result[1].Key)
+		assert.Equal(t, "Charm Person", result[1].Name)
 	})
 }
 
