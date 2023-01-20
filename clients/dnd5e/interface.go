@@ -13,7 +13,7 @@ type Interface interface {
 	GetEquipment(key string) (EquipmentInterface, error)
 	ListClasses() ([]*entities.ReferenceItem, error)
 	GetClass(key string) (*entities.Class, error)
-	ListSpells() ([]*entities.ReferenceItem, error)
+	ListSpells(input *ListSpellsInput) ([]*entities.ReferenceItem, error)
 	GetSpell(key string) (*entities.Spell, error)
 }
 

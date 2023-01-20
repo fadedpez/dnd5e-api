@@ -1,0 +1,250 @@
+{
+  "count": 49,
+  "results": [
+    {
+      "index": "alarm",
+      "name": "Alarm",
+      "url": "/api/spells/alarm"
+    },
+    {
+      "index": "animal-friendship",
+      "name": "Animal Friendship",
+      "url": "/api/spells/animal-friendship"
+    },
+    {
+      "index": "bane",
+      "name": "Bane",
+      "url": "/api/spells/bane"
+    },
+    {
+      "index": "bless",
+      "name": "Bless",
+      "url": "/api/spells/bless"
+    },
+    {
+      "index": "burning-hands",
+      "name": "Burning Hands",
+      "url": "/api/spells/burning-hands"
+    },
+    {
+      "index": "charm-person",
+      "name": "Charm Person",
+      "url": "/api/spells/charm-person"
+    },
+    {
+      "index": "color-spray",
+      "name": "Color Spray",
+      "url": "/api/spells/color-spray"
+    },
+    {
+      "index": "command",
+      "name": "Command",
+      "url": "/api/spells/command"
+    },
+    {
+      "index": "comprehend-languages",
+      "name": "Comprehend Languages",
+      "url": "/api/spells/comprehend-languages"
+    },
+    {
+      "index": "create-or-destroy-water",
+      "name": "Create or Destroy Water",
+      "url": "/api/spells/create-or-destroy-water"
+    },
+    {
+      "index": "cure-wounds",
+      "name": "Cure Wounds",
+      "url": "/api/spells/cure-wounds"
+    },
+    {
+      "index": "detect-evil-and-good",
+      "name": "Detect Evil and Good",
+      "url": "/api/spells/detect-evil-and-good"
+    },
+    {
+      "index": "detect-magic",
+      "name": "Detect Magic",
+      "url": "/api/spells/detect-magic"
+    },
+    {
+      "index": "detect-poison-and-disease",
+      "name": "Detect Poison and Disease",
+      "url": "/api/spells/detect-poison-and-disease"
+    },
+    {
+      "index": "disguise-self",
+      "name": "Disguise Self",
+      "url": "/api/spells/disguise-self"
+    },
+    {
+      "index": "divine-favor",
+      "name": "Divine Favor",
+      "url": "/api/spells/divine-favor"
+    },
+    {
+      "index": "entangle",
+      "name": "Entangle",
+      "url": "/api/spells/entangle"
+    },
+    {
+      "index": "expeditious-retreat",
+      "name": "Expeditious Retreat",
+      "url": "/api/spells/expeditious-retreat"
+    },
+    {
+      "index": "faerie-fire",
+      "name": "Faerie Fire",
+      "url": "/api/spells/faerie-fire"
+    },
+    {
+      "index": "false-life",
+      "name": "False Life",
+      "url": "/api/spells/false-life"
+    },
+    {
+      "index": "feather-fall",
+      "name": "Feather Fall",
+      "url": "/api/spells/feather-fall"
+    },
+    {
+      "index": "find-familiar",
+      "name": "Find Familiar",
+      "url": "/api/spells/find-familiar"
+    },
+    {
+      "index": "floating-disk",
+      "name": "Floating Disk",
+      "url": "/api/spells/floating-disk"
+    },
+    {
+      "index": "fog-cloud",
+      "name": "Fog Cloud",
+      "url": "/api/spells/fog-cloud"
+    },
+    {
+      "index": "goodberry",
+      "name": "Goodberry",
+      "url": "/api/spells/goodberry"
+    },
+    {
+      "index": "grease",
+      "name": "Grease",
+      "url": "/api/spells/grease"
+    },
+    {
+      "index": "guiding-bolt",
+      "name": "Guiding Bolt",
+      "url": "/api/spells/guiding-bolt"
+    },
+    {
+      "index": "healing-word",
+      "name": "Healing Word",
+      "url": "/api/spells/healing-word"
+    },
+    {
+      "index": "hellish-rebuke",
+      "name": "Hellish Rebuke",
+      "url": "/api/spells/hellish-rebuke"
+    },
+    {
+      "index": "heroism",
+      "name": "Heroism",
+      "url": "/api/spells/heroism"
+    },
+    {
+      "index": "hideous-laughter",
+      "name": "Hideous Laughter",
+      "url": "/api/spells/hideous-laughter"
+    },
+    {
+      "index": "hunters-mark",
+      "name": "Hunter's Mark",
+      "url": "/api/spells/hunters-mark"
+    },
+    {
+      "index": "identify",
+      "name": "Identify",
+      "url": "/api/spells/identify"
+    },
+    {
+      "index": "illusory-script",
+      "name": "Illusory Script",
+      "url": "/api/spells/illusory-script"
+    },
+    {
+      "index": "inflict-wounds",
+      "name": "Inflict Wounds",
+      "url": "/api/spells/inflict-wounds"
+    },
+    {
+      "index": "jump",
+      "name": "Jump",
+      "url": "/api/spells/jump"
+    },
+    {
+      "index": "longstrider",
+      "name": "Longstrider",
+      "url": "/api/spells/longstrider"
+    },
+    {
+      "index": "mage-armor",
+      "name": "Mage Armor",
+      "url": "/api/spells/mage-armor"
+    },
+    {
+      "index": "magic-missile",
+      "name": "Magic Missile",
+      "url": "/api/spells/magic-missile"
+    },
+    {
+      "index": "protection-from-evil-and-good",
+      "name": "Protection from Evil and Good",
+      "url": "/api/spells/protection-from-evil-and-good"
+    },
+    {
+      "index": "purify-food-and-drink",
+      "name": "Purify Food and Drink",
+      "url": "/api/spells/purify-food-and-drink"
+    },
+    {
+      "index": "sanctuary",
+      "name": "Sanctuary",
+      "url": "/api/spells/sanctuary"
+    },
+    {
+      "index": "shield",
+      "name": "Shield",
+      "url": "/api/spells/shield"
+    },
+    {
+      "index": "shield-of-faith",
+      "name": "Shield of Faith",
+      "url": "/api/spells/shield-of-faith"
+    },
+    {
+      "index": "silent-image",
+      "name": "Silent Image",
+      "url": "/api/spells/silent-image"
+    },
+    {
+      "index": "sleep",
+      "name": "Sleep",
+      "url": "/api/spells/sleep"
+    },
+    {
+      "index": "speak-with-animals",
+      "name": "Speak with Animals",
+      "url": "/api/spells/speak-with-animals"
+    },
+    {
+      "index": "thunderwave",
+      "name": "Thunderwave",
+      "url": "/api/spells/thunderwave"
+    },
+    {
+      "index": "unseen-servant",
+      "name": "Unseen Servant",
+      "url": "/api/spells/unseen-servant"
+    }
+  ]
+}
