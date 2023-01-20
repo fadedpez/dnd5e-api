@@ -18,7 +18,7 @@ type Monster struct {
 	XP                    int                   `json:"xp"`
 	SpecialAbilities      []*SpecialAbility     `json:"special_abilities"`
 	MonsterActions        []*MonsterAction      `json:"actions"`
-	LegendaryActions      []*LegendaryAction    `json:"legendary_actions"`
+	LegendaryActions      []*MonsterAction      `json:"legendary_actions"`
 }
 
 type Speed struct {
@@ -82,17 +82,11 @@ type Actions struct {
 	Type        string     `json:"type"`
 	AttackBonus int        `json:"attack_bonus"`
 	DC          *MonsterDC `json:"dc"`
+	Damage      *Damage    `json:"damage"`
 }
 
 type MonsterDC struct {
 	DCType      *ReferenceItem `json:"dc_type"`
 	DCValue     int            `json:"dc_value"`
 	SuccessType string         `json:"success"`
-}
-
-type LegendaryAction struct {
-	Name        string     `json:"name"`
-	Description string     `json:"desc"`
-	DC          *MonsterDC `json:"dc"`
-	Damage      *Damage    `json:"damage"`
 }
