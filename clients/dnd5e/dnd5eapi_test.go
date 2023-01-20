@@ -795,3 +795,74 @@ func TestDND5eAPI_ListFeatures(t *testing.T) {
 		assert.Equal(t, "Action Surge (1 use)", result[0].Name)
 	})
 }
+
+func TestDND5eAPI_GetFeature(t *testing.T) {
+	t.Run("it returns an error when http.Get fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"features/metamagic-2").Return(nil, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetFeature("metamagic-2")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "http.Get failed", err.Error())
+	})
+
+	t.Run("it returns an error if json.Unmarshal fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"features/metamagic-2").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetFeature("metamagic-2")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
+	})
+
+	t.Run("it returns an error when the status code is not 200", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"features/metamagic-2").Return(&http.Response{
+			StatusCode: 500,
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetFeature("metamagic-2")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "unexpected status code: 500", err.Error())
+	})
+
+	t.Run("it returns a feature", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/features/metamagic2.json")
+		featureFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"features/metamagic-2").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(featureFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetFeature("metamagic-2")
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, "metamagic-2", result.Key)
+		assert.Equal(t, "Metamagic", result.Name)
+		assert.Equal(t, 10, result.Level)
+		assert.Equal(t, "sorcerer", result.Class.Key)
+		assert.Equal(t, "Sorcerer", result.Class.Name)
+		assert.Equal(t, 1, result.FeatureSpecific.SubFeatureOptions.ChoiceCount)
+		assert.Equal(t, entities.OptionTypeReference, result.FeatureSpecific.SubFeatureOptions.OptionList.Options[0].GetOptionType())
+		assert.Equal(t, 8, len(result.FeatureSpecific.SubFeatureOptions.OptionList.Options))
+		assert.Equal(t, "metamagic-careful-spell", result.FeatureSpecific.SubFeatureOptions.OptionList.Options[0].(*entities.ReferenceOption).Reference.Key)
+		assert.Equal(t, "Metamagic: Careful Spell", result.FeatureSpecific.SubFeatureOptions.OptionList.Options[0].(*entities.ReferenceOption).Reference.Name)
+		assert.Equal(t, entities.OptionTypeReference, result.FeatureSpecific.SubFeatureOptions.OptionList.Options[1].GetOptionType())
+		assert.Equal(t, "metamagic-distant-spell", result.FeatureSpecific.SubFeatureOptions.OptionList.Options[1].(*entities.ReferenceOption).Reference.Key)
+		assert.Equal(t, "Metamagic: Distant Spell", result.FeatureSpecific.SubFeatureOptions.OptionList.Options[1].(*entities.ReferenceOption).Reference.Name)
+	})
+}

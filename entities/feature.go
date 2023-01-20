@@ -1,14 +1,14 @@
 package entities
 
 type Feature struct {
-	Key             string         `json:"key"`
-	Class           *ReferenceItem `json:"class"`
-	Name            string         `json:"name"`
-	Level           int            `json:"level"`
-	FeatureSpecific *SubFeature    `json:"feature_specific"`
+	Key             string            `json:"key"`
+	Class           *ReferenceItem    `json:"class"`
+	Name            string            `json:"name"`
+	Level           int               `json:"level"`
+	FeatureSpecific *SubFeatureOption `json:"feature_specific"`
+	Invocations     []*ReferenceItem  `json:"invocations"`
 }
 
-type SubFeature struct {
-	SubfeatureOptions *ChoiceOption    `json:"subfeature_options"`
-	Invocations       *[]ReferenceItem `json:"invocations"`
+type SubFeatureOption struct {
+	SubFeatureOptions *ChoiceOption `json:"subfeature_options"`
 }
