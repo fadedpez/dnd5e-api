@@ -16,9 +16,11 @@ type Monster struct {
 	Languages             []string              `json:"languages"`
 	ChallengeRating       float32               `json:"challenge_rating"`
 	XP                    int                   `json:"xp"`
-	SpecialAbilities      []*SpecialAbility     `json:"special_abilities"`
-	MonsterActions        []*MonsterAction      `json:"actions"`
-	LegendaryActions      []*MonsterAction      `json:"legendary_actions"`
+	MonsterActions        []*MonsterAction      `json:"actions"` //TODO: Interface
+	MonsterImageURL       string                `json:"image"`
+	//TODO: Add legendary actions
+	//TODO: Add reactions
+	//TODO: Add special abilities
 }
 
 type Speed struct {
@@ -68,25 +70,8 @@ type Usage struct {
 }
 
 type MonsterAction struct {
-	Name            string     `json:"name"`
-	MultiAttackType string     `json:"multiattack_type"`
-	AttackBonus     int        `json:"attack_bonus"`
-	Description     string     `json:"desc"`
-	Actions         []*Actions `json:"actions"`
-	Damage          *Damage    `json:"damage"`
-}
-
-type Actions struct {
-	ActionName  string     `json:"action_name"`
-	Count       int        `json:"count"`
-	Type        string     `json:"type"`
-	AttackBonus int        `json:"attack_bonus"`
-	DC          *MonsterDC `json:"dc"`
-	Damage      *Damage    `json:"damage"`
-}
-
-type MonsterDC struct {
-	DCType      *ReferenceItem `json:"dc_type"`
-	DCValue     int            `json:"dc_value"`
-	SuccessType string         `json:"success"`
+	Name        string  `json:"name"`
+	AttackBonus int     `json:"attack_bonus"`
+	Description string  `json:"desc"`
+	Damage      *Damage `json:"damage"`
 }

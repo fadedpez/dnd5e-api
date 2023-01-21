@@ -201,9 +201,11 @@ type monsterResult struct {
 	Lanuages              string                `json:"languages"`
 	ChallengeRating       float32               `json:"challenge_rating"`
 	XP                    int                   `json:"xp"`
-	SpecialAbilities      []*monsterAbility     `json:"special_abilities"`
-	MonsterActions        []*monsterAction      `json:"actions"`
-	LegendaryActions      []*monsterAction      `json:"legendary_actions"`
+	MonsterActions        []*monsterAction      `json:"actions"` //TODO: convert to an interface
+	MonsterImageURL       string                `json:"image"`
+	//TODO: Add legendary actions
+	//TODO: Add reactions
+	//TODO: Add special abilities, possible to be an interface?
 }
 
 type monsterSpeed struct {
@@ -227,37 +229,9 @@ type monsterSenses struct {
 	PassivePerception int    `json:"passive_perception"`
 }
 
-type monsterAbility struct {
-	Name        string               `json:"name"`
-	Description string               `json:"desc"`
-	Usage       *monsterAbilityUsage `json:"usage"`
-}
-
-type monsterAbilityUsage struct {
-	Type      string   `json:"type"`
-	Times     int      `json:"times"`
-	RestTypes []string `json:"rest_types"`
-	MinValue  int      `json:"min_value"`
-}
-
 type monsterAction struct {
-	Name            string               `json:"name"`
-	Description     string               `json:"desc"`
-	MultiAttackType string               `json:"multiattack_type"`
-	Actions         []*action            `json:"actions"`
-	AttackBonus     int                  `json:"attack_bonus"`
-	Damage          *damage              `json:"damage"`
-	Usage           *monsterAbilityUsage `json:"usage"`
-	DC              *monsterDC           `json:"dc"`
-}
-
-type action struct {
-	ActionName string `json:"action_name"`
-	Count      int    `json:"count"`
-	ActionType string `json:"type"`
-}
-
-type monsterDC struct {
-	DC      *dc `json:"dc"`
-	DCValue int `json:"dc_value"`
+	Name        string  `json:"name"`
+	Description string  `json:"desc"`
+	AttackBonus int     `json:"attack_bonus"`
+	Damage      *damage `json:"damage"`
 }
