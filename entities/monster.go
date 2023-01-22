@@ -21,7 +21,7 @@ type Monster struct {
 	DamageVulnerabilities []string              `json:"damage_vulnerabilities"`
 	DamageResistances     []string              `json:"damage_resistances"`
 	DamageImmunities      []string              `json:"damage_immunities"`
-	ConditionImmunities   []string              `json:"condition_immunities"`
+	ConditionImmunities   []*ReferenceItem      `json:"condition_immunities"`
 	MonsterSenses         *MonsterSenses        `json:"senses"`
 	Languages             string                `json:"languages"`
 	ChallengeRating       float32               `json:"challenge_rating"`

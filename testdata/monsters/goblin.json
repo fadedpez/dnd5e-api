@@ -28,10 +28,31 @@
       }
     }
   ],
-  "damage_vulnerabilities": [],
-  "damage_resistances": [],
-  "damage_immunities": [],
-  "condition_immunities": [],
+  "damage_vulnerabilities": [
+    "sandwiches",
+    "psychic"
+  ],
+  "damage_resistances": [
+    "lightning",
+    "thunder",
+    "bludgeoning, piercing, and slashing from nonmagical weapons"
+  ],
+  "damage_immunities": [
+    "fire",
+    "poison"
+  ],
+  "condition_immunities": [
+    {
+      "index": "exhaustion",
+      "name": "Exhaustion",
+      "url": "/api/conditions/exhaustion"
+    },
+    {
+      "index": "grappled",
+      "name": "Grappled",
+      "url": "/api/conditions/grappled"
+    }
+  ],
   "senses": {
     "darkvision": "60 ft.",
     "passive_perception": 9

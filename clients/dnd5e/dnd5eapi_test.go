@@ -1215,5 +1215,10 @@ func TestDND5eAPI_GetMonster(t *testing.T) {
 		assert.Equal(t, "Slashing", result.MonsterActions[0].Damage[0].DamageType.Name)
 		assert.Equal(t, "1d6+2", result.MonsterActions[0].Damage[0].DamageDice)
 		assert.Equal(t, "/api/images/monsters/goblin.png", result.MonsterImageURL)
+		assert.Equal(t, "sandwiches", result.DamageVulnerabilities[0])
+		assert.Equal(t, "lightning", result.DamageResistances[0])
+		assert.Equal(t, "fire", result.DamageImmunities[0])
+		assert.Equal(t, "exhaustion", result.ConditionImmunities[0].Key)
+		assert.Equal(t, "Exhaustion", result.ConditionImmunities[0].Name)
 	})
 }

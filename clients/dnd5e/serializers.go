@@ -580,3 +580,23 @@ func damageResultsToDamage(input []*damage) []*entities.Damage {
 
 	return out
 }
+
+func referenceItemToCondition(input *referenceItem) *entities.ReferenceItem {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.ReferenceItem{
+		Key:  input.Index,
+		Name: input.Name,
+	}
+}
+
+func referenceItemsToConditions(input []*referenceItem) []*entities.ReferenceItem {
+	out := make([]*entities.ReferenceItem, len(input))
+	for i, c := range input {
+		out[i] = referenceItemToCondition(c)
+	}
+
+	return out
+}

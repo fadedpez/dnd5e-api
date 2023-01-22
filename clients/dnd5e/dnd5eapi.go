@@ -699,7 +699,7 @@ func (c *dnd5eAPI) GetMonster(key string) (*entities.Monster, error) {
 		DamageVulnerabilities: response.DamageVulnerabilities,
 		DamageResistances:     response.DamageResistances,
 		DamageImmunities:      response.DamageImmunities,
-		ConditionImmunities:   response.ConditionImmunities,
+		ConditionImmunities:   referenceItemsToConditions(response.ConditionImmunities),
 		MonsterSenses:         monsterSensesResultToMonsterSenses(response.Senses),
 		Languages:             response.Languages,
 		ChallengeRating:       response.ChallengeRating,
