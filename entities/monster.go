@@ -81,8 +81,8 @@ type Usage struct {
 }
 
 type MonsterAction struct {
-	Name        string  `json:"name"`
-	AttackBonus int     `json:"attack_bonus"`
-	Description string  `json:"desc"`
-	Damage      *Damage `json:"damage"`
+	Name        string    `json:"name"`
+	AttackBonus int       `json:"attack_bonus"`
+	Description string    `json:"desc"`
+	Damage      []*Damage `json:"damage"`
 }

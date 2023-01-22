@@ -559,7 +559,7 @@ func monsterActionResultToMonsterAction(input *monsterAction) *entities.MonsterA
 		Name:        input.Name,
 		Description: input.Description,
 		AttackBonus: input.AttackBonus,
-		Damage:      damageResultToDamage(input.Damage),
+		Damage:      damageResultsToDamage(input.Damage),
 	}
 }
 
@@ -567,6 +567,15 @@ func monsterActionResultsToMonsterActions(input []*monsterAction) []*entities.Mo
 	out := make([]*entities.MonsterAction, len(input))
 	for i, a := range input {
 		out[i] = monsterActionResultToMonsterAction(a)
+	}
+
+	return out
+}
+
+func damageResultsToDamage(input []*damage) []*entities.Damage {
+	out := make([]*entities.Damage, len(input))
+	for i, d := range input {
+		out[i] = damageResultToDamage(d)
 	}
 
 	return out

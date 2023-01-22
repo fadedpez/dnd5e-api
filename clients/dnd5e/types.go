@@ -230,8 +230,8 @@ type monsterSenses struct {
 }
 
 type monsterAction struct {
-	Name        string  `json:"name"`
-	Description string  `json:"desc"`
-	AttackBonus int     `json:"attack_bonus"`
-	Damage      *damage `json:"damage"`
+	Name        string    `json:"name"`
+	Description string    `json:"desc"`
+	AttackBonus int       `json:"attack_bonus"`
+	Damage      []*damage `json:"damage"`
 }
