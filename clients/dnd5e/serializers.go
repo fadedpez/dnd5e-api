@@ -94,7 +94,7 @@ func subRaceResultsToSubRaces(input []*referenceItem) []*entities.ReferenceItem 
 	return out
 }
 
-func proficiencyResultToProficiency(input *referenceItem) *entities.ReferenceItem {
+func referenceItemToProficiency(input *referenceItem) *entities.ReferenceItem {
 	if input == nil {
 		return nil
 	}
@@ -108,7 +108,7 @@ func proficiencyResultToProficiency(input *referenceItem) *entities.ReferenceIte
 func proficiencyResultsToProficiencies(input []*referenceItem) []*entities.ReferenceItem {
 	out := make([]*entities.ReferenceItem, len(input))
 	for i, p := range input {
-		out[i] = proficiencyResultToProficiency(p)
+		out[i] = referenceItemToProficiency(p)
 	}
 
 	return out
@@ -500,4 +500,74 @@ func referenceItemToMonster(input *referenceItem) *entities.ReferenceItem {
 		Key:  input.Index,
 		Name: input.Name,
 	}
+}
+
+func monsterSpeedResultToSpeed(input *monsterSpeed) *entities.Speed {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Speed{
+		Walk:   input.Walk,
+		Climb:  input.Climb,
+		Fly:    input.Fly,
+		Swim:   input.Swim,
+		Burrow: input.Burrow,
+	}
+}
+
+func monsterProficiencyResultToMonsterProficiency(input *monsterProficiency) *entities.MonsterProficiency {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.MonsterProficiency{
+		Proficiency: referenceItemToProficiency(input.Proficiency),
+		Value:       input.Value,
+	}
+}
+
+func monsterProficiencyResultsToMonsterProficiencies(input []*monsterProficiency) []*entities.MonsterProficiency {
+	out := make([]*entities.MonsterProficiency, len(input))
+	for i, p := range input {
+		out[i] = monsterProficiencyResultToMonsterProficiency(p)
+	}
+
+	return out
+}
+
+func monsterSensesResultToMonsterSenses(input *monsterSenses) *entities.MonsterSenses {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.MonsterSenses{
+		Blindsight:        input.Blindsight,
+		Darkvision:        input.Darkvision,
+		Tremorsense:       input.Tremorsense,
+		Truesight:         input.Truesight,
+		PassivePerception: input.PassivePerception,
+	}
+}
+
+func monsterActionResultToMonsterAction(input *monsterAction) *entities.MonsterAction {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.MonsterAction{
+		Name:        input.Name,
+		Description: input.Description,
+		AttackBonus: input.AttackBonus,
+		Damage:      damageResultToDamage(input.Damage),
+	}
+}
+
+func monsterActionResultsToMonsterActions(input []*monsterAction) []*entities.MonsterAction {
+	out := make([]*entities.MonsterAction, len(input))
+	for i, a := range input {
+		out[i] = monsterActionResultToMonsterAction(a)
+	}
+
+	return out
 }

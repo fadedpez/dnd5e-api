@@ -198,7 +198,7 @@ type monsterResult struct {
 	DamageImmunities      []string              `json:"damage_immunities"`
 	ConditionImmunities   []string              `json:"condition_immunities"`
 	Senses                *monsterSenses        `json:"senses"`
-	Lanuages              string                `json:"languages"`
+	Languages             string                `json:"languages"`
 	ChallengeRating       float32               `json:"challenge_rating"`
 	XP                    int                   `json:"xp"`
 	MonsterActions        []*monsterAction      `json:"actions"` //TODO: convert to an interface
