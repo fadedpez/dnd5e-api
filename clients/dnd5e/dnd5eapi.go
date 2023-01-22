@@ -625,3 +625,88 @@ func (c *dnd5eAPI) GetSkill(key string) (*entities.Skill, error) {
 
 	return skill, nil
 }
+
+func (c *dnd5eAPI) ListMonsters() ([]*entities.ReferenceItem, error) {
+	resp, err := c.client.Get(baserulzURL + "monsters")
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := listResponse{}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]*entities.ReferenceItem, len(response.Results))
+	for i, r := range response.Results {
+		out[i] = referenceItemToMonster(r)
+	}
+
+	return out, nil
+}
+
+func (c *dnd5eAPI) GetMonster(key string) (*entities.Monster, error) {
+	resp, err := c.client.Get(baserulzURL + "monsters/" + key)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := monsterResult{}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+
+	if err != nil {
+		return nil, err
+	}
+
+	monster := &entities.Monster{
+		Key:                   response.Index,
+		Name:                  response.Name,
+		Size:                  response.Size,
+		Type:                  response.Type,
+		Alignment:             response.Alignment,
+		ArmorClass:            response.ArmorClass,
+		HitPoints:             response.HitPoints,
+		HitDice:               response.HitDice,
+		Speed:                 monsterSpeedResultToSpeed(response.Speed),
+		Strength:              response.Strength,
+		Dexterity:             response.Dexterity,
+		Constitution:          response.Constitution,
+		Intelligence:          response.Intelligence,
+		Wisdom:                response.Wisdom,
+		Charisma:              response.Charisma,
+		Proficiencies:         monsterProficiencyResultsToMonsterProficiencies(response.Proficiencies),
+		DamageVulnerabilities: response.DamageVulnerabilities,
+		DamageResistances:     response.DamageResistances,
+		DamageImmunities:      response.DamageImmunities,
+		ConditionImmunities:   referenceItemsToConditions(response.ConditionImmunities),
+		MonsterSenses:         monsterSensesResultToMonsterSenses(response.Senses),
+		Languages:             response.Languages,
+		ChallengeRating:       response.ChallengeRating,
+		XP:                    response.XP,
+		MonsterActions:        monsterActionResultsToMonsterActions(response.MonsterActions),
+		MonsterImageURL:       response.MonsterImageURL,
+	}
+
+	return monster, nil
+}

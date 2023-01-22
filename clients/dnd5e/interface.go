@@ -15,6 +15,11 @@ type Interface interface {
 	GetClass(key string) (*entities.Class, error)
 	ListSpells(input *ListSpellsInput) ([]*entities.ReferenceItem, error)
 	GetSpell(key string) (*entities.Spell, error)
+	ListFeatures() ([]*entities.ReferenceItem, error)
+	GetFeature(key string) (*entities.Feature, error)
+	ListSkills() ([]*entities.ReferenceItem, error)
+	GetSkill(key string) (*entities.Skill, error)
+	ListMonsters() ([]*entities.ReferenceItem, error)
 }
 
 type httpIface interface {

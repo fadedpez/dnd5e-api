@@ -174,3 +174,64 @@ type skillResult struct {
 	AbilityScore *referenceItem `json:"ability_score"`
 	URL          string         `json:"url"`
 }
+
+type monsterResult struct {
+	Index                 string                `json:"index"`
+	Name                  string                `json:"name"`
+	Size                  string                `json:"size"`
+	Type                  string                `json:"type"`
+	Alignment             string                `json:"alignment"`
+	ArmorClass            int                   `json:"armor_class"`
+	HitPoints             int                   `json:"hit_points"`
+	HitDice               string                `json:"hit_dice"`
+	HitPointsRoll         string                `json:"hit_points_roll"`
+	Speed                 *monsterSpeed         `json:"speed"`
+	Strength              int                   `json:"strength"`
+	Dexterity             int                   `json:"dexterity"`
+	Constitution          int                   `json:"constitution"`
+	Intelligence          int                   `json:"intelligence"`
+	Wisdom                int                   `json:"wisdom"`
+	Charisma              int                   `json:"charisma"`
+	Proficiencies         []*monsterProficiency `json:"proficiencies"`
+	DamageVulnerabilities []string              `json:"damage_vulnerabilities"`
+	DamageResistances     []string              `json:"damage_resistances"`
+	DamageImmunities      []string              `json:"damage_immunities"`
+	ConditionImmunities   []*referenceItem      `json:"condition_immunities"`
+	Senses                *monsterSenses        `json:"senses"`
+	Languages             string                `json:"languages"`
+	ChallengeRating       float32               `json:"challenge_rating"`
+	XP                    int                   `json:"xp"`
+	MonsterActions        []*monsterAction      `json:"actions"` //TODO: convert to an interface
+	MonsterImageURL       string                `json:"image"`
+	//TODO: Add legendary actions
+	//TODO: Add reactions
+	//TODO: Add special abilities, possible to be an interface?
+}
+
+type monsterSpeed struct {
+	Walk   string `json:"walk"`
+	Burrow string `json:"burrow"`
+	Climb  string `json:"climb"`
+	Fly    string `json:"fly"`
+	Swim   string `json:"swim"`
+}
+
+type monsterProficiency struct {
+	Value       int            `json:"value"`
+	Proficiency *referenceItem `json:"proficiency"`
+}
+
+type monsterSenses struct {
+	Blindsight        string `json:"blindsight"`
+	Darkvision        string `json:"darkvision"`
+	Tremorsense       string `json:"tremorsense"`
+	Truesight         string `json:"truesight"`
+	PassivePerception int    `json:"passive_perception"`
+}
+
+type monsterAction struct {
+	Name        string    `json:"name"`
+	Description string    `json:"desc"`
+	AttackBonus int       `json:"attack_bonus"`
+	Damage      []*damage `json:"damage"`
+}

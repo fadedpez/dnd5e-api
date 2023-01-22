@@ -1068,3 +1068,157 @@ func TestDND5eAPI_GetSkill(t *testing.T) {
 		assert.Equal(t, "skills", result.Type)
 	})
 }
+
+func TestDND5eAPI_ListMonsters(t *testing.T) {
+	t.Run("it returns an error when http.Get fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"monsters").Return(nil, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListMonsters()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "http.Get failed", err.Error())
+	})
+
+	t.Run("it returns an error if json.Unmarshal fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"monsters").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListMonsters()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
+	})
+
+	t.Run("it returns an error when the status code is not 200", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"monsters").Return(&http.Response{
+			StatusCode: 500,
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.ListMonsters()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "unexpected status code: 500", err.Error())
+	})
+
+	t.Run("it returns a list of monsters", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/monsters/monsterslist.json")
+		monstersFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"monsters").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(monstersFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.ListMonsters()
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, 334, len(result))
+		assert.Equal(t, "aboleth", result[0].Key)
+		assert.Equal(t, "Aboleth", result[0].Name)
+	})
+}
+
+func TestDND5eAPI_GetMonster(t *testing.T) {
+	t.Run("it returns an error when http.Get fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"monsters/goblin").Return(nil, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetMonster("goblin")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "http.Get failed", err.Error())
+	})
+
+	t.Run("it returns an error if json.Unmarshal fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"monsters/goblin").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetMonster("goblin")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
+	})
+
+	t.Run("it returns an error when the status code is not 200", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"monsters/goblin").Return(&http.Response{
+			StatusCode: 500,
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetMonster("goblin")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "unexpected status code: 500", err.Error())
+	})
+
+	t.Run("it returns a monster", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/monsters/goblin.json")
+		monsterFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"monsters/goblin").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(monsterFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetMonster("goblin")
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, "goblin", result.Key)
+		assert.Equal(t, "Goblin", result.Name)
+		assert.Equal(t, "Small", result.Size)
+		assert.Equal(t, "humanoid", result.Type)
+		assert.Equal(t, "neutral evil", result.Alignment)
+		assert.Equal(t, 15, result.ArmorClass)
+		assert.Equal(t, 7, result.HitPoints)
+		assert.Equal(t, "2d6", result.HitDice)
+		assert.Equal(t, "30 ft.", result.Speed.Walk)
+		assert.Equal(t, 8, result.Strength)
+		assert.Equal(t, 14, result.Dexterity)
+		assert.Equal(t, 10, result.Constitution)
+		assert.Equal(t, 10, result.Intelligence)
+		assert.Equal(t, 8, result.Wisdom)
+		assert.Equal(t, 8, result.Charisma)
+		assert.Equal(t, 6, result.Proficiencies[0].Value)
+		assert.Equal(t, "skill-stealth", result.Proficiencies[0].Proficiency.Key)
+		assert.Equal(t, "Skill: Stealth", result.Proficiencies[0].Proficiency.Name)
+		assert.Equal(t, "60 ft.", result.MonsterSenses.Darkvision)
+		assert.Equal(t, 9, result.MonsterSenses.PassivePerception)
+		assert.Equal(t, "Common, Goblin", result.Languages)
+		assert.Equal(t, float32(0.25), result.ChallengeRating)
+		assert.Equal(t, 50, result.XP)
+		assert.Equal(t, "Scimitar", result.MonsterActions[0].Name)
+		assert.Equal(t, "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage.", result.MonsterActions[0].Description)
+		assert.Equal(t, 4, result.MonsterActions[0].AttackBonus)
+		assert.Equal(t, "slashing", result.MonsterActions[0].Damage[0].DamageType.Key)
+		assert.Equal(t, "Slashing", result.MonsterActions[0].Damage[0].DamageType.Name)
+		assert.Equal(t, "1d6+2", result.MonsterActions[0].Damage[0].DamageDice)
+		assert.Equal(t, "/api/images/monsters/goblin.png", result.MonsterImageURL)
+		assert.Equal(t, "sandwiches", result.DamageVulnerabilities[0])
+		assert.Equal(t, "lightning", result.DamageResistances[0])
+		assert.Equal(t, "fire", result.DamageImmunities[0])
+		assert.Equal(t, "exhaustion", result.ConditionImmunities[0].Key)
+		assert.Equal(t, "Exhaustion", result.ConditionImmunities[0].Name)
+	})
+}
