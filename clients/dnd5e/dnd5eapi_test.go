@@ -1211,9 +1211,9 @@ func TestDND5eAPI_GetMonster(t *testing.T) {
 		assert.Equal(t, "Scimitar", result.MonsterActions[0].Name)
 		assert.Equal(t, "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage.", result.MonsterActions[0].Description)
 		assert.Equal(t, 4, result.MonsterActions[0].AttackBonus)
-		//		assert.Equal(t, "slashing", result.MonsterActions[0].Damage.(*entities.Damage).DamageType.Key)
-		//	assert.Equal(t, "Slashing", result.MonsterActions[0].Damage.(*entities.Damage).DamageType.Name)
-		//	assert.Equal(t, "1d6+2", result.MonsterActions[0].Damage.(*entities.Damage).DamageDice)
+		assert.Equal(t, "slashing", result.MonsterActions[0].Damage.(*entities.Damage).DamageType.Key)
+		assert.Equal(t, "Slashing", result.MonsterActions[0].Damage.(*entities.Damage).DamageType.Name)
+		assert.Equal(t, "1d6+2", result.MonsterActions[0].Damage.(*entities.Damage).DamageDice)
 		assert.Equal(t, "/api/images/monsters/goblin.png", result.MonsterImageURL)
 	})
 }
