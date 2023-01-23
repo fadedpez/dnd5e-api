@@ -1,0 +1,34 @@
+{
+  "level": 1,
+  "ability_score_bonuses": 0,
+  "prof_bonus": 2,
+  "features": [
+    {
+      "index": "divine-sense",
+      "name": "Divine Sense",
+      "url": "/api/features/divine-sense"
+    },
+    {
+      "index": "lay-on-hands",
+      "name": "Lay on Hands",
+      "url": "/api/features/lay-on-hands"
+    }
+  ],
+  "spellcasting": {
+    "spell_slots_level_1": 0,
+    "spell_slots_level_2": 0,
+    "spell_slots_level_3": 0,
+    "spell_slots_level_4": 0,
+    "spell_slots_level_5": 0
+  },
+  "class_specific": {
+    "aura_range": 0
+  },
+  "index": "paladin-1",
+  "class": {
+    "index": "paladin",
+    "name": "Paladin",
+    "url": "/api/classes/paladin"
+  },
+  "url": "/api/classes/paladin/levels/1"
+}

@@ -1418,4 +1418,23 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		assert.Equal(t, 0, result.ClassSpecific.(*entities.MonkSpecific).UnarmoredMovement)
 	})
 
+	t.Run("it returns paladin specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/paladinlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/paladin/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("paladin", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "paladin", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.PaladinSpecific).AuraRange)
+	})
+
 }

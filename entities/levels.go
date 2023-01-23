@@ -103,3 +103,11 @@ type MartialArts struct {
 	DiceCount int `json:"dice_count"`
 	DiceValue int `json:"dice_value"`
 }
+
+type PaladinSpecific struct {
+	AuraRange int `json:"aura_range"`
+}
+
+func (p PaladinSpecific) GetSpecificClass() string {
+	return "paladin"
+}

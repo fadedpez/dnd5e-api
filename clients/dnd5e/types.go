@@ -283,6 +283,7 @@ type classSpecificResult struct {
 	MartialArts            *martialArts `json:"martial_arts"`
 	KiPoints               int          `json:"ki_points"`
 	UnarmoredMovement      int          `json:"unarmored_movement"`
+	AuraRange              int          `json:"aura_range"`
 }
 
 type martialArts struct {
