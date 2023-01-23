@@ -293,6 +293,7 @@ type classSpecificResult struct {
 	MysticArcanumLevel7    int                   `json:"mystic_arcanum_level_7"`
 	MysticArcanumLevel8    int                   `json:"mystic_arcanum_level_8"`
 	MysticArcanumLevel9    int                   `json:"mystic_arcanum_level_9"`
+	ArcaneRecoveryLevels   int                   `json:"arcane_recovery_levels"`
 }
 
 type martialArts struct {

@@ -683,6 +683,9 @@ func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
 
 	case "warlock":
 		return classSpecificResultToWarlockSpecific(input.ClassSpecific)
+
+	case "wizard":
+		return classSpecificResultToWizardSpecific(input.ClassSpecific)
 	}
 
 	return nil
@@ -850,5 +853,15 @@ func classSpecificResultToWarlockSpecific(input *classSpecificResult) *entities.
 		MysticArcanumLevel7: input.MysticArcanumLevel7,
 		MysticArcanumLevel8: input.MysticArcanumLevel8,
 		MysticArcanumLevel9: input.MysticArcanumLevel9,
+	}
+}
+
+func classSpecificResultToWizardSpecific(input *classSpecificResult) *entities.WizardSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.WizardSpecific{
+		ArcaneRecoveryLevels: input.ArcaneRecoveryLevels,
 	}
 }

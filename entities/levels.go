@@ -151,3 +151,11 @@ type WarlockSpecific struct {
 func (w WarlockSpecific) GetSpecificClass() string {
 	return "warlock"
 }
+
+type WizardSpecific struct {
+	ArcaneRecoveryLevels int `json:"arcane_recovery_levels"`
+}
+
+func (w WizardSpecific) GetSpecificClass() string {
+	return "wizard"
+}

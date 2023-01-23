@@ -1502,4 +1502,22 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		assert.Equal(t, 0, result.ClassSpecific.(*entities.WarlockSpecific).MysticArcanumLevel9)
 	})
 
+	t.Run("it returns wizard specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/wizardlevel5.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/wizard/levels/5").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("wizard", 5)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "wizard", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 3, result.ClassSpecific.(*entities.WizardSpecific).ArcaneRecoveryLevels)
+	})
 }

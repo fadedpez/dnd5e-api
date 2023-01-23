@@ -1,0 +1,29 @@
+{
+  "level": 5,
+  "ability_score_bonuses": 1,
+  "prof_bonus": 3,
+  "features": [],
+  "spellcasting": {
+    "cantrips_known": 4,
+    "spell_slots_level_1": 4,
+    "spell_slots_level_2": 3,
+    "spell_slots_level_3": 2,
+    "spell_slots_level_4": 0,
+    "spell_slots_level_5": 0,
+    "spell_slots_level_6": 0,
+    "spell_slots_level_7": 0,
+    "spell_slots_level_8": 0,
+    "spell_slots_level_9": 0
+  },
+  "class_specific": {
+    "arcane_recovery_levels": 3
+  },
+  "index": "wizard-5",
+  "class": {
+    "index": "wizard",
+    "name": "Wizard",
+    "url": "/api/classes/wizard"
+  },
+  "url": "/api/classes/wizard/levels/5"
+}
+
