@@ -262,22 +262,30 @@ type spellCasting struct {
 }
 
 type classSpecificResult struct {
-	FavoredEnemies         int  `json:"favored_enemies"`
-	FavoredTerrain         int  `json:"favored_terrain"`
-	RageCount              int  `json:"rage_count"`
-	RageDamageBonus        int  `json:"rage_damage_bonus"`
-	BrutalCriticalDice     int  `json:"brutal_critical_dice"`
-	BardicInspirationDie   int  `json:"bardic_inspiration_die"`
-	SongOfRestDie          int  `json:"song_of_rest_die"`
-	MagicalSecretsMax5     int  `json:"magical_secrets_max_5"`
-	MagicalSecretsMax7     int  `json:"magical_secrets_max_7"`
-	MagicalSecretsMax9     int  `json:"magical_secrets_max_9"`
-	ChannelDivinityCharges int  `json:"channel_divinity_charges"`
-	DestroyUndeadCR        int  `json:"destroy_undead_cr"`
-	WildShapeMaxCR         int  `json:"wild_shape_max_cr"`
-	WildShapeSwim          bool `json:"wild_shape_swim"`
-	WildShapeFly           bool `json:"wild_shape_fly"`
-	ActionSurges           int  `json:"action_surges"`
-	IndomitableUses        int  `json:"indomitable_uses"`
-	ExtraAttacks           int  `json:"extra_attacks"`
+	FavoredEnemies         int          `json:"favored_enemies"`
+	FavoredTerrain         int          `json:"favored_terrain"`
+	RageCount              int          `json:"rage_count"`
+	RageDamageBonus        int          `json:"rage_damage_bonus"`
+	BrutalCriticalDice     int          `json:"brutal_critical_dice"`
+	BardicInspirationDie   int          `json:"bardic_inspiration_die"`
+	SongOfRestDie          int          `json:"song_of_rest_die"`
+	MagicalSecretsMax5     int          `json:"magical_secrets_max_5"`
+	MagicalSecretsMax7     int          `json:"magical_secrets_max_7"`
+	MagicalSecretsMax9     int          `json:"magical_secrets_max_9"`
+	ChannelDivinityCharges int          `json:"channel_divinity_charges"`
+	DestroyUndeadCR        int          `json:"destroy_undead_cr"`
+	WildShapeMaxCR         int          `json:"wild_shape_max_cr"`
+	WildShapeSwim          bool         `json:"wild_shape_swim"`
+	WildShapeFly           bool         `json:"wild_shape_fly"`
+	ActionSurges           int          `json:"action_surges"`
+	IndomitableUses        int          `json:"indomitable_uses"`
+	ExtraAttacks           int          `json:"extra_attacks"`
+	MartialArts            *martialArts `json:"martial_arts"`
+	KiPoints               int          `json:"ki_points"`
+	UnarmoredMovement      int          `json:"unarmored_movement"`
+}
+
+type martialArts struct {
+	DiceCount int `json:"dice_count"`
+	DiceValue int `json:"dice_value"`
 }

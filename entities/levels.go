@@ -88,3 +88,18 @@ type FighterSpecific struct {
 func (f FighterSpecific) GetSpecificClass() string {
 	return "fighter"
 }
+
+type MonkSpecific struct {
+	MartialArts       *MartialArts `json:"martial_arts"`
+	KiPoints          int          `json:"ki_points"`
+	UnarmoredMovement int          `json:"unarmored_movement"`
+}
+
+func (m MonkSpecific) GetSpecificClass() string {
+	return "monk"
+}
+
+type MartialArts struct {
+	DiceCount int `json:"dice_count"`
+	DiceValue int `json:"dice_value"`
+}

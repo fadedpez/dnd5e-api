@@ -1,0 +1,32 @@
+{
+  "level": 1,
+  "ability_score_bonuses": 0,
+  "prof_bonus": 2,
+  "features": [
+    {
+      "index": "monk-unarmored-defense",
+      "name": "Unarmored Defense",
+      "url": "/api/features/monk-unarmored-defense"
+    },
+    {
+      "index": "martial-arts",
+      "name": "Martial Arts",
+      "url": "/api/features/martial-arts"
+    }
+  ],
+  "class_specific": {
+    "martial_arts": {
+      "dice_count": 1,
+      "dice_value": 4
+    },
+    "ki_points": 0,
+    "unarmored_movement": 0
+  },
+  "index": "monk-1",
+  "class": {
+    "index": "monk",
+    "name": "Monk",
+    "url": "/api/classes/monk"
+  },
+  "url": "/api/classes/monk/levels/1"
+}

@@ -668,6 +668,9 @@ func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
 
 	case "fighter":
 		return classSpecificResultToFighterSpecific(input.ClassSpecific)
+
+	case "monk":
+		return classSpecificResultToMonkSpecific(input.ClassSpecific)
 	}
 
 	return nil
@@ -731,5 +734,28 @@ func classSpecificResultToFighterSpecific(input *classSpecificResult) *entities.
 		ActionSurges:    input.ActionSurges,
 		IndomitableUses: input.IndomitableUses,
 		ExtraAttacks:    input.ExtraAttacks,
+	}
+}
+
+func classSpecificResultToMonkSpecific(input *classSpecificResult) *entities.MonkSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.MonkSpecific{
+		MartialArts:       martialArtsResultToMartialArts(input.MartialArts),
+		KiPoints:          input.KiPoints,
+		UnarmoredMovement: input.UnarmoredMovement,
+	}
+}
+
+func martialArtsResultToMartialArts(input *martialArts) *entities.MartialArts {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.MartialArts{
+		DiceCount: input.DiceCount,
+		DiceValue: input.DiceValue,
 	}
 }

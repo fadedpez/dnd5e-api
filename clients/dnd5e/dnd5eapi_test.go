@@ -1396,4 +1396,26 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		assert.Equal(t, 0, result.ClassSpecific.(*entities.FighterSpecific).ExtraAttacks)
 	})
 
+	t.Run("it returns monk specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/monklevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/monk/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("monk", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "monk", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 1, result.ClassSpecific.(*entities.MonkSpecific).MartialArts.DiceCount)
+		assert.Equal(t, 4, result.ClassSpecific.(*entities.MonkSpecific).MartialArts.DiceValue)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.MonkSpecific).KiPoints)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.MonkSpecific).UnarmoredMovement)
+	})
+
 }
