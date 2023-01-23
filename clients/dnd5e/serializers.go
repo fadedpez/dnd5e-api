@@ -616,6 +616,7 @@ func spellCastingResultToSpellCasting(input *spellCasting) *entities.SpellCastin
 	}
 
 	return &entities.SpellCasting{
+		CantripsKnown:    input.CantripsKnown,
 		SpellsKnown:      input.SpellsKnown,
 		SpellSlotsLevel1: input.SpellSlotsLevel1,
 		SpellSlotsLevel2: input.SpellSlotsLevel2,
@@ -655,6 +656,9 @@ func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
 
 	case "barbarian":
 		return classSpecificResultToBarbarianSpecific(input.ClassSpecific)
+
+	case "bard":
+		return classSpecificResultToBardSpecific(input.ClassSpecific)
 	}
 
 	return nil
@@ -669,5 +673,19 @@ func classSpecificResultToBarbarianSpecific(input *classSpecificResult) *entitie
 		RageCount:          input.RageCount,
 		RageDamageBonus:    input.RageDamageBonus,
 		BrutalCriticalDice: input.BrutalCriticalDice,
+	}
+}
+
+func classSpecificResultToBardSpecific(input *classSpecificResult) *entities.BardSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.BardSpecific{
+		BardicInspirationDie: input.BardicInspirationDie,
+		SongOfRestDie:        input.SongOfRestDie,
+		MagicalSecretsMax5:   input.MagicalSecretsMax5,
+		MagicalSecretsMax7:   input.MagicalSecretsMax7,
+		MagicalSecretsMax9:   input.MagicalSecretsMax9,
 	}
 }

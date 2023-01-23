@@ -12,6 +12,7 @@ type Level struct {
 }
 
 type SpellCasting struct {
+	CantripsKnown    int `json:"cantrips_known"`
 	SpellsKnown      int `json:"spells_known"`
 	SpellSlotsLevel1 int `json:"spell_slots_level_1"`
 	SpellSlotsLevel2 int `json:"spell_slots_level_2"`
@@ -45,4 +46,16 @@ type BarbarianSpecific struct {
 
 func (b BarbarianSpecific) GetSpecificClass() string {
 	return "barbarian"
+}
+
+type BardSpecific struct {
+	BardicInspirationDie int `json:"bardic_inspiration_die"`
+	SongOfRestDie        int `json:"song_of_rest_die"`
+	MagicalSecretsMax5   int `json:"magical_secret_max_5"`
+	MagicalSecretsMax7   int `json:"magical_secret_max_7"`
+	MagicalSecretsMax9   int `json:"magic_secret_max_9"`
+}
+
+func (b BardSpecific) GetSpecificClass() string {
+	return "bard"
 }

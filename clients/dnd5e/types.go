@@ -248,6 +248,7 @@ type levelResult struct {
 }
 
 type spellCasting struct {
+	CantripsKnown    int `json:"cantrips_known"`
 	SpellsKnown      int `json:"spells_known"`
 	SpellSlotsLevel1 int `json:"spell_slots_level_1"`
 	SpellSlotsLevel2 int `json:"spell_slots_level_2"`
@@ -261,9 +262,14 @@ type spellCasting struct {
 }
 
 type classSpecificResult struct {
-	FavoredEnemies     int `json:"favored_enemies"`
-	FavoredTerrain     int `json:"favored_terrain"`
-	RageCount          int `json:"rage_count"`
-	RageDamageBonus    int `json:"rage_damage_bonus"`
-	BrutalCriticalDice int `json:"brutal_critical_dice"`
+	FavoredEnemies       int `json:"favored_enemies"`
+	FavoredTerrain       int `json:"favored_terrain"`
+	RageCount            int `json:"rage_count"`
+	RageDamageBonus      int `json:"rage_damage_bonus"`
+	BrutalCriticalDice   int `json:"brutal_critical_dice"`
+	BardicInspirationDie int `json:"bardic_inspiration_die"`
+	SongOfRestDie        int `json:"song_of_rest_die"`
+	MagicalSecretsMax5   int `json:"magical_secrets_max_5"`
+	MagicalSecretsMax7   int `json:"magical_secrets_max_7"`
+	MagicalSecretsMax9   int `json:"magical_secrets_max_9"`
 }
