@@ -288,6 +288,11 @@ type classSpecificResult struct {
 	SorceryPoints          int                   `json:"sorcery_points"`
 	MetamagicKnown         int                   `json:"metamagic_known"`
 	CreatingSpellSlots     []*creatingSpellSlots `json:"creating_spell_slots"`
+	InvocationsKnown       int                   `json:"invocations_known"`
+	MysticArcanumLevel6    int                   `json:"mystic_arcanum_level_6"`
+	MysticArcanumLevel7    int                   `json:"mystic_arcanum_level_7"`
+	MysticArcanumLevel8    int                   `json:"mystic_arcanum_level_8"`
+	MysticArcanumLevel9    int                   `json:"mystic_arcanum_level_9"`
 }
 
 type martialArts struct {

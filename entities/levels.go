@@ -139,3 +139,15 @@ type CreatingSpellSlots struct {
 	SpellSlotLevel   int `json:"spell_slot_level"`
 	SorceryPointCost int `json:"sorcery_point_cost"`
 }
+
+type WarlockSpecific struct {
+	InvocationsKnown    int `json:"invocations_known"`
+	MysticArcanumLevel6 int `json:"mystic_arcanum_level_6"`
+	MysticArcanumLevel7 int `json:"mystic_arcanum_level_7"`
+	MysticArcanumLevel8 int `json:"mystic_arcanum_level_8"`
+	MysticArcanumLevel9 int `json:"mystic_arcanum_level_9"`
+}
+
+func (w WarlockSpecific) GetSpecificClass() string {
+	return "warlock"
+}

@@ -680,6 +680,9 @@ func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
 
 	case "sorcerer":
 		return classSpecificResultToSorcererSpecific(input.ClassSpecific)
+
+	case "warlock":
+		return classSpecificResultToWarlockSpecific(input.ClassSpecific)
 	}
 
 	return nil
@@ -834,4 +837,18 @@ func creatingSpellSlotResultsToSpellSlots(input []*creatingSpellSlots) []*entiti
 	}
 
 	return slots
+}
+
+func classSpecificResultToWarlockSpecific(input *classSpecificResult) *entities.WarlockSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.WarlockSpecific{
+		InvocationsKnown:    input.InvocationsKnown,
+		MysticArcanumLevel6: input.MysticArcanumLevel6,
+		MysticArcanumLevel7: input.MysticArcanumLevel7,
+		MysticArcanumLevel8: input.MysticArcanumLevel8,
+		MysticArcanumLevel9: input.MysticArcanumLevel9,
+	}
 }

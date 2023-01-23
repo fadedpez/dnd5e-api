@@ -1479,4 +1479,27 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		assert.Equal(t, 2, result.ClassSpecific.(*entities.SorcererSpecific).CreatingSpellSlots[0].SorceryPointCost)
 	})
 
+	t.Run("it returns warlock specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/warlocklevel5.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/warlock/levels/5").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("warlock", 5)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "warlock", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 3, result.ClassSpecific.(*entities.WarlockSpecific).InvocationsKnown)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.WarlockSpecific).MysticArcanumLevel6)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.WarlockSpecific).MysticArcanumLevel7)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.WarlockSpecific).MysticArcanumLevel8)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.WarlockSpecific).MysticArcanumLevel9)
+	})
+
 }
