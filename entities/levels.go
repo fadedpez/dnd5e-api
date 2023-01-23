@@ -36,3 +36,13 @@ type RangerSpecific struct {
 func (r RangerSpecific) GetSpecificClass() string {
 	return "ranger"
 }
+
+type BarbarianSpecific struct {
+	RageCount          int `json:"rage_count"`
+	RageDamageBonus    int `json:"rage_damage_bonus"`
+	BrutalCriticalDice int `json:"brutal_critical_dice"`
+}
+
+func (b BarbarianSpecific) GetSpecificClass() string {
+	return "barbarian"
+}

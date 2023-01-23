@@ -1290,4 +1290,26 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		assert.Equal(t, "ranger", result.ClassSpecific.GetSpecificClass())
 		assert.Equal(t, 1, result.ClassSpecific.(*entities.RangerSpecific).FavoredEnemies)
 	})
+
+	t.Run("it returns barbarian specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/barbarianlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/barbarian/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("barbarian", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, 1, result.Level)
+		assert.Equal(t, "barbarian", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 2, result.ClassSpecific.(*entities.BarbarianSpecific).RageCount)
+		assert.Equal(t, 2, result.ClassSpecific.(*entities.BarbarianSpecific).RageDamageBonus)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.BarbarianSpecific).BrutalCriticalDice)
+	})
 }

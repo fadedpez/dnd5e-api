@@ -640,23 +640,6 @@ func classSpecificResultToRangerSpecific(input *classSpecificResult) *entities.R
 	}
 }
 
-func levelResultToLevel(input *levelResult) *entities.Level {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.Level{
-		Level:               input.Level,
-		AbilityScoreBonuses: input.AbilityScoreBonuses,
-		ProfBonus:           input.ProfBonus,
-		Features:            referenceItemsToFeatures(input.Features),
-		SpellCasting:        spellCastingResultToSpellCasting(input.SpellCasting),
-		ClassSpecific:       levelResultToClassSpecific(input),
-		Key:                 input.Index,
-		Class:               referenceItemToClass(input.Class),
-	}
-}
-
 func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
 	if input == nil {
 		return nil
@@ -669,7 +652,22 @@ func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
 	switch input.Class.Index {
 	case "ranger":
 		return classSpecificResultToRangerSpecific(input.ClassSpecific)
+
+	case "barbarian":
+		return classSpecificResultToBarbarianSpecific(input.ClassSpecific)
 	}
 
 	return nil
+}
+
+func classSpecificResultToBarbarianSpecific(input *classSpecificResult) *entities.BarbarianSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.BarbarianSpecific{
+		RageCount:          input.RageCount,
+		RageDamageBonus:    input.RageDamageBonus,
+		BrutalCriticalDice: input.BrutalCriticalDice,
+	}
 }

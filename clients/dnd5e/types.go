@@ -261,6 +261,9 @@ type spellCasting struct {
 }
 
 type classSpecificResult struct {
-	FavoredEnemies int `json:"favored_enemies"`
-	FavoredTerrain int `json:"favored_terrain"`
+	FavoredEnemies     int `json:"favored_enemies"`
+	FavoredTerrain     int `json:"favored_terrain"`
+	RageCount          int `json:"rage_count"`
+	RageDamageBonus    int `json:"rage_damage_bonus"`
+	BrutalCriticalDice int `json:"brutal_critical_dice"`
 }
