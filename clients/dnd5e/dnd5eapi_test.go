@@ -1222,3 +1222,302 @@ func TestDND5eAPI_GetMonster(t *testing.T) {
 		assert.Equal(t, "Exhaustion", result.ConditionImmunities[0].Name)
 	})
 }
+
+func TestDND5eAPI_GetClassLevel(t *testing.T) {
+	t.Run("it returns an error when http.Get fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"classes/ranger/levels/1").Return(nil, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetClassLevel("ranger", 1)
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "http.Get failed", err.Error())
+	})
+
+	t.Run("it returns an error if json.Unmarshal fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"classes/ranger/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetClassLevel("ranger", 1)
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
+	})
+
+	t.Run("it returns an error when the status code is not 200", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"classes/ranger/levels/1").Return(&http.Response{
+			StatusCode: 500,
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetClassLevel("ranger", 1)
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "unexpected status code: 500", err.Error())
+	})
+
+	t.Run("it returns a class level", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/rangerlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/ranger/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("ranger", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, 1, result.Level)
+		assert.Equal(t, 2, result.ProfBonus)
+		assert.Equal(t, 2, len(result.Features))
+		assert.Equal(t, "Favored Enemy (1 type)", result.Features[0].Name)
+		assert.Equal(t, 0, result.SpellCasting.SpellsKnown)
+		assert.Equal(t, 0, result.SpellCasting.SpellSlotsLevel1)
+		assert.Equal(t, 0, result.SpellCasting.SpellSlotsLevel5)
+		assert.Equal(t, "ranger-1", result.Key)
+		assert.Equal(t, "ranger", result.Class.Key)
+		assert.Equal(t, "Ranger", result.Class.Name)
+		assert.Equal(t, "ranger", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 1, result.ClassSpecific.(*entities.RangerSpecific).FavoredEnemies)
+	})
+
+	t.Run("it returns barbarian specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/barbarianlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/barbarian/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("barbarian", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, 1, result.Level)
+		assert.Equal(t, "barbarian", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 2, result.ClassSpecific.(*entities.BarbarianSpecific).RageCount)
+		assert.Equal(t, 2, result.ClassSpecific.(*entities.BarbarianSpecific).RageDamageBonus)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.BarbarianSpecific).BrutalCriticalDice)
+	})
+
+	t.Run("it returns bard specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/bardlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/bard/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("bard", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "bard", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 6, result.ClassSpecific.(*entities.BardSpecific).BardicInspirationDie)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.BardSpecific).SongOfRestDie)
+	})
+
+	t.Run("it returns cleric specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/clericlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/cleric/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("cleric", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, 3, result.SpellCasting.CantripsKnown)
+		assert.Equal(t, "cleric", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.ClericSpecific).ChannelDivinityCharges)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.ClericSpecific).DestroyUndeadCR)
+	})
+
+	t.Run("it returns druid specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/druidlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/druid/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("druid", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "druid", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.DruidSpecific).WildShapeMaxCR)
+		assert.Equal(t, false, result.ClassSpecific.(*entities.DruidSpecific).WildShapeSwim)
+		assert.Equal(t, false, result.ClassSpecific.(*entities.DruidSpecific).WildShapeFly)
+	})
+
+	t.Run("it returns fighter specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/fighterlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/fighter/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("fighter", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "fighter", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.FighterSpecific).ActionSurges)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.FighterSpecific).IndomitableUses)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.FighterSpecific).ExtraAttacks)
+	})
+
+	t.Run("it returns monk specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/monklevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/monk/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("monk", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "monk", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 1, result.ClassSpecific.(*entities.MonkSpecific).MartialArts.DiceCount)
+		assert.Equal(t, 4, result.ClassSpecific.(*entities.MonkSpecific).MartialArts.DiceValue)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.MonkSpecific).KiPoints)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.MonkSpecific).UnarmoredMovement)
+	})
+
+	t.Run("it returns paladin specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/paladinlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/paladin/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("paladin", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "paladin", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.PaladinSpecific).AuraRange)
+	})
+
+	t.Run("it returns rogue specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/roguelevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/rogue/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("rogue", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "rogue", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 1, result.ClassSpecific.(*entities.RogueSpecific).SneakAttack.DiceCount)
+		assert.Equal(t, 6, result.ClassSpecific.(*entities.RogueSpecific).SneakAttack.DiceValue)
+	})
+
+	t.Run("it returns sorcerer specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/sorcererlevel5.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/sorcerer/levels/5").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("sorcerer", 5)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "sorcerer", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 5, result.ClassSpecific.(*entities.SorcererSpecific).SorceryPoints)
+		assert.Equal(t, 2, result.ClassSpecific.(*entities.SorcererSpecific).MetamagicKnown)
+		assert.Equal(t, 1, result.ClassSpecific.(*entities.SorcererSpecific).CreatingSpellSlots[0].SpellSlotLevel)
+		assert.Equal(t, 2, result.ClassSpecific.(*entities.SorcererSpecific).CreatingSpellSlots[0].SorceryPointCost)
+	})
+
+	t.Run("it returns warlock specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/warlocklevel5.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/warlock/levels/5").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("warlock", 5)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "warlock", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 3, result.ClassSpecific.(*entities.WarlockSpecific).InvocationsKnown)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.WarlockSpecific).MysticArcanumLevel6)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.WarlockSpecific).MysticArcanumLevel7)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.WarlockSpecific).MysticArcanumLevel8)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.WarlockSpecific).MysticArcanumLevel9)
+	})
+
+	t.Run("it returns wizard specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/wizardlevel5.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/wizard/levels/5").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("wizard", 5)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "wizard", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 3, result.ClassSpecific.(*entities.WizardSpecific).ArcaneRecoveryLevels)
+	})
+}

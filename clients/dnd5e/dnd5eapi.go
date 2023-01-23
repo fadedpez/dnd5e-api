@@ -710,3 +710,48 @@ func (c *dnd5eAPI) GetMonster(key string) (*entities.Monster, error) {
 
 	return monster, nil
 }
+
+func (c *dnd5eAPI) GetClassLevel(key string, level int) (*entities.Level, error) {
+	if key == "" {
+		return nil, errors.New("key is required")
+	}
+
+	if level == 0 {
+		return nil, errors.New("level is required")
+	}
+
+	resp, err := c.client.Get(baserulzURL + "classes/" + key + "/levels/" + strconv.Itoa(level))
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := &levelResult{}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, response)
+
+	if err != nil {
+		return nil, err
+	}
+
+	classLevel := &entities.Level{
+		Level:               response.Level,
+		AbilityScoreBonuses: response.AbilityScoreBonuses,
+		ProfBonus:           response.ProfBonus,
+		Features:            referenceItemsToFeatures(response.Features),
+		SpellCasting:        spellCastingResultToSpellCasting(response.SpellCasting),
+		ClassSpecific:       levelResultToClassSpecific(response),
+		Key:                 response.Index,
+		Class:               referenceItemToClass(response.Class),
+	}
+
+	return classLevel, nil
+}

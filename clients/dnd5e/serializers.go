@@ -437,6 +437,15 @@ func referenceItemToFeature(input *referenceItem) *entities.ReferenceItem {
 	}
 }
 
+func referenceItemsToFeatures(input []*referenceItem) []*entities.ReferenceItem {
+	out := make([]*entities.ReferenceItem, len(input))
+	for i, s := range input {
+		out[i] = referenceItemToFeature(s)
+	}
+
+	return out
+}
+
 func featureClassResultToClass(input *referenceItem) *entities.ReferenceItem {
 	if input == nil {
 		return nil
@@ -599,4 +608,260 @@ func referenceItemsToConditions(input []*referenceItem) []*entities.ReferenceIte
 	}
 
 	return out
+}
+
+func spellCastingResultToSpellCasting(input *spellCasting) *entities.SpellCasting {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.SpellCasting{
+		CantripsKnown:    input.CantripsKnown,
+		SpellsKnown:      input.SpellsKnown,
+		SpellSlotsLevel1: input.SpellSlotsLevel1,
+		SpellSlotsLevel2: input.SpellSlotsLevel2,
+		SpellSlotsLevel3: input.SpellSlotsLevel3,
+		SpellSlotsLevel4: input.SpellSlotsLevel4,
+		SpellSlotsLevel5: input.SpellSlotsLevel5,
+		SpellSlotsLevel6: input.SpellSlotsLevel6,
+		SpellSlotsLevel7: input.SpellSlotsLevel7,
+		SpellSlotsLevel8: input.SpellSlotsLevel8,
+		SpellSlotsLevel9: input.SpellSlotsLevel9,
+	}
+}
+
+func classSpecificResultToRangerSpecific(input *classSpecificResult) *entities.RangerSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.RangerSpecific{
+		FavoredEnemies: input.FavoredEnemies,
+		FavoredTerrain: input.FavoredTerrain,
+	}
+}
+
+func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
+	if input == nil {
+		return nil
+	}
+
+	if input.Class == nil {
+		return nil
+	}
+
+	switch input.Class.Index {
+	case "ranger":
+		return classSpecificResultToRangerSpecific(input.ClassSpecific)
+
+	case "barbarian":
+		return classSpecificResultToBarbarianSpecific(input.ClassSpecific)
+
+	case "bard":
+		return classSpecificResultToBardSpecific(input.ClassSpecific)
+
+	case "cleric":
+		return classSpecificResultToClericSpecific(input.ClassSpecific)
+
+	case "druid":
+		return classSpecificResultToDruidSpecific(input.ClassSpecific)
+
+	case "fighter":
+		return classSpecificResultToFighterSpecific(input.ClassSpecific)
+
+	case "monk":
+		return classSpecificResultToMonkSpecific(input.ClassSpecific)
+
+	case "paladin":
+		return classSpecificResultToPaladinSpecific(input.ClassSpecific)
+
+	case "rogue":
+		return classSpecificResultToRogueSpecific(input.ClassSpecific)
+
+	case "sorcerer":
+		return classSpecificResultToSorcererSpecific(input.ClassSpecific)
+
+	case "warlock":
+		return classSpecificResultToWarlockSpecific(input.ClassSpecific)
+
+	case "wizard":
+		return classSpecificResultToWizardSpecific(input.ClassSpecific)
+	}
+
+	return nil
+}
+
+func classSpecificResultToBarbarianSpecific(input *classSpecificResult) *entities.BarbarianSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.BarbarianSpecific{
+		RageCount:          input.RageCount,
+		RageDamageBonus:    input.RageDamageBonus,
+		BrutalCriticalDice: input.BrutalCriticalDice,
+	}
+}
+
+func classSpecificResultToBardSpecific(input *classSpecificResult) *entities.BardSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.BardSpecific{
+		BardicInspirationDie: input.BardicInspirationDie,
+		SongOfRestDie:        input.SongOfRestDie,
+		MagicalSecretsMax5:   input.MagicalSecretsMax5,
+		MagicalSecretsMax7:   input.MagicalSecretsMax7,
+		MagicalSecretsMax9:   input.MagicalSecretsMax9,
+	}
+}
+
+func classSpecificResultToClericSpecific(input *classSpecificResult) *entities.ClericSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.ClericSpecific{
+		ChannelDivinityCharges: input.ChannelDivinityCharges,
+		DestroyUndeadCR:        input.DestroyUndeadCR,
+	}
+}
+
+func classSpecificResultToDruidSpecific(input *classSpecificResult) *entities.DruidSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.DruidSpecific{
+		WildShapeMaxCR: input.WildShapeMaxCR,
+		WildShapeSwim:  input.WildShapeSwim,
+		WildShapeFly:   input.WildShapeFly,
+	}
+}
+
+func classSpecificResultToFighterSpecific(input *classSpecificResult) *entities.FighterSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.FighterSpecific{
+		ActionSurges:    input.ActionSurges,
+		IndomitableUses: input.IndomitableUses,
+		ExtraAttacks:    input.ExtraAttacks,
+	}
+}
+
+func classSpecificResultToMonkSpecific(input *classSpecificResult) *entities.MonkSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.MonkSpecific{
+		MartialArts:       martialArtsResultToMartialArts(input.MartialArts),
+		KiPoints:          input.KiPoints,
+		UnarmoredMovement: input.UnarmoredMovement,
+	}
+}
+
+func martialArtsResultToMartialArts(input *martialArts) *entities.MartialArts {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.MartialArts{
+		DiceCount: input.DiceCount,
+		DiceValue: input.DiceValue,
+	}
+}
+
+func classSpecificResultToPaladinSpecific(input *classSpecificResult) *entities.PaladinSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.PaladinSpecific{
+		AuraRange: input.AuraRange,
+	}
+}
+
+func sneakAttackResultToSneakAttack(input *sneakAttack) *entities.SneakAttack {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.SneakAttack{
+		DiceCount: input.DiceCount,
+		DiceValue: input.DiceValue,
+	}
+}
+
+func classSpecificResultToRogueSpecific(input *classSpecificResult) *entities.RogueSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.RogueSpecific{
+		SneakAttack: sneakAttackResultToSneakAttack(input.SneakAttack),
+	}
+}
+
+func classSpecificResultToSorcererSpecific(input *classSpecificResult) *entities.SorcererSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.SorcererSpecific{
+		SorceryPoints:      input.SorceryPoints,
+		MetamagicKnown:     input.MetamagicKnown,
+		CreatingSpellSlots: creatingSpellSlotResultsToSpellSlots(input.CreatingSpellSlots),
+	}
+}
+
+func creatingSpellSlotResultToSpellSlot(input *creatingSpellSlots) *entities.CreatingSpellSlots {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.CreatingSpellSlots{
+		SpellSlotLevel:   input.SpellSlotLevel,
+		SorceryPointCost: input.SorceryPointCost,
+	}
+}
+
+func creatingSpellSlotResultsToSpellSlots(input []*creatingSpellSlots) []*entities.CreatingSpellSlots {
+	if input == nil {
+		return nil
+	}
+
+	slots := make([]*entities.CreatingSpellSlots, len(input))
+	for i := range input {
+		slots[i] = creatingSpellSlotResultToSpellSlot(input[i])
+	}
+
+	return slots
+}
+
+func classSpecificResultToWarlockSpecific(input *classSpecificResult) *entities.WarlockSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.WarlockSpecific{
+		InvocationsKnown:    input.InvocationsKnown,
+		MysticArcanumLevel6: input.MysticArcanumLevel6,
+		MysticArcanumLevel7: input.MysticArcanumLevel7,
+		MysticArcanumLevel8: input.MysticArcanumLevel8,
+		MysticArcanumLevel9: input.MysticArcanumLevel9,
+	}
+}
+
+func classSpecificResultToWizardSpecific(input *classSpecificResult) *entities.WizardSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.WizardSpecific{
+		ArcaneRecoveryLevels: input.ArcaneRecoveryLevels,
+	}
 }

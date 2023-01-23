@@ -235,3 +235,78 @@ type monsterAction struct {
 	AttackBonus int       `json:"attack_bonus"`
 	Damage      []*damage `json:"damage"`
 }
+
+type levelResult struct {
+	Level               int                  `json:"level"`
+	AbilityScoreBonuses int                  `json:"ability_score_bonuses"`
+	ProfBonus           int                  `json:"prof_bonus"`
+	Features            []*referenceItem     `json:"features"`
+	SpellCasting        *spellCasting        `json:"spellcasting"`
+	ClassSpecific       *classSpecificResult `json:"class_specific"`
+	Index               string               `json:"index"`
+	Class               *referenceItem       `json:"class"`
+}
+
+type spellCasting struct {
+	CantripsKnown    int `json:"cantrips_known"`
+	SpellsKnown      int `json:"spells_known"`
+	SpellSlotsLevel1 int `json:"spell_slots_level_1"`
+	SpellSlotsLevel2 int `json:"spell_slots_level_2"`
+	SpellSlotsLevel3 int `json:"spell_slots_level_3"`
+	SpellSlotsLevel4 int `json:"spell_slots_level_4"`
+	SpellSlotsLevel5 int `json:"spell_slots_level_5"`
+	SpellSlotsLevel6 int `json:"spell_slots_level_6"`
+	SpellSlotsLevel7 int `json:"spell_slots_level_7"`
+	SpellSlotsLevel8 int `json:"spell_slots_level_8"`
+	SpellSlotsLevel9 int `json:"spell_slots_level_9"`
+}
+
+type classSpecificResult struct {
+	FavoredEnemies         int                   `json:"favored_enemies"`
+	FavoredTerrain         int                   `json:"favored_terrain"`
+	RageCount              int                   `json:"rage_count"`
+	RageDamageBonus        int                   `json:"rage_damage_bonus"`
+	BrutalCriticalDice     int                   `json:"brutal_critical_dice"`
+	BardicInspirationDie   int                   `json:"bardic_inspiration_die"`
+	SongOfRestDie          int                   `json:"song_of_rest_die"`
+	MagicalSecretsMax5     int                   `json:"magical_secrets_max_5"`
+	MagicalSecretsMax7     int                   `json:"magical_secrets_max_7"`
+	MagicalSecretsMax9     int                   `json:"magical_secrets_max_9"`
+	ChannelDivinityCharges int                   `json:"channel_divinity_charges"`
+	DestroyUndeadCR        int                   `json:"destroy_undead_cr"`
+	WildShapeMaxCR         int                   `json:"wild_shape_max_cr"`
+	WildShapeSwim          bool                  `json:"wild_shape_swim"`
+	WildShapeFly           bool                  `json:"wild_shape_fly"`
+	ActionSurges           int                   `json:"action_surges"`
+	IndomitableUses        int                   `json:"indomitable_uses"`
+	ExtraAttacks           int                   `json:"extra_attacks"`
+	MartialArts            *martialArts          `json:"martial_arts"`
+	KiPoints               int                   `json:"ki_points"`
+	UnarmoredMovement      int                   `json:"unarmored_movement"`
+	AuraRange              int                   `json:"aura_range"`
+	SneakAttack            *sneakAttack          `json:"sneak_attack"`
+	SorceryPoints          int                   `json:"sorcery_points"`
+	MetamagicKnown         int                   `json:"metamagic_known"`
+	CreatingSpellSlots     []*creatingSpellSlots `json:"creating_spell_slots"`
+	InvocationsKnown       int                   `json:"invocations_known"`
+	MysticArcanumLevel6    int                   `json:"mystic_arcanum_level_6"`
+	MysticArcanumLevel7    int                   `json:"mystic_arcanum_level_7"`
+	MysticArcanumLevel8    int                   `json:"mystic_arcanum_level_8"`
+	MysticArcanumLevel9    int                   `json:"mystic_arcanum_level_9"`
+	ArcaneRecoveryLevels   int                   `json:"arcane_recovery_levels"`
+}
+
+type martialArts struct {
+	DiceCount int `json:"dice_count"`
+	DiceValue int `json:"dice_value"`
+}
+
+type sneakAttack struct {
+	DiceCount int `json:"dice_count"`
+	DiceValue int `json:"dice_value"`
+}
+
+type creatingSpellSlots struct {
+	SpellSlotLevel   int `json:"spell_slot_level"`
+	SorceryPointCost int `json:"sorcery_point_cost"`
+}
