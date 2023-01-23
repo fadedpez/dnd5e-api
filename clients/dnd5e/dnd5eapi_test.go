@@ -1354,4 +1354,25 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		assert.Equal(t, 0, result.ClassSpecific.(*entities.ClericSpecific).DestroyUndeadCR)
 	})
 
+	t.Run("it returns druid specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/druidlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/druid/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("druid", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "druid", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.DruidSpecific).WildShapeMaxCR)
+		assert.Equal(t, false, result.ClassSpecific.(*entities.DruidSpecific).WildShapeSwim)
+		assert.Equal(t, false, result.ClassSpecific.(*entities.DruidSpecific).WildShapeFly)
+	})
+
 }

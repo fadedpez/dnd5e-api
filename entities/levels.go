@@ -68,3 +68,13 @@ type ClericSpecific struct {
 func (c ClericSpecific) GetSpecificClass() string {
 	return "cleric"
 }
+
+type DruidSpecific struct {
+	WildShapeMaxCR int  `json:"wild_shape_max_cr"`
+	WildShapeSwim  bool `json:"wild_shape_swim"`
+	WildShapeFly   bool `json:"wild_shape_fly"`
+}
+
+func (d DruidSpecific) GetSpecificClass() string {
+	return "druid"
+}
