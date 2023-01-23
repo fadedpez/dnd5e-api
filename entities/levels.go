@@ -111,3 +111,16 @@ type PaladinSpecific struct {
 func (p PaladinSpecific) GetSpecificClass() string {
 	return "paladin"
 }
+
+type RogueSpecific struct {
+	SneakAttack *SneakAttack `json:"sneak_attack_dice"`
+}
+
+func (r RogueSpecific) GetSpecificClass() string {
+	return "rogue"
+}
+
+type SneakAttack struct {
+	DiceCount int `json:"dice_count"`
+	DiceValue int `json:"dice_value"`
+}

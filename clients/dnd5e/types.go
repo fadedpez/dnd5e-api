@@ -284,9 +284,15 @@ type classSpecificResult struct {
 	KiPoints               int          `json:"ki_points"`
 	UnarmoredMovement      int          `json:"unarmored_movement"`
 	AuraRange              int          `json:"aura_range"`
+	SneakAttack            *sneakAttack `json:"sneak_attack"`
 }
 
 type martialArts struct {
+	DiceCount int `json:"dice_count"`
+	DiceValue int `json:"dice_value"`
+}
+
+type sneakAttack struct {
 	DiceCount int `json:"dice_count"`
 	DiceValue int `json:"dice_value"`
 }

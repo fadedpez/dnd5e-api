@@ -1,0 +1,36 @@
+{
+  "level": 1,
+  "ability_score_bonuses": 0,
+  "prof_bonus": 2,
+  "features": [
+    {
+      "index": "rogue-expertise-1",
+      "name": "Expertise",
+      "url": "/api/features/rogue-expertise-1"
+    },
+    {
+      "index": "sneak-attack",
+      "name": "Sneak Attack",
+      "url": "/api/features/sneak-attack"
+    },
+    {
+      "index": "thieves-cant",
+      "name": "Thieves' Cant",
+      "url": "/api/features/thieves-cant"
+    }
+  ],
+  "class_specific": {
+    "sneak_attack": {
+      "dice_count": 1,
+      "dice_value": 6
+    }
+  },
+  "index": "rogue-1",
+  "class": {
+    "index": "rogue",
+    "name": "Rogue",
+    "url": "/api/classes/rogue"
+  },
+  "url": "/api/classes/rogue/levels/1"
+}
+

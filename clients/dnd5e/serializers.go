@@ -674,6 +674,9 @@ func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
 
 	case "paladin":
 		return classSpecificResultToPaladinSpecific(input.ClassSpecific)
+
+	case "rogue":
+		return classSpecificResultToRogueSpecific(input.ClassSpecific)
 	}
 
 	return nil
@@ -770,5 +773,26 @@ func classSpecificResultToPaladinSpecific(input *classSpecificResult) *entities.
 
 	return &entities.PaladinSpecific{
 		AuraRange: input.AuraRange,
+	}
+}
+
+func sneakAttackResultToSneakAttack(input *sneakAttack) *entities.SneakAttack {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.SneakAttack{
+		DiceCount: input.DiceCount,
+		DiceValue: input.DiceValue,
+	}
+}
+
+func classSpecificResultToRogueSpecific(input *classSpecificResult) *entities.RogueSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.RogueSpecific{
+		SneakAttack: sneakAttackResultToSneakAttack(input.SneakAttack),
 	}
 }
