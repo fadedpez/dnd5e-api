@@ -277,4 +277,7 @@ type classSpecificResult struct {
 	WildShapeMaxCR         int  `json:"wild_shape_max_cr"`
 	WildShapeSwim          bool `json:"wild_shape_swim"`
 	WildShapeFly           bool `json:"wild_shape_fly"`
+	ActionSurges           int  `json:"action_surges"`
+	IndomitableUses        int  `json:"indomitable_uses"`
+	ExtraAttacks           int  `json:"extra_attacks"`
 }

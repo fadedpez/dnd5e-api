@@ -78,3 +78,13 @@ type DruidSpecific struct {
 func (d DruidSpecific) GetSpecificClass() string {
 	return "druid"
 }
+
+type FighterSpecific struct {
+	ActionSurges    int `json:"action_surges"`
+	IndomitableUses int `json:"indomitable_uses"`
+	ExtraAttacks    int `json:"extra_attacks"`
+}
+
+func (f FighterSpecific) GetSpecificClass() string {
+	return "fighter"
+}

@@ -665,6 +665,9 @@ func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
 
 	case "druid":
 		return classSpecificResultToDruidSpecific(input.ClassSpecific)
+
+	case "fighter":
+		return classSpecificResultToFighterSpecific(input.ClassSpecific)
 	}
 
 	return nil
@@ -716,5 +719,17 @@ func classSpecificResultToDruidSpecific(input *classSpecificResult) *entities.Dr
 		WildShapeMaxCR: input.WildShapeMaxCR,
 		WildShapeSwim:  input.WildShapeSwim,
 		WildShapeFly:   input.WildShapeFly,
+	}
+}
+
+func classSpecificResultToFighterSpecific(input *classSpecificResult) *entities.FighterSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.FighterSpecific{
+		ActionSurges:    input.ActionSurges,
+		IndomitableUses: input.IndomitableUses,
+		ExtraAttacks:    input.ExtraAttacks,
 	}
 }
