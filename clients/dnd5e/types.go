@@ -237,14 +237,14 @@ type monsterAction struct {
 }
 
 type levelResult struct {
-	Level               int              `json:"level"`
-	AbilityScoreBonuses int              `json:"ability_score_bonuses"`
-	ProfBonus           int              `json:"prof_bonus"`
-	Features            []*referenceItem `json:"features"`
-	SpellCasting        *spellCasting    `json:"spellcasting"`
-	ClassSpecific       *classSpecific   `json:"class_specific"`
-	Index               string           `json:"index"`
-	Class               *referenceItem   `json:"class"`
+	Level               int                  `json:"level"`
+	AbilityScoreBonuses int                  `json:"ability_score_bonuses"`
+	ProfBonus           int                  `json:"prof_bonus"`
+	Features            []*referenceItem     `json:"features"`
+	SpellCasting        *spellCasting        `json:"spellcasting"`
+	ClassSpecific       *classSpecificResult `json:"class_specific"`
+	Index               string               `json:"index"`
+	Class               *referenceItem       `json:"class"`
 }
 
 type spellCasting struct {
@@ -260,7 +260,7 @@ type spellCasting struct {
 	SpellSlotsLevel9 int `json:"spell_slots_level_9"`
 }
 
-type classSpecific struct {
+type classSpecificResult struct {
 	FavoredEnemies int `json:"favored_enemies"`
 	FavoredTerrain int `json:"favored_terrain"`
 }

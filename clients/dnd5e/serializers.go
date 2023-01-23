@@ -629,7 +629,7 @@ func spellCastingResultToSpellCasting(input *spellCasting) *entities.SpellCastin
 	}
 }
 
-func classSpecificResultToRangerSpecific(input *classSpecific) *entities.RangerSpecific {
+func classSpecificResultToRangerSpecific(input *classSpecificResult) *entities.RangerSpecific {
 	if input == nil {
 		return nil
 	}
@@ -651,8 +651,25 @@ func levelResultToLevel(input *levelResult) *entities.Level {
 		ProfBonus:           input.ProfBonus,
 		Features:            referenceItemsToFeatures(input.Features),
 		SpellCasting:        spellCastingResultToSpellCasting(input.SpellCasting),
-		ClassSpecific:       classSpecificResultToRangerSpecific(input.ClassSpecific),
+		ClassSpecific:       levelResultToClassSpecific(input),
 		Key:                 input.Index,
 		Class:               referenceItemToClass(input.Class),
 	}
+}
+
+func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
+	if input == nil {
+		return nil
+	}
+
+	if input.Class == nil {
+		return nil
+	}
+
+	switch input.Class.Index {
+	case "ranger":
+		return classSpecificResultToRangerSpecific(input.ClassSpecific)
+	}
+
+	return nil
 }
