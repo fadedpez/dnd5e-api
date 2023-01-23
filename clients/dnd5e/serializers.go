@@ -659,6 +659,9 @@ func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
 
 	case "bard":
 		return classSpecificResultToBardSpecific(input.ClassSpecific)
+
+	case "cleric":
+		return classSpecificResultToClericSpecific(input.ClassSpecific)
 	}
 
 	return nil
@@ -687,5 +690,16 @@ func classSpecificResultToBardSpecific(input *classSpecificResult) *entities.Bar
 		MagicalSecretsMax5:   input.MagicalSecretsMax5,
 		MagicalSecretsMax7:   input.MagicalSecretsMax7,
 		MagicalSecretsMax9:   input.MagicalSecretsMax9,
+	}
+}
+
+func classSpecificResultToClericSpecific(input *classSpecificResult) *entities.ClericSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.ClericSpecific{
+		ChannelDivinityCharges: input.ChannelDivinityCharges,
+		DestroyUndeadCR:        input.DestroyUndeadCR,
 	}
 }

@@ -59,3 +59,12 @@ type BardSpecific struct {
 func (b BardSpecific) GetSpecificClass() string {
 	return "bard"
 }
+
+type ClericSpecific struct {
+	ChannelDivinityCharges int `json:"channel_divinity_charges"`
+	DestroyUndeadCR        int `json:"destroy_undead_cr"`
+}
+
+func (c ClericSpecific) GetSpecificClass() string {
+	return "cleric"
+}

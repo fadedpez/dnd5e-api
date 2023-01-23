@@ -1,0 +1,46 @@
+{
+  "level": 1,
+  "ability_score_bonuses": 0,
+  "prof_bonus": 2,
+  "features": [
+    {
+      "index": "spellcasting-cleric",
+      "name": "Spellcasting: Cleric",
+      "url": "/api/features/spellcasting-cleric"
+    },
+    {
+      "index": "divine-domain",
+      "name": "Divine Domain",
+      "url": "/api/features/divine-domain"
+    },
+    {
+      "index": "domain-spells-1",
+      "name": "Domain Spells",
+      "url": "/api/features/domain-spells-1"
+    }
+  ],
+  "spellcasting": {
+    "cantrips_known": 3,
+    "spell_slots_level_1": 2,
+    "spell_slots_level_2": 0,
+    "spell_slots_level_3": 0,
+    "spell_slots_level_4": 0,
+    "spell_slots_level_5": 0,
+    "spell_slots_level_6": 0,
+    "spell_slots_level_7": 0,
+    "spell_slots_level_8": 0,
+    "spell_slots_level_9": 0
+  },
+  "class_specific": {
+    "channel_divinity_charges": 0,
+    "destroy_undead_cr": 0
+  },
+  "index": "cleric-1",
+  "class": {
+    "index": "cleric",
+    "name": "Cleric",
+    "url": "/api/classes/cleric"
+  },
+  "url": "/api/classes/cleric/levels/1"
+}
+

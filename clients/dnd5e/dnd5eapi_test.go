@@ -1333,4 +1333,25 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		assert.Equal(t, 0, result.ClassSpecific.(*entities.BardSpecific).SongOfRestDie)
 	})
 
+	t.Run("it returns cleric specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/clericlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/cleric/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("cleric", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, 3, result.SpellCasting.CantripsKnown)
+		assert.Equal(t, "cleric", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.ClericSpecific).ChannelDivinityCharges)
+		assert.Equal(t, 0, result.ClassSpecific.(*entities.ClericSpecific).DestroyUndeadCR)
+	})
+
 }
