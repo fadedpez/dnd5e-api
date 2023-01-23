@@ -21,6 +21,7 @@ type Interface interface {
 	GetSkill(key string) (*entities.Skill, error)
 	ListMonsters() ([]*entities.ReferenceItem, error)
 	GetMonster(key string) (*entities.Monster, error)
+	GetClassLevel(key string, level int) (*entities.Level, error)
 }
 
 type httpIface interface {

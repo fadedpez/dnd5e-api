@@ -1222,3 +1222,72 @@ func TestDND5eAPI_GetMonster(t *testing.T) {
 		assert.Equal(t, "Exhaustion", result.ConditionImmunities[0].Name)
 	})
 }
+
+func TestDND5eAPI_GetClassLevel(t *testing.T) {
+	t.Run("it returns an error when http.Get fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"classes/ranger/levels/1").Return(nil, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetClassLevel("ranger", 1)
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "http.Get failed", err.Error())
+	})
+
+	t.Run("it returns an error if json.Unmarshal fails", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"classes/ranger/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetClassLevel("ranger", 1)
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "invalid character 'i' looking for beginning of value", err.Error())
+	})
+
+	t.Run("it returns an error when the status code is not 200", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		client.On("Get", baserulzURL+"classes/ranger/levels/1").Return(&http.Response{
+			StatusCode: 500,
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		_, err := dnd5eAPI.GetClassLevel("ranger", 1)
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "unexpected status code: 500", err.Error())
+	})
+
+	t.Run("it returns a class level", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/rangerlevel1.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/ranger/levels/1").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("ranger", 1)
+
+		assert.Nil(t, err)
+		assert.Equal(t, 1, result.Level)
+		assert.Equal(t, 2, result.ProfBonus)
+		assert.Equal(t, 2, len(result.Features))
+		assert.Equal(t, "Favored Enemy (1 type)", result.Features[0].Name)
+		assert.Equal(t, 0, result.SpellCasting.SpellsKnown)
+		assert.Equal(t, 0, result.SpellCasting.SpellSlotsLevel1)
+		assert.Equal(t, 0, result.SpellCasting.SpellSlotsLevel5)
+		assert.Equal(t, "ranger-1", result.Key)
+		assert.Equal(t, "ranger", result.Class.Key)
+		assert.Equal(t, "Ranger", result.Class.Name)
+		assert.Equal(t, "ranger", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 1, result.ClassSpecific.(*entities.RangerSpecific).FavoredEnemies)
+	})
+}
