@@ -124,3 +124,18 @@ type SneakAttack struct {
 	DiceCount int `json:"dice_count"`
 	DiceValue int `json:"dice_value"`
 }
+
+type SorcererSpecific struct {
+	SorceryPoints      int                   `json:"sorcery_points"`
+	MetamagicKnown     int                   `json:"metamagic_known"`
+	CreatingSpellSlots []*CreatingSpellSlots `json:"creating_spell_slots"`
+}
+
+func (s SorcererSpecific) GetSpecificClass() string {
+	return "sorcerer"
+}
+
+type CreatingSpellSlots struct {
+	SpellSlotLevel   int `json:"spell_slot_level"`
+	SorceryPointCost int `json:"sorcery_point_cost"`
+}

@@ -1457,4 +1457,26 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		assert.Equal(t, 6, result.ClassSpecific.(*entities.RogueSpecific).SneakAttack.DiceValue)
 	})
 
+	t.Run("it returns sorcerer specific level data", func(t *testing.T) {
+		client := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/classes/levels/sorcererlevel5.json")
+		classLevelFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+
+		client.On("Get", baserulzURL+"classes/sorcerer/levels/5").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{client: client}
+		result, err := dnd5eAPI.GetClassLevel("sorcerer", 5)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "sorcerer", result.ClassSpecific.GetSpecificClass())
+		assert.Equal(t, 5, result.ClassSpecific.(*entities.SorcererSpecific).SorceryPoints)
+		assert.Equal(t, 2, result.ClassSpecific.(*entities.SorcererSpecific).MetamagicKnown)
+		assert.Equal(t, 1, result.ClassSpecific.(*entities.SorcererSpecific).CreatingSpellSlots[0].SpellSlotLevel)
+		assert.Equal(t, 2, result.ClassSpecific.(*entities.SorcererSpecific).CreatingSpellSlots[0].SorceryPointCost)
+	})
+
 }

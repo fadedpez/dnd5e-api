@@ -677,6 +677,9 @@ func levelResultToClassSpecific(input *levelResult) entities.ClassSpecific {
 
 	case "rogue":
 		return classSpecificResultToRogueSpecific(input.ClassSpecific)
+
+	case "sorcerer":
+		return classSpecificResultToSorcererSpecific(input.ClassSpecific)
 	}
 
 	return nil
@@ -795,4 +798,40 @@ func classSpecificResultToRogueSpecific(input *classSpecificResult) *entities.Ro
 	return &entities.RogueSpecific{
 		SneakAttack: sneakAttackResultToSneakAttack(input.SneakAttack),
 	}
+}
+
+func classSpecificResultToSorcererSpecific(input *classSpecificResult) *entities.SorcererSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.SorcererSpecific{
+		SorceryPoints:      input.SorceryPoints,
+		MetamagicKnown:     input.MetamagicKnown,
+		CreatingSpellSlots: creatingSpellSlotResultsToSpellSlots(input.CreatingSpellSlots),
+	}
+}
+
+func creatingSpellSlotResultToSpellSlot(input *creatingSpellSlots) *entities.CreatingSpellSlots {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.CreatingSpellSlots{
+		SpellSlotLevel:   input.SpellSlotLevel,
+		SorceryPointCost: input.SorceryPointCost,
+	}
+}
+
+func creatingSpellSlotResultsToSpellSlots(input []*creatingSpellSlots) []*entities.CreatingSpellSlots {
+	if input == nil {
+		return nil
+	}
+
+	slots := make([]*entities.CreatingSpellSlots, len(input))
+	for i := range input {
+		slots[i] = creatingSpellSlotResultToSpellSlot(input[i])
+	}
+
+	return slots
 }
