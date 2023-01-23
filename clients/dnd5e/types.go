@@ -235,3 +235,32 @@ type monsterAction struct {
 	AttackBonus int       `json:"attack_bonus"`
 	Damage      []*damage `json:"damage"`
 }
+
+type levelResult struct {
+	Level               int              `json:"level"`
+	AbilityScoreBonuses int              `json:"ability_score_bonuses"`
+	ProfBonus           int              `json:"prof_bonus"`
+	Features            []*referenceItem `json:"features"`
+	SpellCasting        *spellCasting    `json:"spellcasting"`
+	ClassSpecific       *classSpecific   `json:"class_specific"`
+	Index               string           `json:"index"`
+	Class               *referenceItem   `json:"class"`
+}
+
+type spellCasting struct {
+	SpellsKnown      int `json:"spells_known"`
+	SpellSlotsLevel1 int `json:"spell_slots_level_1"`
+	SpellSlotsLevel2 int `json:"spell_slots_level_2"`
+	SpellSlotsLevel3 int `json:"spell_slots_level_3"`
+	SpellSlotsLevel4 int `json:"spell_slots_level_4"`
+	SpellSlotsLevel5 int `json:"spell_slots_level_5"`
+	SpellSlotsLevel6 int `json:"spell_slots_level_6"`
+	SpellSlotsLevel7 int `json:"spell_slots_level_7"`
+	SpellSlotsLevel8 int `json:"spell_slots_level_8"`
+	SpellSlotsLevel9 int `json:"spell_slots_level_9"`
+}
+
+type classSpecific struct {
+	FavoredEnemies int `json:"favored_enemies"`
+	FavoredTerrain int `json:"favored_terrain"`
+}

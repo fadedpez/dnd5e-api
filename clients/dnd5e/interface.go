@@ -20,6 +20,7 @@ type Interface interface {
 	ListSkills() ([]*entities.ReferenceItem, error)
 	GetSkill(key string) (*entities.Skill, error)
 	ListMonsters() ([]*entities.ReferenceItem, error)
+	GetMonster(key string) (*entities.Monster, error)
 }
 
 type httpIface interface {

@@ -437,6 +437,15 @@ func referenceItemToFeature(input *referenceItem) *entities.ReferenceItem {
 	}
 }
 
+func referenceItemsToFeatures(input []*referenceItem) []*entities.ReferenceItem {
+	out := make([]*entities.ReferenceItem, len(input))
+	for i, s := range input {
+		out[i] = referenceItemToFeature(s)
+	}
+
+	return out
+}
+
 func featureClassResultToClass(input *referenceItem) *entities.ReferenceItem {
 	if input == nil {
 		return nil
@@ -599,4 +608,51 @@ func referenceItemsToConditions(input []*referenceItem) []*entities.ReferenceIte
 	}
 
 	return out
+}
+
+func spellCastingResultToSpellCasting(input *spellCasting) *entities.SpellCasting {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.SpellCasting{
+		SpellsKnown:      input.SpellsKnown,
+		SpellSlotsLevel1: input.SpellSlotsLevel1,
+		SpellSlotsLevel2: input.SpellSlotsLevel2,
+		SpellSlotsLevel3: input.SpellSlotsLevel3,
+		SpellSlotsLevel4: input.SpellSlotsLevel4,
+		SpellSlotsLevel5: input.SpellSlotsLevel5,
+		SpellSlotsLevel6: input.SpellSlotsLevel6,
+		SpellSlotsLevel7: input.SpellSlotsLevel7,
+		SpellSlotsLevel8: input.SpellSlotsLevel8,
+		SpellSlotsLevel9: input.SpellSlotsLevel9,
+	}
+}
+
+func classSpecificResultToRangerSpecific(input *classSpecific) *entities.RangerSpecific {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.RangerSpecific{
+		FavoredEnemies: input.FavoredEnemies,
+		FavoredTerrain: input.FavoredTerrain,
+	}
+}
+
+func levelResultToLevel(input *levelResult) *entities.Level {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.Level{
+		Level:               input.Level,
+		AbilityScoreBonuses: input.AbilityScoreBonuses,
+		ProfBonus:           input.ProfBonus,
+		Features:            referenceItemsToFeatures(input.Features),
+		SpellCasting:        spellCastingResultToSpellCasting(input.SpellCasting),
+		ClassSpecific:       classSpecificResultToRangerSpecific(input.ClassSpecific),
+		Key:                 input.Index,
+		Class:               referenceItemToClass(input.Class),
+	}
 }
