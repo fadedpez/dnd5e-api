@@ -100,6 +100,7 @@ type choiceResult struct {
 func (c *choiceResult) toEntity() *entities.ChoiceOption {
 
 	return &entities.ChoiceOption{
+		Description: c.Desc,
 		ChoiceCount: c.Choose,
 		ChoiceType:  c.Type,
 		OptionList:  c.From.toEntity(),
