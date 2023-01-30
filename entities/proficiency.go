@@ -9,9 +9,6 @@ const (
 	ProficiencyTypeSavingThrow ProficiencyType = "saving-throw"
 	ProficiencyTypeSkill       ProficiencyType = "skill"
 	ProficiencyTypeInstrument  ProficiencyType = "instrument"
-	ProficiencyTypeLanguage    ProficiencyType = "language"
-	ProficiencyTypeVehicle     ProficiencyType = "vehicle"
-	ProficiencyTypeOther       ProficiencyType = "other"
 	ProficiencyTypeUnknown     ProficiencyType = ""
 )
 
