@@ -1754,3 +1754,25 @@ func TestDND5eAPI_ListDamageTypes(t *testing.T) {
 		assert.Equal(t, "Acid", damagetypes[0].Name)
 	})
 }
+
+func TestDnd5eAPI_GetDamageType(t *testing.T) {
+	mockClient := &mockHTTPClient{}
+	filePath, _ := filepath.Abs("../../testdata/damage/acid.json")
+	damageFile, err := os.ReadFile(filePath)
+	assert.Nil(t, err)
+
+	mockClient.On("Get", baserulzURL+"damage-types/acid").Return(&http.Response{
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(damageFile)),
+	}, nil)
+
+	dnd5eAPI := &dnd5eAPI{
+		client: mockClient,
+	}
+
+	damageType, err := dnd5eAPI.GetDamageType("acid")
+	assert.Nil(t, err)
+	assert.Equal(t, "acid", damageType.Key)
+	assert.Equal(t, "Acid", damageType.Name)
+	assert.Equal(t, "The corrosive spray of a black dragon's breath and the dissolving enzymes secreted by a black pudding deal acid damage.", damageType.Description[0])
+}

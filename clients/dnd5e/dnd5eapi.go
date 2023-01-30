@@ -827,3 +827,36 @@ func (c *dnd5eAPI) ListDamageTypes() ([]*entities.ReferenceItem, error) {
 
 	return out, nil
 }
+
+func (c *dnd5eAPI) GetDamageType(key string) (*entities.DamageType, error) {
+	resp, err := c.client.Get(baserulzURL + "damage-types/" + key)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := damageTypeResult{}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+
+	if err != nil {
+		return nil, err
+	}
+
+	damageType := &entities.DamageType{
+		Key:         response.Index,
+		Name:        response.Name,
+		Type:        urlToType(response.URL),
+		Description: response.Description,
+	}
+
+	return damageType, nil
+}
