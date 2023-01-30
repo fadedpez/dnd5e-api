@@ -61,39 +61,8 @@ func damageResultToDamage(input *damage) *entities.Damage {
 
 	return &entities.Damage{
 		DamageDice: input.DamageDice,
-		DamageType: damageTypeResultToDamageType(input.DamageType),
+		DamageType: referenceItemToReferenceItem(input.DamageType),
 	}
-}
-
-func damageTypeResultToDamageType(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func propertyResultToProperties(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func propertiesResultsToProperties(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, p := range input {
-		out[i] = propertyResultToProperties(p)
-	}
-
-	return out
 }
 
 func weaponRangeResultToWeaponRange(input *weaponRange) *entities.Range {
@@ -122,7 +91,7 @@ func weaponResultToWeapon(input *weaponResult) *entities.Weapon {
 		WeaponRange:       input.WeaponRange,
 		CategoryRange:     input.CategoryRange,
 		Range:             weaponRangeResultToWeaponRange(input.Range),
-		Properties:        propertiesResultsToProperties(input.Properties),
+		Properties:        referenceItemsToReferenceItems(input.Properties),
 		TwoHandedDamage:   damageResultToDamage(input.TwoHandedDamage),
 	}
 }
