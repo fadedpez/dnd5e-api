@@ -125,51 +125,13 @@ func armorClassResultToArmorClass(input *armorClass) *entities.ArmorClass {
 	}
 }
 
-func referenceItemToClass(input *referenceItem) *entities.ReferenceItem {
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func savingThrowResultToSavingThrow(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func savingThrowResultsToSavingThrows(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, s := range input {
-		out[i] = savingThrowResultToSavingThrow(s)
-	}
-
-	return out
-}
-
-func equipmentListResultToEquipmentList(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func startingEquipmentResultToStartingEquipment(input *startingEquipment) *entities.StartingEquipment {
 	if input == nil {
 		return nil
 	}
 
 	return &entities.StartingEquipment{
-		Equipment: equipmentListResultToEquipmentList(input.Equipment),
+		Equipment: referenceItemToReferenceItem(input.Equipment),
 		Quantity:  input.Quantity,
 	}
 }

@@ -209,7 +209,7 @@ func (c *dnd5eAPI) ListClasses() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToClass(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil
@@ -247,7 +247,7 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 		Name:                     response.Name,
 		HitDie:                   response.HitDie,
 		Proficiencies:            referenceItemsToReferenceItems(response.Proficiencies),
-		SavingThrows:             savingThrowResultsToSavingThrows(response.SavingThrows),
+		SavingThrows:             referenceItemsToReferenceItems(response.SavingThrows),
 		StartingEquipment:        startingEquipmentResultsToStartingEquipment(response.StartingEquipment),
 		ProficiencyChoices:       choiceResultsToChoices(response.ProficiencyChoices),
 		StartingEquipmentOptions: startingEquipmentOption,
@@ -752,7 +752,7 @@ func (c *dnd5eAPI) GetClassLevel(key string, level int) (*entities.Level, error)
 		SpellCasting:        spellCastingResultToSpellCasting(response.SpellCasting),
 		ClassSpecific:       levelResultToClassSpecific(response),
 		Key:                 response.Index,
-		Class:               referenceItemToClass(response.Class),
+		Class:               referenceItemToReferenceItem(response.Class),
 	}
 
 	return classLevel, nil
