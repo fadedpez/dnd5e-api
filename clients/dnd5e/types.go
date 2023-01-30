@@ -317,3 +317,10 @@ type proficiencyResult struct {
 	Type      string         `json:"type"`
 	Reference *referenceItem `json:"reference"`
 }
+
+type damageTypeResult struct {
+	Index       string   `json:"index"`
+	Name        string   `json:"name"`
+	Description []string `json:"desc"`
+	URL         string   `json:"url"`
+}

@@ -797,3 +797,66 @@ func (c *dnd5eAPI) GetProficiency(key string) (*entities.Proficiency, error) {
 
 	return proficiency, nil
 }
+
+func (c *dnd5eAPI) ListDamageTypes() ([]*entities.ReferenceItem, error) {
+	resp, err := c.client.Get(baserulzURL + "damage-types")
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := listResponse{}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]*entities.ReferenceItem, len(response.Results))
+	for i, r := range response.Results {
+		out[i] = referenceItemToReferenceItem(r)
+	}
+
+	return out, nil
+}
+
+func (c *dnd5eAPI) GetDamageType(key string) (*entities.DamageType, error) {
+	resp, err := c.client.Get(baserulzURL + "damage-types/" + key)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := damageTypeResult{}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+
+	if err != nil {
+		return nil, err
+	}
+
+	damageType := &entities.DamageType{
+		Key:         response.Index,
+		Name:        response.Name,
+		Type:        urlToType(response.URL),
+		Description: response.Description,
+	}
+
+	return damageType, nil
+}

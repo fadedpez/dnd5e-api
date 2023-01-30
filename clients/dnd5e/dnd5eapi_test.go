@@ -1524,7 +1524,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 	})
 }
 
-func TestDnd5eAPI_GetProficiency(t *testing.T) {
+func TestDND5eAPI_GetProficiency(t *testing.T) {
 	type fields struct {
 		client *mockHTTPClient
 	}
@@ -1688,4 +1688,91 @@ func TestDnd5eAPI_GetProficiency(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestDND5eAPI_ListDamageTypes(t *testing.T) {
+	t.Run("it returns an error when http.Get fails", func(t *testing.T) {
+		mockClient := &mockHTTPClient{}
+		mockClient.On("Get", baserulzURL+"damage-types").Return(&http.Response{}, errors.New("http.Get failed"))
+
+		dnd5eAPI := &dnd5eAPI{
+			client: mockClient,
+		}
+
+		_, err := dnd5eAPI.ListDamageTypes()
+		assert.Error(t, err)
+	})
+
+	t.Run("it returns an error if json unmarshalling fails", func(t *testing.T) {
+		mockClient := &mockHTTPClient{}
+		mockClient.On("Get", baserulzURL+"damage-types").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{
+			client: mockClient,
+		}
+
+		_, err := dnd5eAPI.ListDamageTypes()
+		assert.Error(t, err)
+	})
+
+	t.Run("it returns an error if the status code is not 200", func(t *testing.T) {
+		mockClient := &mockHTTPClient{}
+		mockClient.On("Get", baserulzURL+"damage-types").Return(&http.Response{
+			StatusCode: 500,
+			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{
+			client: mockClient,
+		}
+
+		_, err := dnd5eAPI.ListDamageTypes()
+		assert.Error(t, err)
+	})
+
+	t.Run("it returns a list of damage types", func(t *testing.T) {
+		mockClient := &mockHTTPClient{}
+		filePath, _ := filepath.Abs("../../testdata/damage/damagetypelist.json")
+		damagelistFile, err := os.ReadFile(filePath)
+		assert.Nil(t, err)
+		mockClient.On("Get", baserulzURL+"damage-types").Return(&http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(damagelistFile)),
+		}, nil)
+
+		dnd5eAPI := &dnd5eAPI{
+			client: mockClient,
+		}
+
+		damagetypes, err := dnd5eAPI.ListDamageTypes()
+		assert.Nil(t, err)
+		assert.Equal(t, 13, len(damagetypes))
+		assert.Equal(t, "acid", damagetypes[0].Key)
+		assert.Equal(t, "Acid", damagetypes[0].Name)
+	})
+}
+
+func TestDnd5eAPI_GetDamageType(t *testing.T) {
+	mockClient := &mockHTTPClient{}
+	filePath, _ := filepath.Abs("../../testdata/damage/acid.json")
+	damageFile, err := os.ReadFile(filePath)
+	assert.Nil(t, err)
+
+	mockClient.On("Get", baserulzURL+"damage-types/acid").Return(&http.Response{
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(damageFile)),
+	}, nil)
+
+	dnd5eAPI := &dnd5eAPI{
+		client: mockClient,
+	}
+
+	damageType, err := dnd5eAPI.GetDamageType("acid")
+	assert.Nil(t, err)
+	assert.Equal(t, "acid", damageType.Key)
+	assert.Equal(t, "Acid", damageType.Name)
+	assert.Equal(t, "The corrosive spray of a black dragon's breath and the dissolving enzymes secreted by a black pudding deal acid damage.", damageType.Description[0])
 }
