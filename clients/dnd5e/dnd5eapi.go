@@ -652,7 +652,7 @@ func (c *dnd5eAPI) ListMonsters() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToMonster(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil

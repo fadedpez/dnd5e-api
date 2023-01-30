@@ -217,17 +217,6 @@ func choiceResultsToChoices(input []*choiceResult) []*entities.ChoiceOption {
 	return out
 }
 
-func referenceItemToMonster(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func monsterSpeedResultToSpeed(input *monsterSpeed) *entities.Speed {
 	if input == nil {
 		return nil
