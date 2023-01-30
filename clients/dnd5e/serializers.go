@@ -27,37 +27,6 @@ func abilityBonusResultsToAbilityBonuses(input []*abilityBonus) []*entities.Abil
 	return out
 }
 
-func referenceItemToProficiency(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func proficiencyResultsToProficiencies(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, p := range input {
-		out[i] = referenceItemToProficiency(p)
-	}
-
-	return out
-}
-
-func equipmentCategoryResultToEquipmentCategory(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func costResultToCost(input *cost) *entities.Cost {
 	if input == nil {
 		return nil
@@ -79,7 +48,7 @@ func equipmentResultToEquipment(input *equipmentResult) *entities.Equipment {
 		Name:   input.Name,
 		Cost:   costResultToCost(input.Cost),
 		Weight: input.Weight,
-		EquipmentCategory: equipmentCategoryResultToEquipmentCategory(
+		EquipmentCategory: referenceItemToReferenceItem(
 			input.EquipmentCategory,
 		),
 	}
@@ -148,7 +117,7 @@ func weaponResultToWeapon(input *weaponResult) *entities.Weapon {
 		Cost:              costResultToCost(input.Cost),
 		Damage:            damageResultToDamage(input.Damage),
 		Weight:            input.Weight,
-		EquipmentCategory: equipmentCategoryResultToEquipmentCategory(input.EquipmentCategory),
+		EquipmentCategory: referenceItemToReferenceItem(input.EquipmentCategory),
 		WeaponCategory:    input.WeaponCategory,
 		WeaponRange:       input.WeaponRange,
 		CategoryRange:     input.CategoryRange,
@@ -172,7 +141,7 @@ func armorResultToArmor(input *armorResult) *entities.Armor {
 		StrMinimum:          input.StrMinimum,
 		StealthDisadvantage: input.StealthDisadvantage,
 		Weight:              input.Weight,
-		EquipmentCategory:   equipmentCategoryResultToEquipmentCategory(input.EquipmentCategory),
+		EquipmentCategory:   referenceItemToReferenceItem(input.EquipmentCategory),
 	}
 }
 
@@ -457,7 +426,7 @@ func monsterProficiencyResultToMonsterProficiency(input *monsterProficiency) *en
 	}
 
 	return &entities.MonsterProficiency{
-		Proficiency: referenceItemToProficiency(input.Proficiency),
+		Proficiency: referenceItemToReferenceItem(input.Proficiency),
 		Value:       input.Value,
 	}
 }

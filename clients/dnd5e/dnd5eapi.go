@@ -246,7 +246,7 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 		Key:                      response.Index,
 		Name:                     response.Name,
 		HitDie:                   response.HitDie,
-		Proficiencies:            proficiencyResultsToProficiencies(response.Proficiencies),
+		Proficiencies:            referenceItemsToReferenceItems(response.Proficiencies),
 		SavingThrows:             savingThrowResultsToSavingThrows(response.SavingThrows),
 		StartingEquipment:        startingEquipmentResultsToStartingEquipment(response.StartingEquipment),
 		ProficiencyChoices:       choiceResultsToChoices(response.ProficiencyChoices),
