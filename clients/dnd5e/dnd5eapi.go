@@ -588,7 +588,7 @@ func (c *dnd5eAPI) ListSkills() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToSkill(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil
@@ -621,7 +621,7 @@ func (c *dnd5eAPI) GetSkill(key string) (*entities.Skill, error) {
 		Key:          response.Index,
 		Name:         response.Name,
 		Descricption: response.Description,
-		AbilityScore: referenceItemToAbilityScore(response.AbilityScore),
+		AbilityScore: referenceItemToReferenceItem(response.AbilityScore),
 		Type:         urlToType(response.URL),
 	}
 

@@ -217,28 +217,6 @@ func choiceResultsToChoices(input []*choiceResult) []*entities.ChoiceOption {
 	return out
 }
 
-func referenceItemToSkill(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func referenceItemToAbilityScore(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func referenceItemToMonster(input *referenceItem) *entities.ReferenceItem {
 	if input == nil {
 		return nil
