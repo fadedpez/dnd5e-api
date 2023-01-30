@@ -1,0 +1,13 @@
+{
+  "index": "lute",
+  "type": "Musical Instruments",
+  "name": "Lute",
+  "classes": [],
+  "races": [],
+  "url": "/api/proficiencies/lute",
+  "reference": {
+    "index": "lute",
+    "name": "Lute",
+    "url": "/api/equipment/lute"
+  }
+}
