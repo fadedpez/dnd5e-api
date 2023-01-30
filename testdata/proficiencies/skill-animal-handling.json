@@ -1,0 +1,13 @@
+{
+  "index": "skill-animal-handling",
+  "type": "Skills",
+  "name": "Skill: Animal Handling",
+  "classes": [],
+  "races": [],
+  "url": "/api/proficiencies/skill-animal-handling",
+  "reference": {
+    "index": "animal-handling",
+    "name": "Animal Handling",
+    "url": "/api/skills/animal-handling"
+  }
+}

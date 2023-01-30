@@ -22,6 +22,7 @@ type Interface interface {
 	ListMonsters() ([]*entities.ReferenceItem, error)
 	GetMonster(key string) (*entities.Monster, error)
 	GetClassLevel(key string, level int) (*entities.Level, error)
+	GetProficiency(key string) (*entities.Proficiency, error)
 }
 
 type httpIface interface {

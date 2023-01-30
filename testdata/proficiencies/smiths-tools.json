@@ -1,0 +1,13 @@
+{
+  "index": "smiths-tools",
+  "type": "Artisan's Tools",
+  "name": "Smith's Tools",
+  "classes": [],
+  "races": [],
+  "url": "/api/proficiencies/smiths-tools",
+  "reference": {
+    "index": "smiths-tools",
+    "name": "Smith's Tools",
+    "url": "/api/equipment/smiths-tools"
+  }
+}

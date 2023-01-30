@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"log"
 	"strconv"
 
 	"github.com/fadedpez/dnd5e-api/entities"
@@ -699,7 +701,7 @@ func (c *dnd5eAPI) GetMonster(key string) (*entities.Monster, error) {
 		DamageVulnerabilities: response.DamageVulnerabilities,
 		DamageResistances:     response.DamageResistances,
 		DamageImmunities:      response.DamageImmunities,
-		ConditionImmunities:   referenceItemsToConditions(response.ConditionImmunities),
+		ConditionImmunities:   referenceItemsToReferenceItems(response.ConditionImmunities),
 		MonsterSenses:         monsterSensesResultToMonsterSenses(response.Senses),
 		Languages:             response.Languages,
 		ChallengeRating:       response.ChallengeRating,
@@ -754,4 +756,44 @@ func (c *dnd5eAPI) GetClassLevel(key string, level int) (*entities.Level, error)
 	}
 
 	return classLevel, nil
+}
+
+func (c *dnd5eAPI) GetProficiency(key string) (*entities.Proficiency, error) {
+	resp, err := c.client.Get(baserulzURL + "proficiencies/" + key)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(resp.Body)
+
+	response := proficiencyResult{}
+
+	responseBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(responseBody, &response)
+
+	if err != nil {
+		return nil, err
+	}
+
+	proficiency := &entities.Proficiency{
+		Key:       response.Index,
+		Name:      response.Name,
+		Type:      typeStringToProficiencyType(response.Type),
+		Reference: referenceItemToReferenceItem(response.Reference),
+	}
+
+	return proficiency, nil
 }

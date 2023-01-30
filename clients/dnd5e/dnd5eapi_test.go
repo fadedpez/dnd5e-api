@@ -3,11 +3,13 @@ package dnd5e
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 	"testing"
 
 	"github.com/fadedpez/dnd5e-api/entities"
@@ -1520,4 +1522,170 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		assert.Equal(t, "wizard", result.ClassSpecific.GetSpecificClass())
 		assert.Equal(t, 3, result.ClassSpecific.(*entities.WizardSpecific).ArcaneRecoveryLevels)
 	})
+}
+
+func TestDnd5eAPI_GetProficiency(t *testing.T) {
+	type fields struct {
+		client *mockHTTPClient
+	}
+
+	type args struct {
+		key string
+	}
+
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *entities.Proficiency
+		wantErr bool
+	}{
+		{
+			name: "it returns a skill proficiency",
+			fields: fields{
+				client: &mockHTTPClient{},
+			},
+			args: args{
+				key: "skill-animal-handling",
+			},
+			want: &entities.Proficiency{
+				Key:  "skill-animal-handling",
+				Name: "Skill: Animal Handling",
+				Type: entities.ProficiencyTypeSkill,
+				Reference: &entities.ReferenceItem{
+					Key:  "animal-handling",
+					Name: "Animal Handling",
+					Type: "skills",
+				},
+			},
+			wantErr: false,
+		}, {
+			name: "it returns a tool proficiency",
+			fields: fields{
+				client: &mockHTTPClient{},
+			},
+			args: args{
+				key: "smiths-tools",
+			},
+			want: &entities.Proficiency{
+				Key:  "smiths-tools",
+				Name: "Smith's Tools",
+				Type: entities.ProficiencyTypeTool,
+				Reference: &entities.ReferenceItem{
+					Key:  "smiths-tools",
+					Name: "Smith's Tools",
+					Type: "equipment",
+				},
+			},
+			wantErr: false,
+		}, {
+			name: "it returns a saving throw proficiency",
+			fields: fields{
+				client: &mockHTTPClient{},
+			},
+			args: args{
+				key: "saving-throw-str",
+			},
+			want: &entities.Proficiency{
+				Key:  "saving-throw-str",
+				Name: "Saving Throw: STR",
+				Type: entities.ProficiencyTypeSavingThrow,
+				Reference: &entities.ReferenceItem{
+					Key:  "str",
+					Name: "STR",
+					Type: "ability-scores",
+				},
+			},
+			wantErr: false,
+		}, {
+			name: "it returns an armor proficiency",
+			fields: fields{
+				client: &mockHTTPClient{},
+			},
+			args: args{
+				key: "light-armor",
+			},
+			want: &entities.Proficiency{
+				Key:  "light-armor",
+				Name: "Light Armor",
+				Type: entities.ProficiencyTypeArmor,
+				Reference: &entities.ReferenceItem{
+					Key:  "light-armor",
+					Name: "Light Armor",
+					Type: "equipment-categories",
+				},
+			},
+			wantErr: false,
+		}, {
+			name: "it returns a weapon proficiency",
+			fields: fields{
+				client: &mockHTTPClient{},
+			},
+			args: args{
+				key: "simple-weapons",
+			},
+			want: &entities.Proficiency{
+				Key:  "simple-weapons",
+				Name: "Simple Weapons",
+				Type: entities.ProficiencyTypeWeapon,
+				Reference: &entities.ReferenceItem{
+					Key:  "simple-weapons",
+					Name: "Simple Weapons",
+					Type: "equipment-categories",
+				},
+			},
+		}, {
+			name: "it returns an instrument proficiency",
+			fields: fields{
+				client: &mockHTTPClient{},
+			},
+			args: args{
+				key: "lute",
+			},
+			want: &entities.Proficiency{
+				Key:  "lute",
+				Name: "Lute",
+				Type: entities.ProficiencyTypeInstrument,
+				Reference: &entities.ReferenceItem{
+					Key:  "lute",
+					Name: "Lute",
+					Type: "equipment",
+				},
+			},
+		}, {
+			name: "it returns an error on invalid json",
+			fields: fields{
+				client: &mockHTTPClient{},
+			},
+			args: args{
+				key: "invalid",
+			},
+			want:    nil,
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			filePath, _ := filepath.Abs(fmt.Sprintf("../../testdata/proficiencies/%s.json", tt.args.key))
+			proficiencyFile, err := os.ReadFile(filePath)
+			tt.fields.client.On("Get", baserulzURL+"proficiencies/"+tt.args.key).Return(&http.Response{
+				StatusCode: 200,
+				Body:       io.NopCloser(bytes.NewReader(proficiencyFile)),
+			}, nil)
+
+			dnd5eAPI := &dnd5eAPI{
+				client: tt.fields.client,
+			}
+
+			got, err := dnd5eAPI.GetProficiency(tt.args.key)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetProficiency() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetProficiency() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
