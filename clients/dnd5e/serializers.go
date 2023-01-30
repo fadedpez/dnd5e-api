@@ -4,13 +4,6 @@ import (
 	"github.com/fadedpez/dnd5e-api/entities"
 )
 
-func referenceItemToRace(input *referenceItem) *entities.ReferenceItem {
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func abilityBonusResultToAbilityBonus(input *abilityBonus) *entities.AbilityBonus {
 	if input == nil {
 		return nil
@@ -34,66 +27,6 @@ func abilityBonusResultsToAbilityBonuses(input []*abilityBonus) []*entities.Abil
 	return out
 }
 
-func languageResultToLanguage(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func languageResultsToLanguages(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, l := range input {
-		out[i] = languageResultToLanguage(l)
-	}
-
-	return out
-}
-
-func traitResultToTrait(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func traitResultsToTraits(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, t := range input {
-		out[i] = traitResultToTrait(t)
-	}
-
-	return out
-}
-
-func subRaceResultToSubRace(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func subRaceResultsToSubRaces(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, s := range input {
-		out[i] = subRaceResultToSubRace(s)
-	}
-
-	return out
-}
-
 func referenceItemToProficiency(input *referenceItem) *entities.ReferenceItem {
 	if input == nil {
 		return nil
@@ -112,13 +45,6 @@ func proficiencyResultsToProficiencies(input []*referenceItem) []*entities.Refer
 	}
 
 	return out
-}
-
-func referenceItemToEquipment(input *referenceItem) *entities.ReferenceItem {
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
 }
 
 func equipmentCategoryResultToEquipmentCategory(input *referenceItem) *entities.ReferenceItem {
@@ -864,6 +790,7 @@ func typeStringToProficiencyType(input string) entities.ProficiencyType {
 		return entities.ProficiencyTypeUnknown
 	}
 }
+
 func referenceItemsToReferenceItems(input []*referenceItem) []*entities.ReferenceItem {
 	if input == nil {
 		return nil

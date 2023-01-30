@@ -53,7 +53,7 @@ func (c *dnd5eAPI) ListRaces() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToRace(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil
@@ -81,10 +81,10 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 		Name:                       response.Name,
 		Speed:                      response.Speed,
 		AbilityBonuses:             abilityBonusResultsToAbilityBonuses(response.AbilityBonus),
-		Languages:                  languageResultsToLanguages(response.Language),
-		Traits:                     traitResultsToTraits(response.Trait),
-		SubRaces:                   subRaceResultsToSubRaces(response.SubRaces),
-		StartingProficiencies:      proficiencyResultsToProficiencies(response.StartingProficiencies),
+		Languages:                  referenceItemsToReferenceItems(response.Language),
+		Traits:                     referenceItemsToReferenceItems(response.Trait),
+		SubRaces:                   referenceItemsToReferenceItems(response.SubRaces),
+		StartingProficiencies:      referenceItemsToReferenceItems(response.StartingProficiencies),
 		StartingProficiencyOptions: choiceResultToChoice(response.StartingProficiencyOptions),
 		LanguageOptions:            choiceResultToChoice(response.LanguageOptions),
 	}
@@ -111,7 +111,7 @@ func (c *dnd5eAPI) ListEquipment() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToEquipment(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil
