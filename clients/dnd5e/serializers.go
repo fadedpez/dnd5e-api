@@ -196,37 +196,6 @@ func areaOfEffectResultToAreaOfEffect(input *areaOfEffect) *entities.AreaOfEffec
 	}
 }
 
-func referenceItemToFeature(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func referenceItemsToFeatures(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, s := range input {
-		out[i] = referenceItemToFeature(s)
-	}
-
-	return out
-}
-
-func featureClassResultToClass(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func choiceResultToChoice(input *choiceResult) *entities.ChoiceOption {
 	if input == nil {
 		return nil

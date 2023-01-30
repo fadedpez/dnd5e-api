@@ -519,7 +519,7 @@ func (c *dnd5eAPI) ListFeatures() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToFeature(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil
@@ -552,7 +552,7 @@ func (c *dnd5eAPI) GetFeature(key string) (*entities.Feature, error) {
 		Key:   response.Index,
 		Name:  response.Name,
 		Level: response.Level, //TODO: add prerequisites?
-		Class: featureClassResultToClass(response.Class),
+		Class: referenceItemToReferenceItem(response.Class),
 	}
 
 	if response.FeatureSpecific != nil {
@@ -748,7 +748,7 @@ func (c *dnd5eAPI) GetClassLevel(key string, level int) (*entities.Level, error)
 		Level:               response.Level,
 		AbilityScoreBonuses: response.AbilityScoreBonuses,
 		ProfBonus:           response.ProfBonus,
-		Features:            referenceItemsToFeatures(response.Features),
+		Features:            referenceItemsToReferenceItems(response.Features),
 		SpellCasting:        spellCastingResultToSpellCasting(response.SpellCasting),
 		ClassSpecific:       levelResultToClassSpecific(response),
 		Key:                 response.Index,
