@@ -4,13 +4,6 @@ import (
 	"github.com/fadedpez/dnd5e-api/entities"
 )
 
-func referenceItemToRace(input *referenceItem) *entities.ReferenceItem {
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func abilityBonusResultToAbilityBonus(input *abilityBonus) *entities.AbilityBonus {
 	if input == nil {
 		return nil
@@ -34,104 +27,6 @@ func abilityBonusResultsToAbilityBonuses(input []*abilityBonus) []*entities.Abil
 	return out
 }
 
-func languageResultToLanguage(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func languageResultsToLanguages(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, l := range input {
-		out[i] = languageResultToLanguage(l)
-	}
-
-	return out
-}
-
-func traitResultToTrait(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func traitResultsToTraits(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, t := range input {
-		out[i] = traitResultToTrait(t)
-	}
-
-	return out
-}
-
-func subRaceResultToSubRace(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func subRaceResultsToSubRaces(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, s := range input {
-		out[i] = subRaceResultToSubRace(s)
-	}
-
-	return out
-}
-
-func referenceItemToProficiency(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func proficiencyResultsToProficiencies(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, p := range input {
-		out[i] = referenceItemToProficiency(p)
-	}
-
-	return out
-}
-
-func referenceItemToEquipment(input *referenceItem) *entities.ReferenceItem {
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func equipmentCategoryResultToEquipmentCategory(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func costResultToCost(input *cost) *entities.Cost {
 	if input == nil {
 		return nil
@@ -153,7 +48,7 @@ func equipmentResultToEquipment(input *equipmentResult) *entities.Equipment {
 		Name:   input.Name,
 		Cost:   costResultToCost(input.Cost),
 		Weight: input.Weight,
-		EquipmentCategory: equipmentCategoryResultToEquipmentCategory(
+		EquipmentCategory: referenceItemToReferenceItem(
 			input.EquipmentCategory,
 		),
 	}
@@ -166,39 +61,8 @@ func damageResultToDamage(input *damage) *entities.Damage {
 
 	return &entities.Damage{
 		DamageDice: input.DamageDice,
-		DamageType: damageTypeResultToDamageType(input.DamageType),
+		DamageType: referenceItemToReferenceItem(input.DamageType),
 	}
-}
-
-func damageTypeResultToDamageType(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func propertyResultToProperties(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func propertiesResultsToProperties(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, p := range input {
-		out[i] = propertyResultToProperties(p)
-	}
-
-	return out
 }
 
 func weaponRangeResultToWeaponRange(input *weaponRange) *entities.Range {
@@ -222,12 +86,12 @@ func weaponResultToWeapon(input *weaponResult) *entities.Weapon {
 		Cost:              costResultToCost(input.Cost),
 		Damage:            damageResultToDamage(input.Damage),
 		Weight:            input.Weight,
-		EquipmentCategory: equipmentCategoryResultToEquipmentCategory(input.EquipmentCategory),
+		EquipmentCategory: referenceItemToReferenceItem(input.EquipmentCategory),
 		WeaponCategory:    input.WeaponCategory,
 		WeaponRange:       input.WeaponRange,
 		CategoryRange:     input.CategoryRange,
 		Range:             weaponRangeResultToWeaponRange(input.Range),
-		Properties:        propertiesResultsToProperties(input.Properties),
+		Properties:        referenceItemsToReferenceItems(input.Properties),
 		TwoHandedDamage:   damageResultToDamage(input.TwoHandedDamage),
 	}
 }
@@ -246,7 +110,7 @@ func armorResultToArmor(input *armorResult) *entities.Armor {
 		StrMinimum:          input.StrMinimum,
 		StealthDisadvantage: input.StealthDisadvantage,
 		Weight:              input.Weight,
-		EquipmentCategory:   equipmentCategoryResultToEquipmentCategory(input.EquipmentCategory),
+		EquipmentCategory:   referenceItemToReferenceItem(input.EquipmentCategory),
 	}
 }
 
@@ -261,51 +125,13 @@ func armorClassResultToArmorClass(input *armorClass) *entities.ArmorClass {
 	}
 }
 
-func referenceItemToClass(input *referenceItem) *entities.ReferenceItem {
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func savingThrowResultToSavingThrow(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func savingThrowResultsToSavingThrows(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, s := range input {
-		out[i] = savingThrowResultToSavingThrow(s)
-	}
-
-	return out
-}
-
-func equipmentListResultToEquipmentList(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func startingEquipmentResultToStartingEquipment(input *startingEquipment) *entities.StartingEquipment {
 	if input == nil {
 		return nil
 	}
 
 	return &entities.StartingEquipment{
-		Equipment: equipmentListResultToEquipmentList(input.Equipment),
+		Equipment: referenceItemToReferenceItem(input.Equipment),
 		Quantity:  input.Quantity,
 	}
 }
@@ -319,36 +145,14 @@ func startingEquipmentResultsToStartingEquipment(input []*startingEquipment) []*
 	return out
 }
 
-func referenceItemToSpell(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func spellDamageResultToSpellDamage(input *spellDamage) *entities.SpellDamage {
 	if input == nil {
 		return nil
 	}
 
 	return &entities.SpellDamage{
-		SpellDamageType:        spellDamageTypeResultToSpellDamageType(input.DamageType),
+		SpellDamageType:        referenceItemToReferenceItem(input.DamageType),
 		SpellDamageAtSlotLevel: spellDamageAtSlotLevelToSpellDamageAtSlotLevel(input.DamageAtSlotLevel),
-	}
-}
-
-func spellDamageTypeResultToSpellDamageType(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
 	}
 }
 
@@ -376,32 +180,9 @@ func dcResultToDC(input *dc) *entities.DC {
 	}
 
 	return &entities.DC{
-		DCType:    dcTypeResultToDCType(input.DCType),
+		DCType:    referenceItemToReferenceItem(input.DCType),
 		DCSuccess: input.DCSuccess,
 	}
-}
-
-func dcTypeResultToDCType(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func spellClassResultsToSpellClasses(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, s := range input {
-		out[i] = &entities.ReferenceItem{
-			Key:  s.Index,
-			Name: s.Name,
-		}
-	}
-
-	return out
 }
 
 func areaOfEffectResultToAreaOfEffect(input *areaOfEffect) *entities.AreaOfEffect {
@@ -412,48 +193,6 @@ func areaOfEffectResultToAreaOfEffect(input *areaOfEffect) *entities.AreaOfEffec
 	return &entities.AreaOfEffect{
 		Type: input.Type,
 		Size: input.Size,
-	}
-}
-
-func spellSchoolResultToSpellSchool(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func referenceItemToFeature(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func referenceItemsToFeatures(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, s := range input {
-		out[i] = referenceItemToFeature(s)
-	}
-
-	return out
-}
-
-func featureClassResultToClass(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
 	}
 }
 
@@ -478,39 +217,6 @@ func choiceResultsToChoices(input []*choiceResult) []*entities.ChoiceOption {
 	return out
 }
 
-func referenceItemToSkill(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func referenceItemToAbilityScore(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func referenceItemToMonster(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func monsterSpeedResultToSpeed(input *monsterSpeed) *entities.Speed {
 	if input == nil {
 		return nil
@@ -531,7 +237,7 @@ func monsterProficiencyResultToMonsterProficiency(input *monsterProficiency) *en
 	}
 
 	return &entities.MonsterProficiency{
-		Proficiency: referenceItemToProficiency(input.Proficiency),
+		Proficiency: referenceItemToReferenceItem(input.Proficiency),
 		Value:       input.Value,
 	}
 }
@@ -864,6 +570,7 @@ func typeStringToProficiencyType(input string) entities.ProficiencyType {
 		return entities.ProficiencyTypeUnknown
 	}
 }
+
 func referenceItemsToReferenceItems(input []*referenceItem) []*entities.ReferenceItem {
 	if input == nil {
 		return nil

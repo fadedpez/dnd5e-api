@@ -53,7 +53,7 @@ func (c *dnd5eAPI) ListRaces() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToRace(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil
@@ -81,10 +81,10 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 		Name:                       response.Name,
 		Speed:                      response.Speed,
 		AbilityBonuses:             abilityBonusResultsToAbilityBonuses(response.AbilityBonus),
-		Languages:                  languageResultsToLanguages(response.Language),
-		Traits:                     traitResultsToTraits(response.Trait),
-		SubRaces:                   subRaceResultsToSubRaces(response.SubRaces),
-		StartingProficiencies:      proficiencyResultsToProficiencies(response.StartingProficiencies),
+		Languages:                  referenceItemsToReferenceItems(response.Language),
+		Traits:                     referenceItemsToReferenceItems(response.Trait),
+		SubRaces:                   referenceItemsToReferenceItems(response.SubRaces),
+		StartingProficiencies:      referenceItemsToReferenceItems(response.StartingProficiencies),
 		StartingProficiencyOptions: choiceResultToChoice(response.StartingProficiencyOptions),
 		LanguageOptions:            choiceResultToChoice(response.LanguageOptions),
 	}
@@ -111,7 +111,7 @@ func (c *dnd5eAPI) ListEquipment() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToEquipment(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil
@@ -209,7 +209,7 @@ func (c *dnd5eAPI) ListClasses() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToClass(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil
@@ -246,8 +246,8 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 		Key:                      response.Index,
 		Name:                     response.Name,
 		HitDie:                   response.HitDie,
-		Proficiencies:            proficiencyResultsToProficiencies(response.Proficiencies),
-		SavingThrows:             savingThrowResultsToSavingThrows(response.SavingThrows),
+		Proficiencies:            referenceItemsToReferenceItems(response.Proficiencies),
+		SavingThrows:             referenceItemsToReferenceItems(response.SavingThrows),
 		StartingEquipment:        startingEquipmentResultsToStartingEquipment(response.StartingEquipment),
 		ProficiencyChoices:       choiceResultsToChoices(response.ProficiencyChoices),
 		StartingEquipmentOptions: startingEquipmentOption,
@@ -356,7 +356,7 @@ func (c *dnd5eAPI) ListSpells(input *ListSpellsInput) ([]*entities.ReferenceItem
 
 		levelOut := make([]*entities.ReferenceItem, len(levelList))
 		for i, r := range levelList {
-			levelOut[i] = referenceItemToSpell(r)
+			levelOut[i] = referenceItemToReferenceItem(r)
 		}
 
 		return levelOut, nil
@@ -370,7 +370,7 @@ func (c *dnd5eAPI) ListSpells(input *ListSpellsInput) ([]*entities.ReferenceItem
 
 		classOut := make([]*entities.ReferenceItem, len(classList))
 		for i, r := range classList {
-			classOut[i] = referenceItemToSpell(r)
+			classOut[i] = referenceItemToReferenceItem(r)
 		}
 
 		return classOut, nil
@@ -394,7 +394,7 @@ func (c *dnd5eAPI) ListSpells(input *ListSpellsInput) ([]*entities.ReferenceItem
 	out := make([]*entities.ReferenceItem, 0)
 	for _, r := range classList {
 		if levelMap[r.Index] {
-			out = append(out, referenceItemToSpell(r))
+			out = append(out, referenceItemToReferenceItem(r))
 		}
 	}
 
@@ -488,8 +488,8 @@ func (c *dnd5eAPI) GetSpell(key string) (*entities.Spell, error) {
 		SpellDamage:   spellDamageResultToSpellDamage(response.SpellDamage),
 		DC:            dcResultToDC(response.DC),
 		AreaOfEffect:  areaOfEffectResultToAreaOfEffect(response.AreaOfEffect),
-		SpellSchool:   spellSchoolResultToSpellSchool(response.SpellSchool),
-		SpellClasses:  spellClassResultsToSpellClasses(response.SpellClasses),
+		SpellSchool:   referenceItemToReferenceItem(response.SpellSchool),
+		SpellClasses:  referenceItemsToReferenceItems(response.SpellClasses),
 	}
 
 	return spell, nil
@@ -519,7 +519,7 @@ func (c *dnd5eAPI) ListFeatures() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToFeature(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil
@@ -552,7 +552,7 @@ func (c *dnd5eAPI) GetFeature(key string) (*entities.Feature, error) {
 		Key:   response.Index,
 		Name:  response.Name,
 		Level: response.Level, //TODO: add prerequisites?
-		Class: featureClassResultToClass(response.Class),
+		Class: referenceItemToReferenceItem(response.Class),
 	}
 
 	if response.FeatureSpecific != nil {
@@ -588,7 +588,7 @@ func (c *dnd5eAPI) ListSkills() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToSkill(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil
@@ -621,7 +621,7 @@ func (c *dnd5eAPI) GetSkill(key string) (*entities.Skill, error) {
 		Key:          response.Index,
 		Name:         response.Name,
 		Descricption: response.Description,
-		AbilityScore: referenceItemToAbilityScore(response.AbilityScore),
+		AbilityScore: referenceItemToReferenceItem(response.AbilityScore),
 		Type:         urlToType(response.URL),
 	}
 
@@ -652,7 +652,7 @@ func (c *dnd5eAPI) ListMonsters() ([]*entities.ReferenceItem, error) {
 
 	out := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToMonster(r)
+		out[i] = referenceItemToReferenceItem(r)
 	}
 
 	return out, nil
@@ -748,11 +748,11 @@ func (c *dnd5eAPI) GetClassLevel(key string, level int) (*entities.Level, error)
 		Level:               response.Level,
 		AbilityScoreBonuses: response.AbilityScoreBonuses,
 		ProfBonus:           response.ProfBonus,
-		Features:            referenceItemsToFeatures(response.Features),
+		Features:            referenceItemsToReferenceItems(response.Features),
 		SpellCasting:        spellCastingResultToSpellCasting(response.SpellCasting),
 		ClassSpecific:       levelResultToClassSpecific(response),
 		Key:                 response.Index,
-		Class:               referenceItemToClass(response.Class),
+		Class:               referenceItemToReferenceItem(response.Class),
 	}
 
 	return classLevel, nil
