@@ -145,36 +145,14 @@ func startingEquipmentResultsToStartingEquipment(input []*startingEquipment) []*
 	return out
 }
 
-func referenceItemToSpell(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
 func spellDamageResultToSpellDamage(input *spellDamage) *entities.SpellDamage {
 	if input == nil {
 		return nil
 	}
 
 	return &entities.SpellDamage{
-		SpellDamageType:        spellDamageTypeResultToSpellDamageType(input.DamageType),
+		SpellDamageType:        referenceItemToReferenceItem(input.DamageType),
 		SpellDamageAtSlotLevel: spellDamageAtSlotLevelToSpellDamageAtSlotLevel(input.DamageAtSlotLevel),
-	}
-}
-
-func spellDamageTypeResultToSpellDamageType(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
 	}
 }
 
@@ -202,32 +180,9 @@ func dcResultToDC(input *dc) *entities.DC {
 	}
 
 	return &entities.DC{
-		DCType:    dcTypeResultToDCType(input.DCType),
+		DCType:    referenceItemToReferenceItem(input.DCType),
 		DCSuccess: input.DCSuccess,
 	}
-}
-
-func dcTypeResultToDCType(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func spellClassResultsToSpellClasses(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, s := range input {
-		out[i] = &entities.ReferenceItem{
-			Key:  s.Index,
-			Name: s.Name,
-		}
-	}
-
-	return out
 }
 
 func areaOfEffectResultToAreaOfEffect(input *areaOfEffect) *entities.AreaOfEffect {
@@ -238,17 +193,6 @@ func areaOfEffectResultToAreaOfEffect(input *areaOfEffect) *entities.AreaOfEffec
 	return &entities.AreaOfEffect{
 		Type: input.Type,
 		Size: input.Size,
-	}
-}
-
-func spellSchoolResultToSpellSchool(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
 	}
 }
 

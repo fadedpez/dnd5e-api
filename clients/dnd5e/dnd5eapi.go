@@ -356,7 +356,7 @@ func (c *dnd5eAPI) ListSpells(input *ListSpellsInput) ([]*entities.ReferenceItem
 
 		levelOut := make([]*entities.ReferenceItem, len(levelList))
 		for i, r := range levelList {
-			levelOut[i] = referenceItemToSpell(r)
+			levelOut[i] = referenceItemToReferenceItem(r)
 		}
 
 		return levelOut, nil
@@ -370,7 +370,7 @@ func (c *dnd5eAPI) ListSpells(input *ListSpellsInput) ([]*entities.ReferenceItem
 
 		classOut := make([]*entities.ReferenceItem, len(classList))
 		for i, r := range classList {
-			classOut[i] = referenceItemToSpell(r)
+			classOut[i] = referenceItemToReferenceItem(r)
 		}
 
 		return classOut, nil
@@ -394,7 +394,7 @@ func (c *dnd5eAPI) ListSpells(input *ListSpellsInput) ([]*entities.ReferenceItem
 	out := make([]*entities.ReferenceItem, 0)
 	for _, r := range classList {
 		if levelMap[r.Index] {
-			out = append(out, referenceItemToSpell(r))
+			out = append(out, referenceItemToReferenceItem(r))
 		}
 	}
 
@@ -488,8 +488,8 @@ func (c *dnd5eAPI) GetSpell(key string) (*entities.Spell, error) {
 		SpellDamage:   spellDamageResultToSpellDamage(response.SpellDamage),
 		DC:            dcResultToDC(response.DC),
 		AreaOfEffect:  areaOfEffectResultToAreaOfEffect(response.AreaOfEffect),
-		SpellSchool:   spellSchoolResultToSpellSchool(response.SpellSchool),
-		SpellClasses:  spellClassResultsToSpellClasses(response.SpellClasses),
+		SpellSchool:   referenceItemToReferenceItem(response.SpellSchool),
+		SpellClasses:  referenceItemsToReferenceItems(response.SpellClasses),
 	}
 
 	return spell, nil
