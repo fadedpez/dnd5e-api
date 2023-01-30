@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 	"testing"
 
 	"github.com/fadedpez/dnd5e-api/entities"
@@ -1520,4 +1521,67 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		assert.Equal(t, "wizard", result.ClassSpecific.GetSpecificClass())
 		assert.Equal(t, 3, result.ClassSpecific.(*entities.WizardSpecific).ArcaneRecoveryLevels)
 	})
+}
+
+func TestDnd5eAPI_GetProficiency(t *testing.T) {
+	type fields struct {
+		client *mockHTTPClient
+	}
+
+	type args struct {
+		key string
+	}
+
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *entities.Proficiency
+		wantErr bool
+	}{
+		{
+			name: "it returns a proficiency",
+			fields: fields{
+				client: &mockHTTPClient{},
+			},
+			args: args{
+				key: "skill-animal-handling",
+			},
+			want: &entities.Proficiency{
+				Key:  "skill-animal-handling",
+				Name: "Skill: Animal Handling",
+				Type: entities.ProficiencyTypeSkill,
+				Reference: &entities.ReferenceItem{
+					Key:  "animal-handling",
+					Name: "Animal Handling",
+					Type: "skills",
+				},
+			},
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			filePath, _ := filepath.Abs("../../testdata/proficiencies/skill-animal-handling.json")
+			proficiencyFile, err := os.ReadFile(filePath)
+			tt.fields.client.On("Get", baserulzURL+"proficiencies/"+tt.args.key).Return(&http.Response{
+				StatusCode: 200,
+				Body:       io.NopCloser(bytes.NewReader(proficiencyFile)),
+			}, nil)
+
+			dnd5eAPI := &dnd5eAPI{
+				client: tt.fields.client,
+			}
+
+			got, err := dnd5eAPI.GetProficiency(tt.args.key)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetProficiency() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetProficiency() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }

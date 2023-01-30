@@ -590,26 +590,6 @@ func damageResultsToDamage(input []*damage) []*entities.Damage {
 	return out
 }
 
-func referenceItemToCondition(input *referenceItem) *entities.ReferenceItem {
-	if input == nil {
-		return nil
-	}
-
-	return &entities.ReferenceItem{
-		Key:  input.Index,
-		Name: input.Name,
-	}
-}
-
-func referenceItemsToConditions(input []*referenceItem) []*entities.ReferenceItem {
-	out := make([]*entities.ReferenceItem, len(input))
-	for i, c := range input {
-		out[i] = referenceItemToCondition(c)
-	}
-
-	return out
-}
-
 func spellCastingResultToSpellCasting(input *spellCasting) *entities.SpellCasting {
 	if input == nil {
 		return nil
@@ -863,5 +843,48 @@ func classSpecificResultToWizardSpecific(input *classSpecificResult) *entities.W
 
 	return &entities.WizardSpecific{
 		ArcaneRecoveryLevels: input.ArcaneRecoveryLevels,
+	}
+}
+
+func typeStringToProficiencyType(input string) entities.ProficiencyType {
+	switch input {
+	case "Armor":
+		return entities.ProficiencyTypeArmor
+	case "Weapons":
+		return entities.ProficiencyTypeWeapon
+	case "Artisan's Tools":
+		return entities.ProficiencyTypeTool
+	case "Musical Instruments":
+		return entities.ProficiencyTypeInstrument
+	case "Saving Throws":
+		return entities.ProficiencyTypeSavingThrow
+	case "Skills":
+		return entities.ProficiencyTypeSkill
+	default:
+		return entities.ProficiencyTypeUnknown
+	}
+}
+func referenceItemsToReferenceItems(input []*referenceItem) []*entities.ReferenceItem {
+	if input == nil {
+		return nil
+	}
+
+	items := make([]*entities.ReferenceItem, len(input))
+	for i := range input {
+		items[i] = referenceItemToReferenceItem(input[i])
+	}
+
+	return items
+}
+
+func referenceItemToReferenceItem(input *referenceItem) *entities.ReferenceItem {
+	if input == nil {
+		return nil
+	}
+
+	return &entities.ReferenceItem{
+		Key:  input.Index,
+		Name: input.Name,
+		Type: urlToType(input.URL),
 	}
 }

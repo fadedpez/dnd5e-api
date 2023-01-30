@@ -310,3 +310,10 @@ type creatingSpellSlots struct {
 	SpellSlotLevel   int `json:"spell_slot_level"`
 	SorceryPointCost int `json:"sorcery_point_cost"`
 }
+
+type proficiencyResult struct {
+	Index     string         `json:"index"`
+	Name      string         `json:"name"`
+	Type      string         `json:"type"`
+	Reference *referenceItem `json:"reference"`
+}
