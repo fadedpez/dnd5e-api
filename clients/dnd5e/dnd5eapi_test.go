@@ -375,7 +375,7 @@ func TestDND5eAPI_GetEquipment(t *testing.T) {
 		assert.Equal(t, "Adventuring Gear", equipment.EquipmentCategory.Name)
 		assert.Equal(t, 2, equipment.Cost.Quantity)
 		assert.Equal(t, "gp", equipment.Cost.Unit)
-		assert.Equal(t, 2, equipment.Weight)
+		assert.Equal(t, float32(2), equipment.Weight)
 	})
 
 	t.Run("it returns a weapon", func(t *testing.T) {
@@ -411,7 +411,7 @@ func TestDND5eAPI_GetEquipment(t *testing.T) {
 		assert.Equal(t, "1d10", actual.TwoHandedDamage.DamageDice)
 		assert.Equal(t, "slashing", actual.TwoHandedDamage.DamageType.Key)
 		assert.Equal(t, "Slashing", actual.TwoHandedDamage.DamageType.Name)
-		assert.Equal(t, 4, actual.Weight)
+		assert.Equal(t, float32(4), actual.Weight)
 		assert.Equal(t, 10, actual.Cost.Quantity)
 		assert.Equal(t, "gp", actual.Cost.Unit)
 	})
@@ -442,7 +442,7 @@ func TestDND5eAPI_GetEquipment(t *testing.T) {
 		assert.Equal(t, true, actual.ArmorClass.DexBonus)
 		assert.Equal(t, 0, actual.StrMinimum)
 		assert.Equal(t, false, actual.StealthDisadvantage)
-		assert.Equal(t, 13, actual.Weight)
+		assert.Equal(t, float32(13), actual.Weight)
 		assert.Equal(t, 45, actual.Cost.Quantity)
 		assert.Equal(t, "gp", actual.Cost.Unit)
 	})

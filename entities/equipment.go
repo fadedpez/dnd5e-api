@@ -1,11 +1,11 @@
 package entities
 
 type Equipment struct {
-	Key               string             `json:"key"`
-	Name              string             `json:"name"`
+	Key               string         `json:"key"`
+	Name              string         `json:"name"`
 	EquipmentCategory *ReferenceItem `json:"equipment_category"`
-	Cost              *Cost              `json:"cost"`
-	Weight            int                `json:"weight"`
+	Cost              *Cost          `json:"cost"`
+	Weight            float32        `json:"weight"`
 }
 
 func (e *Equipment) GetType() string {
@@ -18,18 +18,18 @@ type Cost struct {
 }
 
 type Weapon struct {
-	Key               string             `json:"key"`
-	Name              string             `json:"name"`
-	EquipmentCategory *ReferenceItem `json:"equipment_category"`
-	Cost              *Cost              `json:"cost"`
-	Weight            int                `json:"weight"`
-	WeaponCategory    string             `json:"weapon_category"`
-	Damage            *Damage            `json:"damage"`
-	WeaponRange       string             `json:"range"`
-	CategoryRange     string             `json:"category_range"`
-	Range             *Range             `json:"weapon_range"`
-	Properties        []*ReferenceItem      `json:"properties"`
-	TwoHandedDamage   *Damage            `json:"two_handed_damage"`
+	Key               string           `json:"key"`
+	Name              string           `json:"name"`
+	EquipmentCategory *ReferenceItem   `json:"equipment_category"`
+	Cost              *Cost            `json:"cost"`
+	Weight            float32          `json:"weight"`
+	WeaponCategory    string           `json:"weapon_category"`
+	Damage            *Damage          `json:"damage"`
+	WeaponRange       string           `json:"range"`
+	CategoryRange     string           `json:"category_range"`
+	Range             *Range           `json:"weapon_range"`
+	Properties        []*ReferenceItem `json:"properties"`
+	TwoHandedDamage   *Damage          `json:"two_handed_damage"`
 }
 
 func (w *Weapon) GetType() string {
@@ -37,7 +37,7 @@ func (w *Weapon) GetType() string {
 }
 
 type Damage struct {
-	DamageDice string      `json:"damage_dice"`
+	DamageDice string         `json:"damage_dice"`
 	DamageType *ReferenceItem `json:"damage_type"`
 }
 
@@ -46,15 +46,15 @@ type Range struct {
 }
 
 type Armor struct {
-	Key                 string             `json:"key"`
-	Name                string             `json:"name"`
+	Key                 string         `json:"key"`
+	Name                string         `json:"name"`
 	EquipmentCategory   *ReferenceItem `json:"equipment_category"`
-	Cost                *Cost              `json:"cost"`
-	Weight              int                `json:"weight"`
-	ArmorCategory       string             `json:"armor_category"`
-	ArmorClass          *ArmorClass        `json:"armor_class"`
-	StrMinimum          int                `json:"str_minimum"`
-	StealthDisadvantage bool               `json:"stealth_disadvantage"`
+	Cost                *Cost          `json:"cost"`
+	Weight              float32        `json:"weight"`
+	ArmorCategory       string         `json:"armor_category"`
+	ArmorClass          *ArmorClass    `json:"armor_class"`
+	StrMinimum          int            `json:"str_minimum"`
+	StealthDisadvantage bool           `json:"stealth_disadvantage"`
 }
 
 func (a *Armor) GetType() string {
