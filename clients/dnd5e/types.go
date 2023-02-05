@@ -37,7 +37,7 @@ type equipmentResult struct {
 	Index             string         `json:"index"`
 	Name              string         `json:"name"`
 	Cost              *cost          `json:"cost"`
-	Weight            int            `json:"weight"`
+	Weight            float32        `json:"weight"`
 	EquipmentCategory *referenceItem `json:"equipment_category"`
 }
 
@@ -58,7 +58,7 @@ type weaponResult struct {
 	Index             string           `json:"index"`
 	Name              string           `json:"name"`
 	Cost              *cost            `json:"cost"`
-	Weight            int              `json:"weight"`
+	Weight            float32          `json:"weight"`
 	EquipmentCategory *referenceItem   `json:"equipment_category"`
 	WeaponCategory    string           `json:"weapon_category"`
 	WeaponRange       string           `json:"weapon_range"`
@@ -82,7 +82,7 @@ type armorResult struct {
 	Index               string         `json:"index"`
 	Name                string         `json:"name"`
 	Cost                *cost          `json:"cost"`
-	Weight              int            `json:"weight"`
+	Weight              float32        `json:"weight"`
 	EquipmentCategory   *referenceItem `json:"equipment_category"`
 	ArmorCategory       string         `json:"armor_category"`
 	ArmorClass          *armorClass    `json:"armor_class"`
