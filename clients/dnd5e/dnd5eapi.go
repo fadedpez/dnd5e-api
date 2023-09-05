@@ -687,7 +687,7 @@ func (c *dnd5eAPI) GetMonster(key string) (*entities.Monster, error) {
 		Size:                  response.Size,
 		Type:                  response.Type,
 		Alignment:             response.Alignment,
-		ArmorClass:            response.ArmorClass,
+		ArmorClass:            response.ArmorClass.Value,
 		HitPoints:             response.HitPoints,
 		HitDice:               response.HitDice,
 		Speed:                 monsterSpeedResultToSpeed(response.Speed),
