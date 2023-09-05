@@ -5,10 +5,10 @@
   "type": "humanoid",
   "subtype": "goblinoid",
   "alignment": "neutral evil",
-  "armor_class": {
+  "armor_class": [{
     "type": "armor",
     "value": 15
-  },
+  }],
   "hit_points": 7,
   "hit_dice": "2d6",
   "hit_points_roll": "2d6",

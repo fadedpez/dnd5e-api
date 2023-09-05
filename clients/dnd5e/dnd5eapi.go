@@ -687,7 +687,7 @@ func (c *dnd5eAPI) GetMonster(key string) (*entities.Monster, error) {
 		Size:                  response.Size,
 		Type:                  response.Type,
 		Alignment:             response.Alignment,
-		ArmorClass:            response.ArmorClass.Value,
+		ArmorClass:            monsterArmorClassToValue(response.ArmorClass),
 		HitPoints:             response.HitPoints,
 		HitDice:               response.HitDice,
 		Speed:                 monsterSpeedResultToSpeed(response.Speed),
@@ -713,6 +713,22 @@ func (c *dnd5eAPI) GetMonster(key string) (*entities.Monster, error) {
 	return monster, nil
 }
 
+func monsterArmorClassToValue(input []*monsterArmorClass) int {
+	if input == nil {
+		return 0
+	}
+
+	if len(input) == 0 {
+		return 0
+	}
+
+	sum := 0
+	for _, ac := range input {
+		sum += ac.Value
+	}
+
+	return sum
+}
 func (c *dnd5eAPI) GetClassLevel(key string, level int) (*entities.Level, error) {
 	if key == "" {
 		return nil, errors.New("key is required")
