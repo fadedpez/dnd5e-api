@@ -181,7 +181,7 @@ type monsterResult struct {
 	Size                  string                `json:"size"`
 	Type                  string                `json:"type"`
 	Alignment             string                `json:"alignment"`
-	ArmorClass            int                   `json:"armor_class"`
+	ArmorClass            []*monsterArmorClass  `json:"armor_class"`
 	HitPoints             int                   `json:"hit_points"`
 	HitDice               string                `json:"hit_dice"`
 	HitPointsRoll         string                `json:"hit_points_roll"`
@@ -206,6 +206,11 @@ type monsterResult struct {
 	//TODO: Add legendary actions
 	//TODO: Add reactions
 	//TODO: Add special abilities, possible to be an interface?
+}
+
+type monsterArmorClass struct {
+	Type  string `json:"type"`
+	Value int    `json:"value"`
 }
 
 type monsterSpeed struct {
