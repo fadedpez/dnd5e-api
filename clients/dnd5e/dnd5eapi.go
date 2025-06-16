@@ -876,3 +876,28 @@ func (c *dnd5eAPI) GetDamageType(key string) (*entities.DamageType, error) {
 
 	return damageType, nil
 }
+
+func (c *dnd5eAPI) GetEquipmentCategory(key string) (*entities.EquipmentCategory, error) {
+	resp, err := c.client.Get(baserulzURL + "equipment-categories/" + key)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	category := &entities.EquipmentCategory{}
+	err = json.Unmarshal(responseBody, category)
+	if err != nil {
+		return nil, err
+	}
+
+	return category, nil
+}
