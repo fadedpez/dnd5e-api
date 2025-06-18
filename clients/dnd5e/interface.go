@@ -20,9 +20,11 @@ type Interface interface {
 	ListSkills() ([]*entities.ReferenceItem, error)
 	GetSkill(key string) (*entities.Skill, error)
 	ListMonsters() ([]*entities.ReferenceItem, error)
+	ListMonstersWithFilter(input *ListMonstersInput) ([]*entities.ReferenceItem, error)
 	GetMonster(key string) (*entities.Monster, error)
 	GetClassLevel(key string, level int) (*entities.Level, error)
 	GetProficiency(key string) (*entities.Proficiency, error)
+	GetEquipmentCategory(key string) (*entities.EquipmentCategory, error)
 }
 
 type httpIface interface {

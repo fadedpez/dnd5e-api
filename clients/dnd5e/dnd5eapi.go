@@ -628,8 +628,23 @@ func (c *dnd5eAPI) GetSkill(key string) (*entities.Skill, error) {
 	return skill, nil
 }
 
+type ListMonstersInput struct {
+	ChallengeRating *float64
+}
+
 func (c *dnd5eAPI) ListMonsters() ([]*entities.ReferenceItem, error) {
-	resp, err := c.client.Get(baserulzURL + "monsters")
+	return c.ListMonstersWithFilter(nil)
+}
+
+func (c *dnd5eAPI) ListMonstersWithFilter(input *ListMonstersInput) ([]*entities.ReferenceItem, error) {
+	url := baserulzURL + "monsters"
+	
+	// Add query parameters if provided
+	if input != nil && input.ChallengeRating != nil {
+		url = fmt.Sprintf("%s?challenge_rating=%g", url, *input.ChallengeRating)
+	}
+	
+	resp, err := c.client.Get(url)
 	if err != nil {
 		return nil, err
 	}
@@ -875,4 +890,29 @@ func (c *dnd5eAPI) GetDamageType(key string) (*entities.DamageType, error) {
 	}
 
 	return damageType, nil
+}
+
+func (c *dnd5eAPI) GetEquipmentCategory(key string) (*entities.EquipmentCategory, error) {
+	resp, err := c.client.Get(baserulzURL + "equipment-categories/" + key)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	category := &entities.EquipmentCategory{}
+	err = json.Unmarshal(responseBody, category)
+	if err != nil {
+		return nil, err
+	}
+
+	return category, nil
 }
