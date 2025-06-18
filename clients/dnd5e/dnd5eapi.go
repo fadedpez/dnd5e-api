@@ -628,8 +628,23 @@ func (c *dnd5eAPI) GetSkill(key string) (*entities.Skill, error) {
 	return skill, nil
 }
 
+type ListMonstersInput struct {
+	ChallengeRating *float64
+}
+
 func (c *dnd5eAPI) ListMonsters() ([]*entities.ReferenceItem, error) {
-	resp, err := c.client.Get(baserulzURL + "monsters")
+	return c.ListMonstersWithFilter(nil)
+}
+
+func (c *dnd5eAPI) ListMonstersWithFilter(input *ListMonstersInput) ([]*entities.ReferenceItem, error) {
+	url := baserulzURL + "monsters"
+	
+	// Add query parameters if provided
+	if input != nil && input.ChallengeRating != nil {
+		url = fmt.Sprintf("%s?challenge_rating=%g", url, *input.ChallengeRating)
+	}
+	
+	resp, err := c.client.Get(url)
 	if err != nil {
 		return nil, err
 	}
