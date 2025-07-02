@@ -17,6 +17,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TODO: refactor with suites
 func TestNewDND5eAPI(t *testing.T) {
 	t.Run("cfg is required", func(t *testing.T) {
 		_, err := NewDND5eAPI(nil)
