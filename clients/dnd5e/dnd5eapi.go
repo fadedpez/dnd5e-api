@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"strconv"
+	"sync"
 
 	"github.com/fadedpez/dnd5e-api/entities"
 )
@@ -15,11 +16,14 @@ import (
 const baserulzURL = "https://www.dnd5eapi.co/api/"
 
 type dnd5eAPI struct {
-	client httpIface
+	client  httpIface
+	baseURL string
+	mu      sync.RWMutex
 }
 
 type DND5eAPIConfig struct {
-	Client httpIface
+	Client  httpIface
+	BaseURL string
 }
 
 func NewDND5eAPI(cfg *DND5eAPIConfig) (Interface, error) {
@@ -31,11 +35,25 @@ func NewDND5eAPI(cfg *DND5eAPIConfig) (Interface, error) {
 		return nil, errors.New("cfg.Client is required")
 	}
 
-	return &dnd5eAPI{client: cfg.Client}, nil
+	baseURL := cfg.BaseURL
+	if baseURL == "" {
+		baseURL = baserulzURL
+	}
+
+	return &dnd5eAPI{
+		client:  cfg.Client,
+		baseURL: baseURL,
+	}, nil
+}
+
+func (c *dnd5eAPI) getBaseURL() string {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.baseURL
 }
 
 func (c *dnd5eAPI) ListRaces() ([]*entities.ReferenceItem, error) {
-	resp, err := c.client.Get(baserulzURL + "races")
+	resp, err := c.client.Get(c.getBaseURL() + "races")
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +78,7 @@ func (c *dnd5eAPI) ListRaces() ([]*entities.ReferenceItem, error) {
 }
 
 func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
-	resp, err := c.client.Get(baserulzURL + "races/" + key)
+	resp, err := c.client.Get(c.getBaseURL() + "races/" + key)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +111,7 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 }
 
 func (c *dnd5eAPI) ListEquipment() ([]*entities.ReferenceItem, error) {
-	resp, err := c.client.Get(baserulzURL + "equipment")
+	resp, err := c.client.Get(c.getBaseURL() + "equipment")
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +136,7 @@ func (c *dnd5eAPI) ListEquipment() ([]*entities.ReferenceItem, error) {
 }
 
 func (c *dnd5eAPI) listEquipmentByCategory(category string) ([]*referenceItem, error) {
-	resp, err := c.client.Get(baserulzURL + "equipment-categories/" + category)
+	resp, err := c.client.Get(c.getBaseURL() + "equipment-categories/" + category)
 	if err != nil {
 		return nil, err
 	}
@@ -138,7 +156,7 @@ func (c *dnd5eAPI) listEquipmentByCategory(category string) ([]*referenceItem, e
 }
 
 func (c *dnd5eAPI) GetEquipment(key string) (EquipmentInterface, error) {
-	resp, err := c.client.Get(baserulzURL + "equipment/" + key)
+	resp, err := c.client.Get(c.getBaseURL() + "equipment/" + key)
 	if err != nil {
 		return nil, err
 	}
@@ -186,7 +204,7 @@ func (c *dnd5eAPI) GetEquipment(key string) (EquipmentInterface, error) {
 }
 
 func (c *dnd5eAPI) ListClasses() ([]*entities.ReferenceItem, error) {
-	resp, err := c.client.Get(baserulzURL + "classes")
+	resp, err := c.client.Get(c.getBaseURL() + "classes")
 	if err != nil {
 		return nil, err
 	}
@@ -216,7 +234,7 @@ func (c *dnd5eAPI) ListClasses() ([]*entities.ReferenceItem, error) {
 }
 
 func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
-	resp, err := c.client.Get(baserulzURL + "classes/" + key)
+	resp, err := c.client.Get(c.getBaseURL() + "classes/" + key)
 	if err != nil {
 		return nil, err
 	}
@@ -404,9 +422,9 @@ func (c *dnd5eAPI) ListSpells(input *ListSpellsInput) ([]*entities.ReferenceItem
 func (c *dnd5eAPI) doGetSpellsByLevel(level *int) ([]*referenceItem, error) {
 	var url string
 	if level == nil {
-		url = baserulzURL + "spells"
+		url = c.getBaseURL() + "spells"
 	} else {
-		url = baserulzURL + "spells?level=" + strconv.Itoa(*level)
+		url = c.getBaseURL() + "spells?level=" + strconv.Itoa(*level)
 	}
 
 	resp, err := c.client.Get(url)
@@ -433,7 +451,7 @@ func (c *dnd5eAPI) doGetSpellsByClass(class string) ([]*referenceItem, error) {
 		return nil, errors.New("class is empty")
 	}
 
-	url := baserulzURL + "classes/" + class + "/spells"
+	url := c.getBaseURL() + "classes/" + class + "/spells"
 
 	resp, err := c.client.Get(url)
 	if err != nil {
@@ -455,7 +473,7 @@ func (c *dnd5eAPI) doGetSpellsByClass(class string) ([]*referenceItem, error) {
 }
 
 func (c *dnd5eAPI) GetSpell(key string) (*entities.Spell, error) {
-	resp, err := c.client.Get(baserulzURL + "spells/" + key)
+	resp, err := c.client.Get(c.getBaseURL() + "spells/" + key)
 	if err != nil {
 		return nil, err
 	}
@@ -496,7 +514,7 @@ func (c *dnd5eAPI) GetSpell(key string) (*entities.Spell, error) {
 }
 
 func (c *dnd5eAPI) ListFeatures() ([]*entities.ReferenceItem, error) {
-	resp, err := c.client.Get(baserulzURL + "features")
+	resp, err := c.client.Get(c.getBaseURL() + "features")
 	if err != nil {
 		return nil, err
 	}
@@ -526,7 +544,7 @@ func (c *dnd5eAPI) ListFeatures() ([]*entities.ReferenceItem, error) {
 }
 
 func (c *dnd5eAPI) GetFeature(key string) (*entities.Feature, error) {
-	resp, err := c.client.Get(baserulzURL + "features/" + key)
+	resp, err := c.client.Get(c.getBaseURL() + "features/" + key)
 	if err != nil {
 		return nil, err
 	}
@@ -565,7 +583,7 @@ func (c *dnd5eAPI) GetFeature(key string) (*entities.Feature, error) {
 }
 
 func (c *dnd5eAPI) ListSkills() ([]*entities.ReferenceItem, error) {
-	resp, err := c.client.Get(baserulzURL + "skills")
+	resp, err := c.client.Get(c.getBaseURL() + "skills")
 	if err != nil {
 		return nil, err
 	}
@@ -595,7 +613,7 @@ func (c *dnd5eAPI) ListSkills() ([]*entities.ReferenceItem, error) {
 }
 
 func (c *dnd5eAPI) GetSkill(key string) (*entities.Skill, error) {
-	resp, err := c.client.Get(baserulzURL + "skills/" + key)
+	resp, err := c.client.Get(c.getBaseURL() + "skills/" + key)
 	if err != nil {
 		return nil, err
 	}
@@ -637,7 +655,7 @@ func (c *dnd5eAPI) ListMonsters() ([]*entities.ReferenceItem, error) {
 }
 
 func (c *dnd5eAPI) ListMonstersWithFilter(input *ListMonstersInput) ([]*entities.ReferenceItem, error) {
-	url := baserulzURL + "monsters"
+	url := c.getBaseURL() + "monsters"
 	
 	// Add query parameters if provided
 	if input != nil && input.ChallengeRating != nil {
@@ -674,7 +692,7 @@ func (c *dnd5eAPI) ListMonstersWithFilter(input *ListMonstersInput) ([]*entities
 }
 
 func (c *dnd5eAPI) GetMonster(key string) (*entities.Monster, error) {
-	resp, err := c.client.Get(baserulzURL + "monsters/" + key)
+	resp, err := c.client.Get(c.getBaseURL() + "monsters/" + key)
 	if err != nil {
 		return nil, err
 	}
@@ -753,7 +771,7 @@ func (c *dnd5eAPI) GetClassLevel(key string, level int) (*entities.Level, error)
 		return nil, errors.New("level is required")
 	}
 
-	resp, err := c.client.Get(baserulzURL + "classes/" + key + "/levels/" + strconv.Itoa(level))
+	resp, err := c.client.Get(c.getBaseURL() + "classes/" + key + "/levels/" + strconv.Itoa(level))
 	if err != nil {
 		return nil, err
 	}
@@ -790,7 +808,7 @@ func (c *dnd5eAPI) GetClassLevel(key string, level int) (*entities.Level, error)
 }
 
 func (c *dnd5eAPI) GetProficiency(key string) (*entities.Proficiency, error) {
-	resp, err := c.client.Get(baserulzURL + "proficiencies/" + key)
+	resp, err := c.client.Get(c.getBaseURL() + "proficiencies/" + key)
 	if err != nil {
 		return nil, err
 	}
@@ -830,7 +848,7 @@ func (c *dnd5eAPI) GetProficiency(key string) (*entities.Proficiency, error) {
 }
 
 func (c *dnd5eAPI) ListDamageTypes() ([]*entities.ReferenceItem, error) {
-	resp, err := c.client.Get(baserulzURL + "damage-types")
+	resp, err := c.client.Get(c.getBaseURL() + "damage-types")
 	if err != nil {
 		return nil, err
 	}
@@ -860,7 +878,7 @@ func (c *dnd5eAPI) ListDamageTypes() ([]*entities.ReferenceItem, error) {
 }
 
 func (c *dnd5eAPI) GetDamageType(key string) (*entities.DamageType, error) {
-	resp, err := c.client.Get(baserulzURL + "damage-types/" + key)
+	resp, err := c.client.Get(c.getBaseURL() + "damage-types/" + key)
 	if err != nil {
 		return nil, err
 	}
@@ -893,7 +911,7 @@ func (c *dnd5eAPI) GetDamageType(key string) (*entities.DamageType, error) {
 }
 
 func (c *dnd5eAPI) GetEquipmentCategory(key string) (*entities.EquipmentCategory, error) {
-	resp, err := c.client.Get(baserulzURL + "equipment-categories/" + key)
+	resp, err := c.client.Get(c.getBaseURL() + "equipment-categories/" + key)
 	if err != nil {
 		return nil, err
 	}
