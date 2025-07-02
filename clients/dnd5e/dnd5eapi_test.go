@@ -51,7 +51,7 @@ func TestDND5eAPI_ListRaces(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"races").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListRaces()
 
 		assert.NotNil(t, err)
@@ -66,7 +66,7 @@ func TestDND5eAPI_ListRaces(t *testing.T) {
 			Body:       invalidJSONBody,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListRaces()
 
 		assert.NotNil(t, err)
@@ -79,7 +79,7 @@ func TestDND5eAPI_ListRaces(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListRaces()
 
 		assert.NotNil(t, err)
@@ -94,7 +94,7 @@ func TestDND5eAPI_ListRaces(t *testing.T) {
 			Body:       validJSONBody,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		actual, err := dnd5eAPI.ListRaces()
 
 		assert.Nil(t, err)
@@ -111,7 +111,7 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"races/human").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetRace("human")
 
 		assert.NotNil(t, err)
@@ -126,7 +126,7 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 			Body:       invalidJSONBody,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetRace("human")
 
 		assert.NotNil(t, err)
@@ -139,7 +139,7 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetRace("human")
 
 		assert.NotNil(t, err)
@@ -157,7 +157,7 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(raceFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		actual, err := dnd5eAPI.GetRace("human")
 
 		assert.Nil(t, err)
@@ -193,7 +193,7 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(raceFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		actual, err := dnd5eAPI.GetRace("elf")
 
 		assert.Nil(t, err)
@@ -213,7 +213,7 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(raceFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		actual, err := dnd5eAPI.GetRace("elf")
 
 		assert.Nil(t, err)
@@ -232,7 +232,7 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(raceFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		actual, err := dnd5eAPI.GetRace("dwarf")
 
 		assert.Nil(t, err)
@@ -254,7 +254,7 @@ func TestDND5eAPI_ListEquipment(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"equipment").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListEquipment()
 
 		assert.NotNil(t, err)
@@ -268,7 +268,7 @@ func TestDND5eAPI_ListEquipment(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListEquipment()
 
 		assert.NotNil(t, err)
@@ -282,7 +282,7 @@ func TestDND5eAPI_ListEquipment(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListEquipment()
 
 		assert.NotNil(t, err)
@@ -300,7 +300,7 @@ func TestDND5eAPI_ListEquipment(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(equipmentFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		actual, err := dnd5eAPI.ListEquipment()
 
 		assert.Nil(t, err)
@@ -316,7 +316,7 @@ func TestDND5eAPI_GetEquipment(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"equipment/abacus").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetEquipment("abacus")
 
 		assert.NotNil(t, err)
@@ -330,7 +330,7 @@ func TestDND5eAPI_GetEquipment(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetEquipment("abacus")
 
 		assert.NotNil(t, err)
@@ -344,7 +344,7 @@ func TestDND5eAPI_GetEquipment(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetEquipment("abacus")
 
 		assert.NotNil(t, err)
@@ -362,7 +362,7 @@ func TestDND5eAPI_GetEquipment(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(equipmentFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		actual, err := dnd5eAPI.GetEquipment("abacus")
 
 		assert.Nil(t, err)
@@ -389,7 +389,7 @@ func TestDND5eAPI_GetEquipment(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(equipmentFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetEquipment("battleaxe")
 
 		assert.Nil(t, err)
@@ -427,7 +427,7 @@ func TestDND5eAPI_GetEquipment(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(equipmentFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetEquipment("studded-leather-armor")
 
 		assert.Nil(t, err)
@@ -453,7 +453,7 @@ func TestDND5eAPI_ListClasses(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"classes").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListClasses()
 
 		assert.NotNil(t, err)
@@ -467,7 +467,7 @@ func TestDND5eAPI_ListClasses(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListClasses()
 
 		assert.NotNil(t, err)
@@ -480,7 +480,7 @@ func TestDND5eAPI_ListClasses(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListClasses()
 
 		assert.NotNil(t, err)
@@ -498,7 +498,7 @@ func TestDND5eAPI_ListClasses(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classesFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.ListClasses()
 
 		assert.Nil(t, err)
@@ -514,7 +514,7 @@ func TestDND5eAPI_GetClass(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"classes/ranger").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetClass("ranger")
 
 		assert.NotNil(t, err)
@@ -528,7 +528,7 @@ func TestDND5eAPI_GetClass(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetClass("ranger")
 
 		assert.NotNil(t, err)
@@ -541,7 +541,7 @@ func TestDND5eAPI_GetClass(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetClass("ranger")
 
 		assert.NotNil(t, err)
@@ -568,7 +568,7 @@ func TestDND5eAPI_GetClass(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(equipmentFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClass("ranger")
 
 		assert.Nil(t, err)
@@ -602,7 +602,7 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"spells").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListSpells(&ListSpellsInput{})
 
 		assert.NotNil(t, err)
@@ -616,7 +616,7 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListSpells(&ListSpellsInput{})
 
 		assert.NotNil(t, err)
@@ -629,7 +629,7 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListSpells(&ListSpellsInput{})
 
 		assert.NotNil(t, err)
@@ -647,7 +647,7 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(spellsFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.ListSpells(&ListSpellsInput{})
 
 		assert.Nil(t, err)
@@ -669,7 +669,7 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(spellsFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		setLevel := 1
 		result, err := dnd5eAPI.ListSpells(&ListSpellsInput{Level: &setLevel})
 
@@ -691,7 +691,7 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(spellsFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		setClass := "sorcerer"
 		result, err := dnd5eAPI.ListSpells(&ListSpellsInput{Class: setClass})
 
@@ -722,7 +722,7 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(levelSpellsFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		setClass := "sorcerer"
 		setLevel := 1
 		result, err := dnd5eAPI.ListSpells(&ListSpellsInput{Class: setClass, Level: &setLevel})
@@ -742,7 +742,7 @@ func TestDND5eAPI_GetSpell(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"spells/burning-hands").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetSpell("burning-hands")
 
 		assert.NotNil(t, err)
@@ -756,7 +756,7 @@ func TestDND5eAPI_GetSpell(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetSpell("burning-hands")
 
 		assert.NotNil(t, err)
@@ -769,7 +769,7 @@ func TestDND5eAPI_GetSpell(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetSpell("burning-hands")
 
 		assert.NotNil(t, err)
@@ -787,7 +787,7 @@ func TestDND5eAPI_GetSpell(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(spellFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetSpell("burning-hands")
 
 		assert.Nil(t, err)
@@ -820,7 +820,7 @@ func TestDND5eAPI_ListFeatures(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"features").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListFeatures()
 
 		assert.NotNil(t, err)
@@ -834,7 +834,7 @@ func TestDND5eAPI_ListFeatures(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListFeatures()
 
 		assert.NotNil(t, err)
@@ -847,7 +847,7 @@ func TestDND5eAPI_ListFeatures(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListFeatures()
 
 		assert.NotNil(t, err)
@@ -865,7 +865,7 @@ func TestDND5eAPI_ListFeatures(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(featuresFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.ListFeatures()
 
 		assert.Nil(t, err)
@@ -881,7 +881,7 @@ func TestDND5eAPI_GetFeature(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"features/metamagic-2").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetFeature("metamagic-2")
 
 		assert.NotNil(t, err)
@@ -895,7 +895,7 @@ func TestDND5eAPI_GetFeature(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetFeature("metamagic-2")
 
 		assert.NotNil(t, err)
@@ -908,7 +908,7 @@ func TestDND5eAPI_GetFeature(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetFeature("metamagic-2")
 
 		assert.NotNil(t, err)
@@ -926,7 +926,7 @@ func TestDND5eAPI_GetFeature(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(featureFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetFeature("metamagic-2")
 
 		assert.Nil(t, err)
@@ -952,7 +952,7 @@ func TestDND5eAPI_ListSkills(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"skills").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListSkills()
 
 		assert.NotNil(t, err)
@@ -966,7 +966,7 @@ func TestDND5eAPI_ListSkills(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListSkills()
 
 		assert.NotNil(t, err)
@@ -979,7 +979,7 @@ func TestDND5eAPI_ListSkills(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListSkills()
 
 		assert.NotNil(t, err)
@@ -997,7 +997,7 @@ func TestDND5eAPI_ListSkills(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(skillsFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.ListSkills()
 
 		assert.Nil(t, err)
@@ -1013,7 +1013,7 @@ func TestDND5eAPI_GetSkill(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"skills/acrobatics").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetSkill("acrobatics")
 
 		assert.NotNil(t, err)
@@ -1027,7 +1027,7 @@ func TestDND5eAPI_GetSkill(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetSkill("acrobatics")
 
 		assert.NotNil(t, err)
@@ -1040,7 +1040,7 @@ func TestDND5eAPI_GetSkill(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetSkill("acrobatics")
 
 		assert.NotNil(t, err)
@@ -1058,7 +1058,7 @@ func TestDND5eAPI_GetSkill(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(skillFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetSkill("acrobatics")
 
 		assert.Nil(t, err)
@@ -1076,7 +1076,7 @@ func TestDND5eAPI_ListMonsters(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"monsters").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListMonsters()
 
 		assert.NotNil(t, err)
@@ -1090,7 +1090,7 @@ func TestDND5eAPI_ListMonsters(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListMonsters()
 
 		assert.NotNil(t, err)
@@ -1103,7 +1103,7 @@ func TestDND5eAPI_ListMonsters(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.ListMonsters()
 
 		assert.NotNil(t, err)
@@ -1121,7 +1121,7 @@ func TestDND5eAPI_ListMonsters(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(monstersFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.ListMonsters()
 
 		assert.Nil(t, err)
@@ -1137,7 +1137,7 @@ func TestDND5eAPI_GetMonster(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"monsters/goblin").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetMonster("goblin")
 
 		assert.NotNil(t, err)
@@ -1151,7 +1151,7 @@ func TestDND5eAPI_GetMonster(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetMonster("goblin")
 
 		assert.NotNil(t, err)
@@ -1164,7 +1164,7 @@ func TestDND5eAPI_GetMonster(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetMonster("goblin")
 
 		assert.NotNil(t, err)
@@ -1182,7 +1182,7 @@ func TestDND5eAPI_GetMonster(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(monsterFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetMonster("goblin")
 
 		assert.Nil(t, err)
@@ -1230,7 +1230,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"classes/ranger/levels/1").Return(nil, errors.New("http.Get failed"))
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetClassLevel("ranger", 1)
 
 		assert.NotNil(t, err)
@@ -1244,7 +1244,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader([]byte("invalid json"))),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetClassLevel("ranger", 1)
 
 		assert.NotNil(t, err)
@@ -1257,7 +1257,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			StatusCode: 500,
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		_, err := dnd5eAPI.GetClassLevel("ranger", 1)
 
 		assert.NotNil(t, err)
@@ -1275,7 +1275,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("ranger", 1)
 
 		assert.Nil(t, err)
@@ -1304,7 +1304,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("barbarian", 1)
 
 		assert.Nil(t, err)
@@ -1326,7 +1326,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("bard", 1)
 
 		assert.Nil(t, err)
@@ -1346,7 +1346,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("cleric", 1)
 
 		assert.Nil(t, err)
@@ -1367,7 +1367,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("druid", 1)
 
 		assert.Nil(t, err)
@@ -1388,7 +1388,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("fighter", 1)
 
 		assert.Nil(t, err)
@@ -1409,7 +1409,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("monk", 1)
 
 		assert.Nil(t, err)
@@ -1431,7 +1431,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("paladin", 1)
 
 		assert.Nil(t, err)
@@ -1450,7 +1450,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("rogue", 1)
 
 		assert.Nil(t, err)
@@ -1470,7 +1470,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("sorcerer", 5)
 
 		assert.Nil(t, err)
@@ -1492,7 +1492,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("warlock", 5)
 
 		assert.Nil(t, err)
@@ -1515,7 +1515,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 			Body:       io.NopCloser(bytes.NewReader(classLevelFile)),
 		}, nil)
 
-		dnd5eAPI := &dnd5eAPI{client: client}
+		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
 		result, err := dnd5eAPI.GetClassLevel("wizard", 5)
 
 		assert.Nil(t, err)
@@ -1675,7 +1675,8 @@ func TestDND5eAPI_GetProficiency(t *testing.T) {
 			}, nil)
 
 			dnd5eAPI := &dnd5eAPI{
-				client: tt.fields.client,
+				client:  tt.fields.client,
+				baseURL: baserulzURL,
 			}
 
 			got, err := dnd5eAPI.GetProficiency(tt.args.key)
@@ -1696,7 +1697,8 @@ func TestDND5eAPI_ListDamageTypes(t *testing.T) {
 		mockClient.On("Get", baserulzURL+"damage-types").Return(&http.Response{}, errors.New("http.Get failed"))
 
 		dnd5eAPI := &dnd5eAPI{
-			client: mockClient,
+			client:  mockClient,
+			baseURL: baserulzURL,
 		}
 
 		_, err := dnd5eAPI.ListDamageTypes()
@@ -1711,7 +1713,8 @@ func TestDND5eAPI_ListDamageTypes(t *testing.T) {
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{
-			client: mockClient,
+			client:  mockClient,
+			baseURL: baserulzURL,
 		}
 
 		_, err := dnd5eAPI.ListDamageTypes()
@@ -1726,7 +1729,8 @@ func TestDND5eAPI_ListDamageTypes(t *testing.T) {
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{
-			client: mockClient,
+			client:  mockClient,
+			baseURL: baserulzURL,
 		}
 
 		_, err := dnd5eAPI.ListDamageTypes()
@@ -1744,7 +1748,8 @@ func TestDND5eAPI_ListDamageTypes(t *testing.T) {
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{
-			client: mockClient,
+			client:  mockClient,
+			baseURL: baserulzURL,
 		}
 
 		damagetypes, err := dnd5eAPI.ListDamageTypes()
@@ -1767,7 +1772,8 @@ func TestDnd5eAPI_GetDamageType(t *testing.T) {
 	}, nil)
 
 	dnd5eAPI := &dnd5eAPI{
-		client: mockClient,
+		client:  mockClient,
+		baseURL: baserulzURL,
 	}
 
 	damageType, err := dnd5eAPI.GetDamageType("acid")
