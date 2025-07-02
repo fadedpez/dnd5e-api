@@ -12,10 +12,11 @@ import (
 	"github.com/fadedpez/dnd5e-api/entities"
 )
 
-const baserulzURL = "https://www.dnd5eapi.co/api/"
+const defaultBaserulzURL = "https://www.dnd5eapi.co/api/"
 
 type dnd5eAPI struct {
-	client httpIface
+	baserulzURL string
+	client      httpIface
 }
 
 type DND5eAPIConfig struct {
@@ -31,7 +32,11 @@ func NewDND5eAPI(cfg *DND5eAPIConfig) (Interface, error) {
 		return nil, errors.New("cfg.Client is required")
 	}
 
-	return &dnd5eAPI{client: cfg.Client}, nil
+	if cfg.BaserulzURL == "" {
+		cfg.BaserulzURL = defaultBaserulzURL
+	}
+
+	return &dnd5eAPI{client: cfg.Client, baserulzURL: cfg.BaserulzURL}, nil
 }
 
 func (c *dnd5eAPI) ListRaces() ([]*entities.ReferenceItem, error) {
@@ -289,10 +294,7 @@ func (c *dnd5eAPI) replaceEquipmentCategoryOptionSetTypeToOptionsArray(input *ch
 					return nil, err
 				}
 				option.Choice = newChoice
-				input.From.Options[idx] = option
-			} else if option.OptionType == "multiple" {
-				for idx2, multiple := range option.Items {
-					if multiple.OptionType == "choice" {
+				input.From.Options[idx] = opti choice" {
 						newChoice, err := c.replaceEquipmentCategoryOptionSetTypeToOptionsArray(multiple.Choice)
 						if err != nil {
 							return nil, err
