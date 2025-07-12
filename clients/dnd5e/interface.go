@@ -24,6 +24,8 @@ type Interface interface {
 	GetMonster(key string) (*entities.Monster, error)
 	GetClassLevel(key string, level int) (*entities.Level, error)
 	GetProficiency(key string) (*entities.Proficiency, error)
+	ListDamageTypes() ([]*entities.ReferenceItem, error)
+	GetDamageType(key string) (*entities.DamageType, error)
 	GetEquipmentCategory(key string) (*entities.EquipmentCategory, error)
 }
 
