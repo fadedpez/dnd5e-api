@@ -1,6 +1,8 @@
 package dnd5e
 
 import (
+	"strings"
+
 	"github.com/fadedpez/dnd5e-api/entities"
 )
 
@@ -602,13 +604,7 @@ func backgroundFeatureResultToBackgroundFeature(input *backgroundFeatureResult) 
 	}
 
 	// Join description array into a single string
-	description := ""
-	if len(input.Description) > 0 {
-		description = input.Description[0]
-		for i := 1; i < len(input.Description); i++ {
-			description += "\n" + input.Description[i]
-		}
-	}
+	description := strings.Join(input.Description, "\n")
 
 	return &entities.BackgroundFeature{
 		Name:        input.Name,

@@ -13,7 +13,10 @@ import (
 	"github.com/fadedpez/dnd5e-api/entities"
 )
 
-const baserulzURL = "https://www.dnd5eapi.co/api/"
+const (
+	baserulzURL    = "https://www.dnd5eapi.co/api/"
+	httpStatusOK   = 200
+)
 
 type dnd5eAPI struct {
 	client  httpIface
@@ -52,6 +55,11 @@ func (c *dnd5eAPI) getBaseURL() string {
 	return c.baseURL
 }
 
+// newHTTPStatusError creates a standardized error for unexpected HTTP status codes
+func newHTTPStatusError(statusCode int) error {
+	return fmt.Errorf("unexpected status code: %d", statusCode)
+}
+
 func (c *dnd5eAPI) ListRaces() ([]*entities.ReferenceItem, error) {
 	resp, err := c.client.Get(c.getBaseURL() + "races")
 	if err != nil {
@@ -59,8 +67,8 @@ func (c *dnd5eAPI) ListRaces() ([]*entities.ReferenceItem, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := listResponse{}
 
@@ -84,8 +92,8 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := raceResult{}
 
@@ -119,8 +127,8 @@ func (c *dnd5eAPI) ListEquipment() ([]*entities.ReferenceItem, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := listResponse{}
 
@@ -144,8 +152,8 @@ func (c *dnd5eAPI) listEquipmentByCategory(category string) ([]*referenceItem, e
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := equipmentListResponse{}
 
@@ -164,8 +172,8 @@ func (c *dnd5eAPI) GetEquipment(key string) (EquipmentInterface, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := equipmentResult{}
 
@@ -212,8 +220,8 @@ func (c *dnd5eAPI) ListClasses() ([]*entities.ReferenceItem, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := listResponse{}
 
@@ -242,8 +250,8 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := classResult{}
 
@@ -435,8 +443,8 @@ func (c *dnd5eAPI) doGetSpellsByLevel(level *int) ([]*referenceItem, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := listResponse{}
 
@@ -461,8 +469,8 @@ func (c *dnd5eAPI) doGetSpellsByClass(class string) ([]*referenceItem, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := listResponse{}
 
@@ -481,8 +489,8 @@ func (c *dnd5eAPI) GetSpell(key string) (*entities.Spell, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := spellResult{}
 
@@ -522,8 +530,8 @@ func (c *dnd5eAPI) ListFeatures() ([]*entities.ReferenceItem, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := listResponse{}
 
@@ -552,8 +560,8 @@ func (c *dnd5eAPI) GetFeature(key string) (*entities.Feature, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := featureResult{}
 
@@ -591,8 +599,8 @@ func (c *dnd5eAPI) ListSkills() ([]*entities.ReferenceItem, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := listResponse{}
 
@@ -621,8 +629,8 @@ func (c *dnd5eAPI) GetSkill(key string) (*entities.Skill, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := skillResult{}
 
@@ -640,7 +648,7 @@ func (c *dnd5eAPI) GetSkill(key string) (*entities.Skill, error) {
 	skill := &entities.Skill{
 		Key:          response.Index,
 		Name:         response.Name,
-		Descricption: response.Description,
+		Description: response.Description,
 		AbilityScore: referenceItemToReferenceItem(response.AbilityScore),
 		Type:         urlToType(response.URL),
 	}
@@ -670,8 +678,8 @@ func (c *dnd5eAPI) ListMonstersWithFilter(input *ListMonstersInput) ([]*entities
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := listResponse{}
 
@@ -700,8 +708,8 @@ func (c *dnd5eAPI) GetMonster(key string) (*entities.Monster, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := monsterResult{}
 
@@ -779,8 +787,8 @@ func (c *dnd5eAPI) GetClassLevel(key string, level int) (*entities.Level, error)
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := &levelResult{}
 
@@ -815,8 +823,8 @@ func (c *dnd5eAPI) GetProficiency(key string) (*entities.Proficiency, error) {
 		return nil, err
 	}
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 
 	defer func(Body io.ReadCloser) {
@@ -856,8 +864,8 @@ func (c *dnd5eAPI) ListDamageTypes() ([]*entities.ReferenceItem, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := listResponse{}
 
@@ -886,8 +894,8 @@ func (c *dnd5eAPI) GetDamageType(key string) (*entities.DamageType, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := damageTypeResult{}
 
@@ -919,8 +927,8 @@ func (c *dnd5eAPI) GetEquipmentCategory(key string) (*entities.EquipmentCategory
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -944,8 +952,8 @@ func (c *dnd5eAPI) ListBackgrounds() ([]*entities.ReferenceItem, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := listResponse{}
 
@@ -969,8 +977,8 @@ func (c *dnd5eAPI) GetBackground(key string) (*entities.Background, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	if resp.StatusCode != httpStatusOK {
+		return nil, newHTTPStatusError(resp.StatusCode)
 	}
 	response := backgroundResult{}
 
