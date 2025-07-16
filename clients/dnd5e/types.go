@@ -106,6 +106,18 @@ type classResult struct {
 	StartingEquipment        []*startingEquipment `json:"starting_equipment"`
 	ProficiencyChoices       []*choiceResult      `json:"proficiency_choices"`
 	StartingEquipmentOptions []*choiceResult      `json:"starting_equipment_options"`
+	MultiClassing            *multiClassing       `json:"multi_classing"`
+}
+
+type multiClassing struct {
+	Prerequisites       []*multiClassingPrerequisite `json:"prerequisites"`
+	Proficiencies       []*referenceItem             `json:"proficiencies"`
+	ProficiencyChoices  []*choiceResult              `json:"proficiency_choices"`
+}
+
+type multiClassingPrerequisite struct {
+	AbilityScore *referenceItem `json:"ability_score"`
+	MinimumScore int            `json:"minimum_score"`
 }
 
 type startingEquipment struct {
