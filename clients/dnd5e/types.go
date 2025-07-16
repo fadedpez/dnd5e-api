@@ -10,6 +10,8 @@ type raceResult struct {
 	Index                      string           `json:"index"`
 	Name                       string           `json:"name"`
 	Speed                      int              `json:"speed"`
+	Size                       string           `json:"size"`
+	SizeDescription            string           `json:"size_description"`
 	AbilityBonus               []*abilityBonus  `json:"ability_bonuses"`
 	Language                   []*referenceItem `json:"languages"`
 	Trait                      []*referenceItem `json:"traits"`
