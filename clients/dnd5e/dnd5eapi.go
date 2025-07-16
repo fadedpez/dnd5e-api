@@ -57,11 +57,11 @@ func (c *dnd5eAPI) ListRaces() ([]*entities.ReferenceItem, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := listResponse{}
 
 	err = json.NewDecoder(resp.Body).Decode(&response)
@@ -82,11 +82,11 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := raceResult{}
 
 	err = json.NewDecoder(resp.Body).Decode(&response)
@@ -115,11 +115,11 @@ func (c *dnd5eAPI) ListEquipment() ([]*entities.ReferenceItem, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := listResponse{}
 
 	err = json.NewDecoder(resp.Body).Decode(&response)
@@ -140,11 +140,11 @@ func (c *dnd5eAPI) listEquipmentByCategory(category string) ([]*referenceItem, e
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := equipmentListResponse{}
 
 	err = json.NewDecoder(resp.Body).Decode(&response)
@@ -160,11 +160,11 @@ func (c *dnd5eAPI) GetEquipment(key string) (EquipmentInterface, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := equipmentResult{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -208,11 +208,11 @@ func (c *dnd5eAPI) ListClasses() ([]*entities.ReferenceItem, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := listResponse{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -238,11 +238,11 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := classResult{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -431,11 +431,11 @@ func (c *dnd5eAPI) doGetSpellsByLevel(level *int) ([]*referenceItem, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := listResponse{}
 
 	err = json.NewDecoder(resp.Body).Decode(&response)
@@ -457,11 +457,11 @@ func (c *dnd5eAPI) doGetSpellsByClass(class string) ([]*referenceItem, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := listResponse{}
 
 	err = json.NewDecoder(resp.Body).Decode(&response)
@@ -477,11 +477,11 @@ func (c *dnd5eAPI) GetSpell(key string) (*entities.Spell, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := spellResult{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -518,11 +518,11 @@ func (c *dnd5eAPI) ListFeatures() ([]*entities.ReferenceItem, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := listResponse{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -548,11 +548,11 @@ func (c *dnd5eAPI) GetFeature(key string) (*entities.Feature, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := featureResult{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -587,11 +587,11 @@ func (c *dnd5eAPI) ListSkills() ([]*entities.ReferenceItem, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := listResponse{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -617,11 +617,11 @@ func (c *dnd5eAPI) GetSkill(key string) (*entities.Skill, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := skillResult{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -666,11 +666,11 @@ func (c *dnd5eAPI) ListMonstersWithFilter(input *ListMonstersInput) ([]*entities
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := listResponse{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -696,11 +696,11 @@ func (c *dnd5eAPI) GetMonster(key string) (*entities.Monster, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := monsterResult{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -775,11 +775,11 @@ func (c *dnd5eAPI) GetClassLevel(key string, level int) (*entities.Level, error)
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := &levelResult{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -852,11 +852,11 @@ func (c *dnd5eAPI) ListDamageTypes() ([]*entities.ReferenceItem, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := listResponse{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -882,11 +882,11 @@ func (c *dnd5eAPI) GetDamageType(key string) (*entities.DamageType, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := damageTypeResult{}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
@@ -915,11 +915,11 @@ func (c *dnd5eAPI) GetEquipmentCategory(key string) (*entities.EquipmentCategory
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -940,11 +940,11 @@ func (c *dnd5eAPI) ListBackgrounds() ([]*entities.ReferenceItem, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := listResponse{}
 
 	err = json.NewDecoder(resp.Body).Decode(&response)
@@ -965,11 +965,11 @@ func (c *dnd5eAPI) GetBackground(key string) (*entities.Background, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
 	}
-	defer resp.Body.Close()
 	response := backgroundResult{}
 
 	err = json.NewDecoder(resp.Body).Decode(&response)
