@@ -78,6 +78,7 @@ func TestDND5eAPI_ListRaces(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"races").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -138,6 +139,7 @@ func TestDND5eAPI_GetRace(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"races/human").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -479,6 +481,7 @@ func TestDND5eAPI_ListClasses(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"classes").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -540,6 +543,7 @@ func TestDND5eAPI_GetClass(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"classes/ranger").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -628,6 +632,7 @@ func TestDnd5eAPI_ListSpells(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"spells").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -768,6 +773,7 @@ func TestDND5eAPI_GetSpell(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"spells/burning-hands").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -846,6 +852,7 @@ func TestDND5eAPI_ListFeatures(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"features").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -907,6 +914,7 @@ func TestDND5eAPI_GetFeature(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"features/metamagic-2").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -978,6 +986,7 @@ func TestDND5eAPI_ListSkills(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"skills").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -1039,6 +1048,7 @@ func TestDND5eAPI_GetSkill(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"skills/acrobatics").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -1102,6 +1112,7 @@ func TestDND5eAPI_ListMonsters(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"monsters").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -1163,6 +1174,7 @@ func TestDND5eAPI_GetMonster(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"monsters/goblin").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}
@@ -1256,6 +1268,7 @@ func TestDND5eAPI_GetClassLevel(t *testing.T) {
 		client := &mockHTTPClient{}
 		client.On("Get", baserulzURL+"classes/ranger/levels/1").Return(&http.Response{
 			StatusCode: 500,
+			Body:       ioutil.NopCloser(bytes.NewReader([]byte(``))),
 		}, nil)
 
 		dnd5eAPI := &dnd5eAPI{client: client, baseURL: baserulzURL}

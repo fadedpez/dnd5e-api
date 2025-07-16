@@ -331,3 +331,22 @@ type damageTypeResult struct {
 	Description []string `json:"desc"`
 	URL         string   `json:"url"`
 }
+
+type backgroundResult struct {
+	Index                      string           `json:"index"`
+	Name                       string           `json:"name"`
+	StartingProficiencies      []*referenceItem `json:"starting_proficiencies"`
+	LanguageOptions            *choiceResult    `json:"language_options"`
+	StartingEquipment          []*startingEquipment `json:"starting_equipment"`
+	StartingEquipmentOptions   []*choiceResult  `json:"starting_equipment_options"`
+	Feature                    *backgroundFeatureResult `json:"feature"`
+	PersonalityTraits          *choiceResult    `json:"personality_traits"`
+	Ideals                     *choiceResult    `json:"ideals"`
+	Bonds                      *choiceResult    `json:"bonds"`
+	Flaws                      *choiceResult    `json:"flaws"`
+}
+
+type backgroundFeatureResult struct {
+	Name        string   `json:"name"`
+	Description []string `json:"desc"`
+}

@@ -175,6 +175,22 @@ func (m *MockClient) GetEquipmentCategory(key string) (*entities.EquipmentCatego
 	return args.Get(0).(*entities.EquipmentCategory), args.Error(1)
 }
 
+func (m *MockClient) ListBackgrounds() ([]*entities.ReferenceItem, error) {
+	args := m.Called()
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]*entities.ReferenceItem), args.Error(1)
+}
+
+func (m *MockClient) GetBackground(key string) (*entities.Background, error) {
+	args := m.Called(key)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*entities.Background), args.Error(1)
+}
+
 func TestCachedClient_GetRace_CacheHit(t *testing.T) {
 	mockClient := new(MockClient)
 	cachedClient := NewCachedClient(mockClient, 24*time.Hour).(*CachedClient)

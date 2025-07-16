@@ -27,6 +27,8 @@ type Interface interface {
 	ListDamageTypes() ([]*entities.ReferenceItem, error)
 	GetDamageType(key string) (*entities.DamageType, error)
 	GetEquipmentCategory(key string) (*entities.EquipmentCategory, error)
+	ListBackgrounds() ([]*entities.ReferenceItem, error)
+	GetBackground(key string) (*entities.Background, error)
 }
 
 type httpIface interface {
