@@ -2,6 +2,7 @@ package dnd5e
 
 import (
 	"fmt"
+	"log"
 	"sync"
 	"time"
 
@@ -61,7 +62,11 @@ func (c *CachedClient) ListRaces() ([]*entities.ReferenceItem, error) {
 	cacheKey := "list:races"
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.([]*entities.ReferenceItem), nil
+		if typedResult, ok := cached.([]*entities.ReferenceItem); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected []*entities.ReferenceItem, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -79,7 +84,11 @@ func (c *CachedClient) GetRace(key string) (*entities.Race, error) {
 	cacheKey := fmt.Sprintf("race:%s", key)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(*entities.Race), nil
+		if typedResult, ok := cached.(*entities.Race); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected *entities.Race, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -97,7 +106,11 @@ func (c *CachedClient) ListEquipment() ([]*entities.ReferenceItem, error) {
 	cacheKey := "list:equipment"
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.([]*entities.ReferenceItem), nil
+		if typedResult, ok := cached.([]*entities.ReferenceItem); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected []*entities.ReferenceItem, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -115,7 +128,11 @@ func (c *CachedClient) GetEquipment(key string) (EquipmentInterface, error) {
 	cacheKey := fmt.Sprintf("equipment:%s", key)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(EquipmentInterface), nil
+		if typedResult, ok := cached.(EquipmentInterface); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected EquipmentInterface, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -133,7 +150,11 @@ func (c *CachedClient) ListClasses() ([]*entities.ReferenceItem, error) {
 	cacheKey := "list:classes"
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.([]*entities.ReferenceItem), nil
+		if typedResult, ok := cached.([]*entities.ReferenceItem); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected []*entities.ReferenceItem, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -151,7 +172,11 @@ func (c *CachedClient) GetClass(key string) (*entities.Class, error) {
 	cacheKey := fmt.Sprintf("class:%s", key)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(*entities.Class), nil
+		if typedResult, ok := cached.(*entities.Class); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected *entities.Class, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -181,7 +206,11 @@ func (c *CachedClient) ListSpells(input *ListSpellsInput) ([]*entities.Reference
 	}
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.([]*entities.ReferenceItem), nil
+		if typedResult, ok := cached.([]*entities.ReferenceItem); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected []*entities.ReferenceItem, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -199,7 +228,11 @@ func (c *CachedClient) GetSpell(key string) (*entities.Spell, error) {
 	cacheKey := fmt.Sprintf("spell:%s", key)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(*entities.Spell), nil
+		if typedResult, ok := cached.(*entities.Spell); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected *entities.Spell, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -217,7 +250,11 @@ func (c *CachedClient) ListFeatures() ([]*entities.ReferenceItem, error) {
 	cacheKey := "list:features"
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.([]*entities.ReferenceItem), nil
+		if typedResult, ok := cached.([]*entities.ReferenceItem); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected []*entities.ReferenceItem, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -235,7 +272,11 @@ func (c *CachedClient) GetFeature(key string) (*entities.Feature, error) {
 	cacheKey := fmt.Sprintf("feature:%s", key)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(*entities.Feature), nil
+		if typedResult, ok := cached.(*entities.Feature); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected *entities.Feature, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -253,7 +294,11 @@ func (c *CachedClient) ListSkills() ([]*entities.ReferenceItem, error) {
 	cacheKey := "list:skills"
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.([]*entities.ReferenceItem), nil
+		if typedResult, ok := cached.([]*entities.ReferenceItem); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected []*entities.ReferenceItem, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -271,7 +316,11 @@ func (c *CachedClient) GetSkill(key string) (*entities.Skill, error) {
 	cacheKey := fmt.Sprintf("skill:%s", key)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(*entities.Skill), nil
+		if typedResult, ok := cached.(*entities.Skill); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected *entities.Skill, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -289,7 +338,11 @@ func (c *CachedClient) ListMonsters() ([]*entities.ReferenceItem, error) {
 	cacheKey := "list:monsters:all"
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.([]*entities.ReferenceItem), nil
+		if typedResult, ok := cached.([]*entities.ReferenceItem); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected []*entities.ReferenceItem, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -312,7 +365,11 @@ func (c *CachedClient) ListMonstersWithFilter(input *ListMonstersInput) ([]*enti
 	cacheKey = fmt.Sprintf("list:monsters:cr:%g", *input.ChallengeRating)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.([]*entities.ReferenceItem), nil
+		if typedResult, ok := cached.([]*entities.ReferenceItem); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected []*entities.ReferenceItem, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -330,7 +387,11 @@ func (c *CachedClient) GetMonster(key string) (*entities.Monster, error) {
 	cacheKey := fmt.Sprintf("monster:%s", key)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(*entities.Monster), nil
+		if typedResult, ok := cached.(*entities.Monster); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected *entities.Monster, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -348,7 +409,11 @@ func (c *CachedClient) GetClassLevel(key string, level int) (*entities.Level, er
 	cacheKey := fmt.Sprintf("class:%s:level:%d", key, level)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(*entities.Level), nil
+		if typedResult, ok := cached.(*entities.Level); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected *entities.Level, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -366,7 +431,11 @@ func (c *CachedClient) GetProficiency(key string) (*entities.Proficiency, error)
 	cacheKey := fmt.Sprintf("proficiency:%s", key)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(*entities.Proficiency), nil
+		if typedResult, ok := cached.(*entities.Proficiency); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected *entities.Proficiency, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -384,7 +453,11 @@ func (c *CachedClient) ListDamageTypes() ([]*entities.ReferenceItem, error) {
 	cacheKey := "list:damage-types"
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.([]*entities.ReferenceItem), nil
+		if typedResult, ok := cached.([]*entities.ReferenceItem); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected []*entities.ReferenceItem, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -402,7 +475,11 @@ func (c *CachedClient) GetDamageType(key string) (*entities.DamageType, error) {
 	cacheKey := fmt.Sprintf("damage-type:%s", key)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(*entities.DamageType), nil
+		if typedResult, ok := cached.(*entities.DamageType); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected *entities.DamageType, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -420,7 +497,11 @@ func (c *CachedClient) GetEquipmentCategory(key string) (*entities.EquipmentCate
 	cacheKey := fmt.Sprintf("equipment-category:%s", key)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(*entities.EquipmentCategory), nil
+		if typedResult, ok := cached.(*entities.EquipmentCategory); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected *entities.EquipmentCategory, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -438,7 +519,11 @@ func (c *CachedClient) ListBackgrounds() ([]*entities.ReferenceItem, error) {
 	cacheKey := "backgrounds"
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.([]*entities.ReferenceItem), nil
+		if typedResult, ok := cached.([]*entities.ReferenceItem); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected []*entities.ReferenceItem, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
@@ -456,7 +541,11 @@ func (c *CachedClient) GetBackground(key string) (*entities.Background, error) {
 	cacheKey := fmt.Sprintf("background:%s", key)
 	
 	if cached, ok := c.getFromCache(cacheKey); ok {
-		return cached.(*entities.Background), nil
+		if typedResult, ok := cached.(*entities.Background); ok {
+			return typedResult, nil
+		}
+		log.Printf("Cache type mismatch for key %s, expected *entities.Background, got %T", cacheKey, cached)
+		// Fall through to API call
 	}
 	
 	// Cache miss - fetch from API
