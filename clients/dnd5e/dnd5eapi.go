@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/fadedpez/dnd5e-api/entities"
@@ -270,6 +271,8 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 		return nil, err
 	}
 
+	armorProfs, weaponProfs, toolProfs := categorizeProficiencies(response.Proficiencies)
+	
 	class := &entities.Class{
 		Key:                      response.Index,
 		Name:                     response.Name,
@@ -279,6 +282,11 @@ func (c *dnd5eAPI) GetClass(key string) (*entities.Class, error) {
 		StartingEquipment:        startingEquipmentResultsToStartingEquipment(response.StartingEquipment),
 		ProficiencyChoices:       choiceResultsToChoices(response.ProficiencyChoices),
 		StartingEquipmentOptions: startingEquipmentOption,
+		PrimaryAbilities:         extractPrimaryAbilities(response.MultiClassing),
+		Description:              getClassDescription(response.Index),
+		ArmorProficiencies:       armorProfs,
+		WeaponProficiencies:      weaponProfs,
+		ToolProficiencies:        toolProfs,
 	}
 
 	return class, nil
@@ -1002,4 +1010,99 @@ func (c *dnd5eAPI) GetBackground(key string) (*entities.Background, error) {
 	}
 
 	return background, nil
+}
+
+func extractPrimaryAbilities(multiclassing *multiClassing) []*entities.ReferenceItem {
+	if multiclassing == nil || multiclassing.Prerequisites == nil {
+		return nil
+	}
+
+	primaryAbilities := make([]*entities.ReferenceItem, 0, len(multiclassing.Prerequisites))
+	for _, prereq := range multiclassing.Prerequisites {
+		if prereq.AbilityScore != nil {
+			primaryAbilities = append(primaryAbilities, referenceItemToReferenceItem(prereq.AbilityScore))
+		}
+	}
+
+	return primaryAbilities
+}
+
+func getClassDescription(key string) string {
+	descriptions := map[string]string{
+		"barbarian":  "A fierce warrior of primitive background who can enter a battle rage",
+		"bard":       "A master of song, speech, and the magic they contain",
+		"cleric":     "A priestly champion who wields divine magic in service of a higher power",
+		"druid":      "A priest of nature, wielding elemental forces and transformative magic",
+		"fighter":    "A master of martial combat, skilled with a variety of weapons and armor",
+		"monk":       "A master of martial arts, harnessing inner power through discipline",
+		"paladin":    "A holy warrior bound to a sacred oath, wielding divine magic",
+		"ranger":     "A warrior of the wilderness, skilled in tracking, survival, and combat",
+		"rogue":      "A scoundrel who uses stealth and trickery to achieve their goals",
+		"sorcerer":   "A spellcaster who draws on inherent magic from a gift or bloodline",
+		"warlock":    "A wielder of magic derived from a bargain with an extraplanar entity",
+		"wizard":     "A scholarly magic-user capable of manipulating structures of reality",
+	}
+	
+	if description, exists := descriptions[key]; exists {
+		return description
+	}
+	
+	return ""
+}
+
+func categorizeProficiencies(proficiencies []*referenceItem) (armor, weapon, tool []*entities.ReferenceItem) {
+	armorProficiencies := make([]*entities.ReferenceItem, 0)
+	weaponProficiencies := make([]*entities.ReferenceItem, 0)
+	toolProficiencies := make([]*entities.ReferenceItem, 0)
+
+	for _, prof := range proficiencies {
+		if prof == nil {
+			continue
+		}
+		
+		switch {
+		case isArmorProficiency(prof.Index):
+			armorProficiencies = append(armorProficiencies, referenceItemToReferenceItem(prof))
+		case isWeaponProficiency(prof.Index):
+			weaponProficiencies = append(weaponProficiencies, referenceItemToReferenceItem(prof))
+		case isToolProficiency(prof.Index):
+			toolProficiencies = append(toolProficiencies, referenceItemToReferenceItem(prof))
+		}
+	}
+
+	return armorProficiencies, weaponProficiencies, toolProficiencies
+}
+
+func isArmorProficiency(index string) bool {
+	armorProficiencies := map[string]bool{
+		"light-armor":  true,
+		"medium-armor": true,
+		"heavy-armor":  true,
+		"shields":      true,
+		"all-armor":    true,
+	}
+	return armorProficiencies[index]
+}
+
+func isWeaponProficiency(index string) bool {
+	weaponProficiencies := map[string]bool{
+		"simple-weapons":  true,
+		"martial-weapons": true,
+	}
+	return weaponProficiencies[index]
+}
+
+const savingThrowPrefix = "saving-throw"
+
+func isToolProficiency(index string) bool {
+	// Tools are proficiencies that are not armor, weapons, or saving throws
+	// This handles various tool types like "smiths-tools", "thieves-tools", etc.
+	// as well as any unknown proficiency types that may be added in the future
+	return !isArmorProficiency(index) && 
+		   !isWeaponProficiency(index) && 
+		   !isSavingThrowProficiency(index)
+}
+
+func isSavingThrowProficiency(index string) bool {
+	return strings.HasPrefix(index, savingThrowPrefix)
 }
