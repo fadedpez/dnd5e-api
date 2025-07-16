@@ -432,3 +432,39 @@ func (c *CachedClient) GetEquipmentCategory(key string) (*entities.EquipmentCate
 	c.storeInCache(cacheKey, category)
 	return category, nil
 }
+
+// ListBackgrounds returns cached backgrounds list or fetches from API
+func (c *CachedClient) ListBackgrounds() ([]*entities.ReferenceItem, error) {
+	cacheKey := "backgrounds"
+	
+	if cached, ok := c.getFromCache(cacheKey); ok {
+		return cached.([]*entities.ReferenceItem), nil
+	}
+	
+	// Cache miss - fetch from API
+	backgrounds, err := c.client.ListBackgrounds()
+	if err != nil {
+		return nil, err
+	}
+	
+	c.storeInCache(cacheKey, backgrounds)
+	return backgrounds, nil
+}
+
+// GetBackground returns cached background or fetches from API
+func (c *CachedClient) GetBackground(key string) (*entities.Background, error) {
+	cacheKey := fmt.Sprintf("background:%s", key)
+	
+	if cached, ok := c.getFromCache(cacheKey); ok {
+		return cached.(*entities.Background), nil
+	}
+	
+	// Cache miss - fetch from API
+	background, err := c.client.GetBackground(key)
+	if err != nil {
+		return nil, err
+	}
+	
+	c.storeInCache(cacheKey, background)
+	return background, nil
+}

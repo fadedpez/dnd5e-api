@@ -934,3 +934,62 @@ func (c *dnd5eAPI) GetEquipmentCategory(key string) (*entities.EquipmentCategory
 
 	return category, nil
 }
+
+func (c *dnd5eAPI) ListBackgrounds() ([]*entities.ReferenceItem, error) {
+	resp, err := c.client.Get(c.getBaseURL() + "backgrounds")
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := listResponse{}
+
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]*entities.ReferenceItem, len(response.Results))
+	for i, r := range response.Results {
+		out[i] = referenceItemToReferenceItem(r)
+	}
+
+	return out, nil
+}
+
+func (c *dnd5eAPI) GetBackground(key string) (*entities.Background, error) {
+	resp, err := c.client.Get(c.getBaseURL() + "backgrounds/" + key)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code: %d", resp.StatusCode))
+	}
+	defer resp.Body.Close()
+	response := backgroundResult{}
+
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	if err != nil {
+		return nil, err
+	}
+
+	background := &entities.Background{
+		Key:                        response.Index,
+		Name:                       response.Name,
+		SkillProficiencies:         referenceItemsToReferenceItems(response.StartingProficiencies),
+		LanguageOptions:            choiceResultToChoice(response.LanguageOptions),
+		StartingEquipment:          startingEquipmentResultsToStartingEquipment(response.StartingEquipment),
+		StartingEquipmentOptions:   choiceResultsToChoices(response.StartingEquipmentOptions),
+		Feature:                    backgroundFeatureResultToBackgroundFeature(response.Feature),
+		PersonalityTraits:          choiceResultToChoice(response.PersonalityTraits),
+		Ideals:                     choiceResultToChoice(response.Ideals),
+		Bonds:                      choiceResultToChoice(response.Bonds),
+		Flaws:                      choiceResultToChoice(response.Flaws),
+	}
+
+	return background, nil
+}

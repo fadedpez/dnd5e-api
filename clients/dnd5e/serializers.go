@@ -595,3 +595,23 @@ func referenceItemToReferenceItem(input *referenceItem) *entities.ReferenceItem 
 		Type: urlToType(input.URL),
 	}
 }
+
+func backgroundFeatureResultToBackgroundFeature(input *backgroundFeatureResult) *entities.BackgroundFeature {
+	if input == nil {
+		return nil
+	}
+
+	// Join description array into a single string
+	description := ""
+	if len(input.Description) > 0 {
+		description = input.Description[0]
+		for i := 1; i < len(input.Description); i++ {
+			description += "\n" + input.Description[i]
+		}
+	}
+
+	return &entities.BackgroundFeature{
+		Name:        input.Name,
+		Description: description,
+	}
+}
