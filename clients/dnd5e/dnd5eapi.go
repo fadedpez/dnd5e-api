@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/fadedpez/dnd5e-api/entities"
@@ -1091,12 +1092,17 @@ func isWeaponProficiency(index string) bool {
 	return weaponProficiencies[index]
 }
 
+const savingThrowPrefix = "saving-throw"
+
 func isToolProficiency(index string) bool {
+	// Tools are proficiencies that are not armor, weapons, or saving throws
+	// This handles various tool types like "smiths-tools", "thieves-tools", etc.
+	// as well as any unknown proficiency types that may be added in the future
 	return !isArmorProficiency(index) && 
 		   !isWeaponProficiency(index) && 
 		   !isSavingThrowProficiency(index)
 }
 
 func isSavingThrowProficiency(index string) bool {
-	return len(index) >= 12 && index[:12] == "saving-throw"
+	return strings.HasPrefix(index, savingThrowPrefix)
 }
