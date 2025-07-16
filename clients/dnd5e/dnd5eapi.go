@@ -98,6 +98,8 @@ func (c *dnd5eAPI) GetRace(key string) (*entities.Race, error) {
 		Key:                        response.Index,
 		Name:                       response.Name,
 		Speed:                      response.Speed,
+		Size:                       response.Size,
+		SizeDescription:            response.SizeDescription,
 		AbilityBonuses:             abilityBonusResultsToAbilityBonuses(response.AbilityBonus),
 		Languages:                  referenceItemsToReferenceItems(response.Language),
 		Traits:                     referenceItemsToReferenceItems(response.Trait),

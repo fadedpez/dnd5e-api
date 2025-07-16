@@ -4,6 +4,8 @@ type Race struct {
 	Key                        string           `json:"key"`
 	Name                       string           `json:"name"`
 	Speed                      int              `json:"speed"`
+	Size                       string           `json:"size"`
+	SizeDescription            string           `json:"size_description"`
 	AbilityBonuses             []*AbilityBonus  `json:"ability_bonuses"`
 	Languages                  []*ReferenceItem `json:"languages"`
 	Traits                     []*ReferenceItem `json:"traits"`
