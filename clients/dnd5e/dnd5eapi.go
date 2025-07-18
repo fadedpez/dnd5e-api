@@ -954,45 +954,71 @@ func (c *dnd5eAPI) GetEquipmentCategory(key string) (*entities.EquipmentCategory
 }
 
 func (c *dnd5eAPI) ListBackgrounds() ([]*entities.ReferenceItem, error) {
+	// Try to get from API first
 	resp, err := c.client.Get(c.getBaseURL() + "backgrounds")
 	if err != nil {
-		return nil, err
+		// If API fails, return hardcoded backgrounds
+		return getHardcodedBackgrounds(), nil
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != httpStatusOK {
-		return nil, newHTTPStatusError(resp.StatusCode)
+		// If API returns error, return hardcoded backgrounds
+		return getHardcodedBackgrounds(), nil
 	}
+	
 	response := listResponse{}
-
 	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
-		return nil, err
+		// If parsing fails, return hardcoded backgrounds
+		return getHardcodedBackgrounds(), nil
 	}
 
-	out := make([]*entities.ReferenceItem, len(response.Results))
+	// Merge API results with hardcoded backgrounds
+	apiBackgrounds := make([]*entities.ReferenceItem, len(response.Results))
 	for i, r := range response.Results {
-		out[i] = referenceItemToReferenceItem(r)
+		apiBackgrounds[i] = referenceItemToReferenceItem(r)
+	}
+	
+	// Get hardcoded backgrounds and merge, avoiding duplicates
+	hardcodedBackgrounds := getHardcodedBackgrounds()
+	merged := make([]*entities.ReferenceItem, 0, len(apiBackgrounds)+len(hardcodedBackgrounds))
+	merged = append(merged, apiBackgrounds...)
+	
+	// Add hardcoded backgrounds that aren't in API results
+	apiKeys := make(map[string]bool)
+	for _, bg := range apiBackgrounds {
+		apiKeys[bg.Key] = true
+	}
+	
+	for _, bg := range hardcodedBackgrounds {
+		if !apiKeys[bg.Key] {
+			merged = append(merged, bg)
+		}
 	}
 
-	return out, nil
+	return merged, nil
 }
 
 func (c *dnd5eAPI) GetBackground(key string) (*entities.Background, error) {
+	// Try to get from API first
 	resp, err := c.client.Get(c.getBaseURL() + "backgrounds/" + key)
 	if err != nil {
-		return nil, err
+		// If API fails, try hardcoded background
+		return getHardcodedBackground(key)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != httpStatusOK {
-		return nil, newHTTPStatusError(resp.StatusCode)
+		// If API returns 404 or other error, try hardcoded background
+		return getHardcodedBackground(key)
 	}
+	
 	response := backgroundResult{}
-
 	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
-		return nil, err
+		// If parsing fails, try hardcoded background
+		return getHardcodedBackground(key)
 	}
 
 	background := &entities.Background{
@@ -1048,6 +1074,111 @@ func getClassDescription(key string) string {
 	}
 	
 	return ""
+}
+
+// getHardcodedBackgrounds returns a list of standard D&D 5e backgrounds
+func getHardcodedBackgrounds() []*entities.ReferenceItem {
+	return []*entities.ReferenceItem{
+		{Key: "acolyte", Name: "Acolyte"},
+		{Key: "criminal", Name: "Criminal"},
+		{Key: "folk-hero", Name: "Folk Hero"},
+		{Key: "noble", Name: "Noble"},
+		{Key: "sage", Name: "Sage"},
+		{Key: "soldier", Name: "Soldier"},
+		{Key: "charlatan", Name: "Charlatan"},
+		{Key: "entertainer", Name: "Entertainer"},
+		{Key: "guild-artisan", Name: "Guild Artisan"},
+		{Key: "hermit", Name: "Hermit"},
+		{Key: "outlander", Name: "Outlander"},
+		{Key: "sailor", Name: "Sailor"},
+	}
+}
+
+// getHardcodedBackground returns detailed background data for standard D&D 5e backgrounds
+func getHardcodedBackground(key string) (*entities.Background, error) {
+	backgrounds := getHardcodedBackgroundData()
+	if bg, exists := backgrounds[key]; exists {
+		return bg, nil
+	}
+	return nil, fmt.Errorf("background not found: %s", key)
+}
+
+// getHardcodedBackgroundData returns detailed background data
+func getHardcodedBackgroundData() map[string]*entities.Background {
+	return map[string]*entities.Background{
+		"criminal": {
+			Key:  "criminal",
+			Name: "Criminal",
+			SkillProficiencies: []*entities.ReferenceItem{
+				{Key: "skill-deception", Name: "Skill: Deception"},
+				{Key: "skill-stealth", Name: "Skill: Stealth"},
+			},
+			Feature: &entities.BackgroundFeature{
+				Name: "Criminal Contact",
+				Description: "You have a reliable and trustworthy contact who acts as your liaison to a network of other criminals.",
+			},
+		},
+		"folk-hero": {
+			Key:  "folk-hero",
+			Name: "Folk Hero",
+			SkillProficiencies: []*entities.ReferenceItem{
+				{Key: "skill-animal-handling", Name: "Skill: Animal Handling"},
+				{Key: "skill-survival", Name: "Skill: Survival"},
+			},
+			Feature: &entities.BackgroundFeature{
+				Name: "Rustic Hospitality",
+				Description: "Since you come from the ranks of the common folk, you fit in among them with ease.",
+			},
+		},
+		"sage": {
+			Key:  "sage",
+			Name: "Sage",
+			SkillProficiencies: []*entities.ReferenceItem{
+				{Key: "skill-arcana", Name: "Skill: Arcana"},
+				{Key: "skill-history", Name: "Skill: History"},
+			},
+			Feature: &entities.BackgroundFeature{
+				Name: "Researcher",
+				Description: "When you attempt to learn or recall a piece of lore, if you do not know that information, you often know where and from whom you can obtain it.",
+			},
+		},
+		"soldier": {
+			Key:  "soldier",
+			Name: "Soldier",
+			SkillProficiencies: []*entities.ReferenceItem{
+				{Key: "skill-athletics", Name: "Skill: Athletics"},
+				{Key: "skill-intimidation", Name: "Skill: Intimidation"},
+			},
+			Feature: &entities.BackgroundFeature{
+				Name: "Military Rank",
+				Description: "You have a military rank from your career as a soldier. Soldiers loyal to your former military organization still recognize your authority and influence.",
+			},
+		},
+		"noble": {
+			Key:  "noble",
+			Name: "Noble",
+			SkillProficiencies: []*entities.ReferenceItem{
+				{Key: "skill-history", Name: "Skill: History"},
+				{Key: "skill-persuasion", Name: "Skill: Persuasion"},
+			},
+			Feature: &entities.BackgroundFeature{
+				Name: "Position of Privilege",
+				Description: "Thanks to your noble birth, people are inclined to think the best of you.",
+			},
+		},
+		"charlatan": {
+			Key:  "charlatan",
+			Name: "Charlatan",
+			SkillProficiencies: []*entities.ReferenceItem{
+				{Key: "skill-deception", Name: "Skill: Deception"},
+				{Key: "skill-sleight-of-hand", Name: "Skill: Sleight of Hand"},
+			},
+			Feature: &entities.BackgroundFeature{
+				Name: "False Identity",
+				Description: "You have created a second identity that includes documentation, established acquaintances, and disguises.",
+			},
+		},
+	}
 }
 
 func categorizeProficiencies(proficiencies []*referenceItem) (armor, weapon, tool []*entities.ReferenceItem) {

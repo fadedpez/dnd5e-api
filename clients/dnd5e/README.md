@@ -75,3 +75,26 @@ Tests include:
 - TTL expiration
 - Error handling
 - Different query parameters
+
+## Development Practices
+
+### Pull Request Guidelines
+
+When creating pull requests, use GitHub keywords to automatically close related issues:
+
+- `fixes #123` - closes issue #123 when PR is merged
+- `closes #123` - closes issue #123 when PR is merged  
+- `resolves #123` - closes issue #123 when PR is merged
+
+**Example PR description:**
+```
+Add class enhancement features
+
+This PR adds new fields to the Class entity to support character creation.
+
+Fixes #119
+Closes #120
+Resolves #123
+```
+
+This ensures issues are automatically closed when the implementing PR is merged, keeping the issue tracker clean and up-to-date.
